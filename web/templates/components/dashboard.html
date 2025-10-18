@@ -1,0 +1,74 @@
+<!-- Dashboard Section -->
+<section id="dashboard" class="content-section active">
+    <div class="section-header">
+        <h2 class="section-title">📊 Dashboard Principal</h2>
+        <p class="section-subtitle">Vue d'ensemble de votre système domotique</p>
+    </div>
+
+    <!-- System Status Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">🖥️</div>
+            <div class="stat-content">
+                <h3 class="stat-title">Raspberry Pi</h3>
+                <div class="stat-value" id="pi-status">
+                    <span class="status-text">Chargement...</span>
+                    <span class="status-dot loading"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">💻</div>
+            <div class="stat-content">
+                <h3 class="stat-title">PC de Bureau</h3>
+                <div class="stat-value" id="desktop-status">
+                    <span class="status-text">Vérification...</span>
+                    <span class="status-dot loading"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📡</div>
+            <div class="stat-content">
+                <h3 class="stat-title">Réseau</h3>
+                <div class="stat-value" id="network-status">
+                    <span class="status-text">Analyse...</span>
+                    <span class="status-dot loading"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🌡️</div>
+            <div class="stat-content">
+                <h3 class="stat-title">Température</h3>
+                <div class="stat-value" id="temperature-status">
+                    <span class="status-text">--°C</span>
+                    <span class="status-dot loading"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section-card">
+        <div class="section-card-header">
+            <h3 class="section-card-title">🚀 Actions Rapides</h3>
+        </div>
+        <div class="section-card-content">
+            <div class="quick-actions">
+                <button class="action-btn primary" id="desktop-wol-btn">
+                    ⚡ Démarrer PC
+                </button>
+                <button class="action-btn secondary" id="network-scan-btn">
+                    🔍 Scanner Réseau
+                </button>
+                <button class="action-btn secondary" onclick="window.location.reload()">
+                    🔄 Actualiser
+                </button>
+            </div>
+        </div>
+    </div>
+</section>

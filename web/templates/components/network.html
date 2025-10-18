@@ -1,0 +1,45 @@
+<!-- Network Scanner Section -->
+<section id="network" class="content-section">
+    <div class="section-header">
+        <h2 class="section-title">📡 Scanner Réseau</h2>
+        <p class="section-subtitle">Découvrez tous les appareils connectés</p>
+    </div>
+
+    <!-- Scan Controls -->
+    <div class="section-card">
+        <div class="section-card-header">
+            <h3 class="section-card-title">🔍 Contrôles de Scan</h3>
+        </div>
+        <div class="section-card-content">
+            <div class="scan-controls">
+                <button class="action-btn primary" id="start-scan-btn">
+                    🚀 Démarrer Scan Complet
+                </button>
+                <button class="action-btn secondary" id="refresh-scan-btn" disabled>
+                    🔄 Actualiser
+                </button>
+                <div class="scan-status" id="scan-status">
+                    <span class="status-text">Prêt à scanner</span>
+                    <span class="status-dot ready"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Network Devices -->
+    <div class="section-card">
+        <div class="section-card-header">
+            <h3 class="section-card-title">🌐 Appareils Détectés</h3>
+            <span class="device-count" id="device-count">0 appareil</span>
+        </div>
+        <div class="section-card-content">
+            <div class="network-devices" id="network-devices">
+                <!-- Les appareils réseau seront ajoutés dynamiquement -->
+                <div class="empty-state">
+                    <p>🔍 Aucun scan effectué</p>
+                    <p class="text-muted">Cliquez sur "Démarrer Scan Complet" pour découvrir les appareils</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

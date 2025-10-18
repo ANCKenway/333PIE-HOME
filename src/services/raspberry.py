@@ -6,6 +6,7 @@ Fonctionnalités : température, CPU, mémoire, services système
 import subprocess
 import psutil
 from typing import Dict, List
+from ..utils.system import get_cpu_usage, get_memory_usage, get_temperature, get_uptime, check_service_status
 
 class PiMonitor:
     """Monitoring du Raspberry Pi"""
@@ -15,8 +16,9 @@ class PiMonitor:
         try:
             return {
                 "cpu": self._get_cpu_info(),
-                "memory": self._get_memory_info(),
-                "temperature": self._get_temperature(),
+                "memory": get_memory_usage(),
+                "temperature": get_temperature(),
+                "uptime": get_uptime(),
                 "services": self._get_services_status()
             }
         except Exception as e:
@@ -24,32 +26,19 @@ class PiMonitor:
     
     def _get_cpu_info(self) -> Dict:
         """Informations CPU"""
-        cpu_percent = psutil.cpu_percent(interval=0.1)
-        with open('/proc/loadavg', 'r') as f:
-            load = f.read().split()[:3]
-        
-        return {
-            "usage_percent": round(cpu_percent, 1),
-            "load_average": [float(x) for x in load]
-        }
-    
-    def _get_memory_info(self) -> Dict:
-        """Informations mémoire"""
-        memory = psutil.virtual_memory()
-        return {
-            "total_gb": round(memory.total / (1024**3), 2),
-            "used_gb": round(memory.used / (1024**3), 2),
-            "usage_percent": round(memory.percent, 1)
-        }
-    
-    def _get_temperature(self) -> float:
-        """Température CPU"""
+        cpu_percent = get_cpu_usage()
         try:
-            with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
-                temp = int(f.read().strip()) / 1000
-            return round(temp, 1)
+            with open('/proc/loadavg', 'r') as f:
+                load = f.read().split()[:3]
+            
+            return {
+                "usage_percent": round(cpu_percent, 1),
+                "load_1m": float(load[0]),
+                "load_5m": float(load[1]),
+                "load_15m": float(load[2])
+            }
         except:
-            return 0.0
+            return {"usage_percent": round(cpu_percent, 1)}
     
     def _get_services_status(self) -> List[Dict]:
         """Status des services système"""
@@ -60,31 +49,12 @@ class PiMonitor:
             {"name": "Nginx", "service": "nginx", "port": 80},
         ]
         
-        for service in system_services:
-            try:
-                result = subprocess.run(
-                    ["systemctl", "is-active", service["service"]], 
-                    capture_output=True, 
-                    text=True, 
-                    timeout=2
-                )
-                status = "online" if result.stdout.strip() == "active" else "offline"
-                
-                service_info = {
-                    "name": service["name"],
-                    "status": status,
-                    "type": "system"
-                }
-                
-                if "port" in service:
-                    service_info["port"] = service["port"]
-                    
-                services.append(service_info)
-            except:
-                services.append({
-                    "name": service["name"],
-                    "status": "offline",
-                    "type": "system"
-                })
+        for service_info in system_services:
+            status = check_service_status(service_info["service"])
+            services.append({
+                "name": service_info["name"],
+                "status": "active" if status else "inactive",
+                "port": service_info.get("port")
+            })
         
         return services

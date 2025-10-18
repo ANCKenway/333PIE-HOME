@@ -30,8 +30,8 @@ app.include_router(network_router, prefix="/api/network", tags=["network"])
 
 @app.get("/")
 async def dashboard():
-    """Dashboard principal"""
-    return FileResponse("web/templates/dashboard.html")
+    """Page d'accueil - Dashboard principal"""
+    return FileResponse("web/templates/index.html")
 
 @app.get("/favicon.ico")
 async def favicon():
