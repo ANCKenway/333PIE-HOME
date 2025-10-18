@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏠 Home Automation - Dashboard</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/web/static/css/base.css">
+    <link rel="stylesheet" href="/web/static/css/components.css">
+    
+    <!-- Plus de Lucide - Émojis natifs ultra-rapides ! -->
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="app-header">
+                <h1 class="app-title">
+                    🏠 <span>Home Automation</span>
+                </h1>
+                <p class="app-subtitle">Raspberry Pi - Système de domotique</p>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Principal</h3>
+                    <a href="#" class="nav-item active" data-section="dashboard">
+                        <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                        Dashboard
+                    </a>
+                    <a href="#" class="nav-item" data-section="devices">
+                        <i data-lucide="monitor" class="nav-icon"></i>
+                        Mes Appareils
+                    </a>
+                    <a href="#" class="nav-item" data-section="network">
+                        <i data-lucide="wifi" class="nav-icon"></i>
+                        Scanner Réseau
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Système</h3>
+                    <a href="#" class="nav-item" data-section="monitoring">
+                        <i data-lucide="activity" class="nav-icon"></i>
+                        Monitoring Pi
+                    </a>
+                    <a href="#" class="nav-item" data-section="settings">
+                        <i data-lucide="settings" class="nav-icon"></i>
+                        Paramètres
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="topbar">
+                <div class="flex items-center gap-4">
+                    <button id="mobile-menu-btn" class="md:hidden btn btn-secondary btn-sm">
+                        <i data-lucide="menu" width="16" height="16"></i>
+                    </button>
+                    <h2 id="page-title" class="text-xl font-semibold text-gray-800">Dashboard</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex items-center gap-2 text-sm text-gray-600">
+                        <div class="w-2 h-2 bg-success-500 rounded-full"></div>
+                        <span>Système en ligne</span>
+                    </div>
+                    <button id="refresh-btn" class="btn btn-secondary btn-sm">
+                        <i data-lucide="refresh-cw" width="16" height="16"></i>
+                        <span class="hidden md:inline">Actualiser</span>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard Section -->
+                <section id="dashboard-section" class="section active">
+                    <div class="grid grid-cols-auto gap-6 mb-6">
+                        <!-- Status rapide -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i data-lucide="zap" width="20" height="20"></i>
+                                    État du système
+                                </h3>
+                            </div>
+                            <div class="card-content">
+                                <div id="system-stats" class="grid grid-cols-2 gap-4">
+                                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                                        <div class="text-2xl font-bold text-primary-600" id="cpu-usage">--</div>
+                                        <div class="text-sm text-gray-600">CPU</div>
+                                    </div>
+                                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                                        <div class="text-2xl font-bold text-primary-600" id="temperature">--</div>
+                                        <div class="text-sm text-gray-600">Température</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Appareils favoris -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i data-lucide="star" width="20" height="20"></i>
+                                    Appareils favoris
+                                </h3>
+                                <button class="btn btn-primary btn-sm" data-section="devices">
+                                    <i data-lucide="plus" width="16" height="16"></i>
+                                    Gérer
+                                </button>
+                            </div>
+                            <div class="card-content">
+                                <div id="favorite-devices" class="space-y-2">
+                                    <div class="loading">Chargement...</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Scan rapide -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i data-lucide="search" width="20" height="20"></i>
+                                    Scan rapide
+                                </h3>
+                                <button id="quick-scan-btn" class="btn btn-primary btn-sm">
+                                    <i data-lucide="radar" width="16" height="16"></i>
+                                    Scanner
+                                </button>
+                            </div>
+                            <div class="card-content">
+                                <div id="quick-scan-results">
+                                    <p class="text-gray-600 text-sm">Cliquez sur "Scanner" pour découvrir les appareils en ligne</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Mes Appareils Section -->
+                <section id="devices-section" class="section">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900">Mes Appareils</h3>
+                            <p class="text-gray-600">Gérez vos ordinateurs et appareils réseau</p>
+                        </div>
+                        <button id="add-device-btn" class="btn btn-primary">
+                            <i data-lucide="plus" width="20" height="20"></i>
+                            Ajouter un appareil
+                        </button>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-content">
+                            <div id="devices-list">
+                                <div class="loading">Chargement des appareils...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Scanner Réseau Section -->
+                <section id="network-section" class="section">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900">Scanner Réseau</h3>
+                            <p class="text-gray-600">Découvrez tous les appareils de votre réseau local</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button id="network-scan-btn" class="btn btn-primary">
+                                <i data-lucide="wifi" width="20" height="20"></i>
+                                Scanner le réseau
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid gap-6">
+                        <!-- Filtres -->
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="flex gap-4 items-center">
+                                    <div class="form-group flex-1">
+                                        <label class="form-label">Filtrer par type</label>
+                                        <select id="device-type-filter" class="form-select">
+                                            <option value="">Tous les types</option>
+                                            <option value="windows">Windows</option>
+                                            <option value="linux">Linux</option>
+                                            <option value="unknown">Inconnu</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label class="form-label">Rechercher</label>
+                                        <input type="text" id="device-search" class="form-input" placeholder="Nom ou IP...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Résultats du scan -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Appareils détectés</h4>
+                                <span id="devices-count" class="text-sm text-gray-600">0 appareil</span>
+                            </div>
+                            <div class="card-content">
+                                <div id="network-devices">
+                                    <div class="text-center py-12">
+                                        <i data-lucide="wifi-off" width="48" height="48" class="mx-auto text-gray-400 mb-4"></i>
+                                        <p class="text-gray-600">Lancez un scan pour découvrir les appareils</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Monitoring Section -->
+                <section id="monitoring-section" class="section">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900">Monitoring Raspberry Pi</h3>
+                        <p class="text-gray-600">Surveillance du système en temps réel</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-auto gap-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">
+                                    <i data-lucide="cpu" width="20" height="20"></i>
+                                    Performances
+                                </h4>
+                            </div>
+                            <div class="card-content">
+                                <div id="detailed-stats"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">
+                                    <i data-lucide="server" width="20" height="20"></i>
+                                    Services système
+                                </h4>
+                            </div>
+                            <div class="card-content">
+                                <div id="system-services"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Settings Section -->
+                <section id="settings-section" class="section">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900">Paramètres</h3>
+                        <p class="text-gray-600">Configuration du système</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-content">
+                            <p class="text-gray-600">Paramètres à venir...</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Modals -->
+    <div id="device-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Ajouter un appareil</h3>
+                <button class="modal-close">
+                    <i data-lucide="x" width="20" height="20"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="device-form">
+                    <div class="form-group">
+                        <label class="form-label">Nom de l'appareil</label>
+                        <input type="text" id="device-name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Adresse IP</label>
+                        <input type="text" id="device-ip" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Adresse MAC</label>
+                        <input type="text" id="device-mac" class="form-input" placeholder="aa:bb:cc:dd:ee:ff">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Type</label>
+                        <select id="device-type" class="form-select">
+                            <option value="desktop">PC de bureau</option>
+                            <option value="laptop">Ordinateur portable</option>
+                            <option value="server">Serveur</option>
+                            <option value="other">Autre</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary modal-close">Annuler</button>
+                <button type="submit" form="device-form" class="btn btn-primary">Ajouter</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="/web/static/js/api.js"></script>
+    <script src="/web/static/js/components.js"></script>
+    <script src="/web/static/js/app.js"></script>
+    
+    <script>
+        // Initialisation des icônes Lucide
+        lucide.createIcons();
+    </script>
+    
+    <style>
+        /* Styles pour les sections et modals */
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.hidden {
+            display: none;
+        }
+        
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-content {
+            position: relative;
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 500px;
+            margin: var(--space-4);
+        }
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .modal-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--gray-500);
+            cursor: pointer;
+            padding: var(--space-2);
+            border-radius: var(--radius-md);
+        }
+        
+        .modal-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+        
+        .modal-body {
+            padding: var(--space-6);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-2);
+            padding: var(--space-6);
+            border-top: 1px solid var(--gray-200);
+        }
+    </style>
+    
+    <!-- Script d'optimisation immédiate -->
+    <script>
+    // Initialisation ultra-rapide
+    document.addEventListener('DOMContentLoaded', function() {
+        // Précharger immédiatement les icônes critiques
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+        
+        // Optimisations de performance
+        document.body.style.setProperty('--transition-duration', '0ms');
+        document.body.style.setProperty('--animation-duration', '0ms');
+        
+        // Désactiver les transitions pendant le chargement
+        const style = document.createElement('style');
+        style.innerHTML = `
+            * { transition: none !important; animation: none !important; }
+        `;
+        document.head.appendChild(style);
+        
+        // Réactiver après chargement complet
+        setTimeout(() => {
+            document.head.removeChild(style);
+        }, 100);
+    });
+    </script>
+</body>
+</html>

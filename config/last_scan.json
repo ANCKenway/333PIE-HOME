@@ -1,0 +1,128 @@
+{
+  "network": "192.168.1.0/24",
+  "scan_time": "2025-10-16T18:58:59.009538",
+  "total_scanned": 254,
+  "devices_found": 10,
+  "devices": [
+    {
+      "ip": "192.168.1.24",
+      "hostname": null,
+      "mac_address": "10:7C:61:78:72:8B",
+      "vendor": "Inconnu",
+      "open_ports": [
+        80
+      ],
+      "device_type": "web_server",
+      "response_time": "0.235ms",
+      "online": true,
+      "last_seen": "2025-10-16T18:58:49.962132"
+    },
+    {
+      "ip": "192.168.1.150",
+      "hostname": null,
+      "mac_address": null,
+      "vendor": null,
+      "open_ports": [
+        22,
+        8000,
+        3389,
+        5900
+      ],
+      "device_type": "windows_pc",
+      "response_time": "0.036ms",
+      "online": true,
+      "last_seen": "2025-10-16T18:58:51.975761"
+    },
+    {
+      "ip": "192.168.1.254",
+      "hostname": null,
+      "mac_address": "8C:97:EA:31:C0:A2",
+      "vendor": "Inconnu",
+      "open_ports": [
+        80,
+        443
+      ],
+      "device_type": "web_server",
+      "response_time": "0.261ms",
+      "online": true,
+      "last_seen": "2025-10-16T18:58:53.984301"
+    },
+    {
+      "ip": "192.168.1.174",
+      "hostname": null,
+      "mac_address": "34:5A:60:7F:12:C1",
+      "vendor": "Inconnu",
+      "open_ports": [],
+      "device_type": "unknown",
+      "response_time": "0.166ms",
+      "online": true,
+      "last_seen": "2025-10-16T18:58:52.915340"
+    },
+    {
+      "ip": "192.168.1.171",
+      "hostname": null,
+      "mac_address": "A4:E5:7C:31:54:36",
+      "vendor": "Inconnu",
+      "open_ports": [],
+      "device_type": "unknown",
+      "response_time": "53.1ms",
+      "online": true,
+      "last_seen": "2025-10-16T18:58:52.966287"
+    },
+    {
+      "ip": "192.168.1.23",
+      "hostname": null,
+      "mac_address": "CA:08:C5:BF:00:13",
+      "vendor": "Inconnu",
+      "open_ports": [],
+      "device_type": "unknown",
+      "response_time": "39.5ms",
+      "online": true,
+      "last_seen": "2025-10-16T18:58:49.999161"
+    },
+    {
+      "ip": "192.168.1.123",
+      "hostname": null,
+      "mac_address": "AE:CA:56:5B:75:E5",
+      "vendor": "Inconnu",
+      "open_ports": [],
+      "device_type": "unknown",
+      "response_time": "405ms",
+      "online": true,
+      "last_seen": "2025-10-16T18:58:52.333872"
+    },
+    {
+      "ip": "192.168.1.99",
+      "hostname": null,
+      "mac_address": "9E:67:44:B4:B8:7D",
+      "vendor": "Inconnu",
+      "open_ports": [],
+      "device_type": "unknown",
+      "response_time": "28.2ms",
+      "online": true,
+      "last_seen": "2025-10-16T18:58:50.996993"
+    },
+    {
+      "ip": "192.168.1.186",
+      "hostname": null,
+      "mac_address": "14:A3:2F:7F:A5:0F",
+      "vendor": "Inconnu",
+      "open_ports": [],
+      "device_type": "unknown",
+      "response_time": "245ms",
+      "online": true,
+      "last_seen": "2025-10-16T18:58:53.208443"
+    },
+    {
+      "ip": "192.168.1.77",
+      "hostname": null,
+      "mac_address": "C8:FF:77:59:DE:E1",
+      "vendor": "Inconnu",
+      "open_ports": [],
+      "device_type": "unknown",
+      "response_time": "4.45ms",
+      "online": true,
+      "last_seen": "2025-10-16T18:58:50.959319"
+    }
+  ]
+}
