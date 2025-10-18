@@ -303,8 +303,8 @@ class HomeApp {
             const response = await fetch(`${this.apiBase}/api/devices`);
             const data = await response.json();
             
-            if (data.success && data.data && data.data.length > 0) {
-                this.displayDevices(data.data);
+            if (data.success && data.devices && data.devices.length > 0) {
+                this.displayDevices(data.devices);
             } else {
                 this.showEmptyDevices();
             }
@@ -323,20 +323,90 @@ class HomeApp {
         const container = document.getElementById('devices-list');
         if (!container) return;
         
-        container.innerHTML = devices.map(device => `
-            <div class="device-item">
-                <div class="device-info">
-                    <h4>${device.name || device.ip}</h4>
-                    <p>IP: ${device.ip} | MAC: ${device.mac || 'N/A'}</p>
-                    <p>Type: ${device.type || 'Inconnu'} | Statut: <span class="status-${device.status}">${device.status || 'Inconnu'}</span></p>
+        container.innerHTML = `
+            <div class="devices-grid">
+                ${devices.map(device => this.renderDeviceCard(device)).join('')}
+            </div>
+        `;
+    }
+
+    /**
+     * Rendu d'une carte d'appareil
+     */
+    renderDeviceCard(device) {
+        const statusClass = device.status === 'online' ? 'online' : 'offline';
+        const statusIcon = device.status === 'online' ? '🟢' : '🔴';
+        const deviceIcon = this.getDeviceIcon(device.type);
+        
+        return `
+            <div class="device-card" data-device-id="${device.ip}">
+                <div class="device-card-header">
+                    <div class="device-icon">${deviceIcon}</div>
+                    <div class="device-status ${statusClass}">
+                        <span class="status-indicator">${statusIcon}</span>
+                        <span class="status-text">${device.status || 'Inconnu'}</span>
+                    </div>
                 </div>
-                <div class="device-actions">
-                    ${device.type === 'computer' ? '<button class="btn btn-success btn-sm">💻 Wake-on-LAN</button>' : ''}
-                    <button class="btn btn-primary btn-sm">⚙️ Config</button>
-                    <button class="btn btn-danger btn-sm">🗑️</button>
+                
+                <div class="device-card-body">
+                    <h3 class="device-name">${device.name || device.hostname || device.ip}</h3>
+                    <div class="device-details">
+                        <div class="detail-row">
+                            <span class="detail-label">🌐 IP Principale:</span>
+                            <span class="detail-value">${device.current_ip || device.ip}</span>
+                        </div>
+                        ${device.mac ? `
+                            <div class="detail-row">
+                                <span class="detail-label">🔧 MAC:</span>
+                                <span class="detail-value mac-address">${device.mac}</span>
+                            </div>
+                        ` : ''}
+                        <div class="detail-row">
+                            <span class="detail-label">📱 Type:</span>
+                            <span class="detail-value">${device.device_type || device.type || 'Inconnu'}</span>
+                        </div>
+                        ${device.vendor ? `
+                            <div class="detail-row">
+                                <span class="detail-label">🏭 Fabricant:</span>
+                                <span class="detail-value">${device.vendor}</span>
+                            </div>
+                        ` : ''}
+                        <div class="detail-row">
+                            <span class="detail-label">⏱️ Dernière vérification:</span>
+                            <span class="detail-value">${device.last_seen || 'Jamais'}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="device-card-actions">
+                    ${device.wake_on_lan ? `
+                        <button class="btn btn-success btn-wol" onclick="app.wakeDevice('${device.mac}')">
+                            💻 Wake-on-LAN
+                        </button>
+                    ` : ''}
+                    <button class="btn btn-primary btn-config" onclick="app.configureDevice('${device.ip}')">
+                        ⚙️ Configurer
+                    </button>
+                    <button class="btn btn-danger btn-delete" onclick="app.confirmDeleteDevice('${device.ip}')">
+                        🗑️ Supprimer
+                    </button>
                 </div>
             </div>
-        `).join('');
+        `;
+    }
+
+    /**
+     * Obtenir l'icône d'un appareil selon son type
+     */
+    getDeviceIcon(type) {
+        const icons = {
+            'PC': '🖥️',
+            'Serveur': '🖲️', 
+            'Réseau': '🌐',
+            'Appareil': '📱',
+            'discovered': '❓'
+        };
+        return icons[type] || '📟';
     }
 
     /**
@@ -554,7 +624,7 @@ class HomeApp {
                         <div class="device-category">
                             <h4 class="category-header">${cat.emoji} ${cat.label} (${cat.devices.length})</h4>
                             <div class="devices-grid">
-                                ${cat.devices.map(device => this.renderDeviceCard(device)).join('')}
+                                ${cat.devices.map(device => this.renderNetworkDeviceCard(device)).join('')}
                             </div>
                         </div>
                     `).join('')}
@@ -565,9 +635,9 @@ class HomeApp {
     }
     
     /**
-     * Rendu d'une carte d'appareil
+     * Rendu d'une carte d'appareil réseau (scan)
      */
-    renderDeviceCard(device) {
+    renderNetworkDeviceCard(device) {
         const hostname = device.hostname || '';
         const vendor = device.vendor || '';
         const os = device.os_detected || 'Inconnu';
@@ -712,6 +782,9 @@ class HomeApp {
                 alert(`❌ Appareil ${ip} non trouvé dans le dernier scan.`);
                 return;
             }
+            
+            // DEBUG: Vérifier les données de l'appareil
+            console.log('🔍 Données appareil du scan:', device);
             
             // 3. Préparer les données complètes pour l'ajout
             const deviceData = {
@@ -1380,6 +1453,335 @@ class HomeApp {
         const container = document.getElementById(containerId);
         if (container) {
             container.innerHTML = `<div class="error">❌ ${message}</div>`;
+        }
+    }
+
+    /**
+     * Confirmer la suppression d'un appareil
+     */
+    confirmDeleteDevice(deviceIp) {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="device-config-modal">
+                <div class="modal-header">
+                    <h3>🗑️ Supprimer l'appareil</h3>
+                    <button onclick="closeDeviceModal()" class="btn-close">×</button>
+                </div>
+                <div class="modal-body">
+                    <p>⚠️ Êtes-vous sûr de vouloir supprimer cet appareil ?</p>
+                    <p><strong>IP:</strong> ${deviceIp}</p>
+                    <p>Cette action est irréversible.</p>
+                </div>
+                <div class="modal-actions">
+                    <button onclick="closeDeviceModal()" class="btn btn-secondary">Annuler</button>
+                    <button onclick="app.deleteDevice('${deviceIp}')" class="btn btn-danger">Supprimer</button>
+                </div>
+            </div>
+        `;
+        
+        modal.onclick = (e) => {
+            if (e.target === modal) modal.remove();
+        };
+        
+        // Fonction globale pour fermer la modal
+        window.closeDeviceModal = () => {
+            modal.remove();
+            document.removeEventListener('keydown', escapeHandler);
+        };
+        
+        // Fermer avec Escape
+        const escapeHandler = (e) => {
+            if (e.key === 'Escape') {
+                window.closeDeviceModal();
+            }
+        };
+        document.addEventListener('keydown', escapeHandler);
+        
+        document.body.appendChild(modal);
+    }
+
+    /**
+     * Supprimer un appareil
+     */
+    async deleteDevice(deviceIp) {
+        try {
+            const response = await fetch(`${this.apiBase}/api/devices/${deviceIp}`, {
+                method: 'DELETE'
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                window.closeDeviceModal();
+                this.loadDevices();
+                this.showNotification('✅ Appareil supprimé avec succès', 'success');
+            } else {
+                this.showNotification('❌ Erreur lors de la suppression', 'error');
+            }
+        } catch (error) {
+            console.error('❌ Erreur suppression:', error);
+            this.showNotification('❌ Erreur lors de la suppression', 'error');
+        }
+    }
+
+    /**
+     * Configurer un appareil
+     */
+    configureDevice(deviceIp) {
+        // Chercher l'appareil dans la liste
+        const deviceElement = document.querySelector(`[data-device-id="${deviceIp}"]`);
+        if (!deviceElement) return;
+        
+        // Récupérer les données depuis l'API
+        fetch(`${this.apiBase}/api/devices`)
+            .then(response => response.json())
+            .then(data => {
+                const device = data.devices.find(d => d.ip === deviceIp || d.current_ip === deviceIp);
+                if (device) {
+                    this.showDeviceConfigModal(device);
+                }
+            })
+            .catch(error => {
+                console.error('❌ Erreur chargement appareil:', error);
+                this.showNotification('❌ Erreur lors du chargement', 'error');
+            });
+    }
+
+    /**
+     * Afficher la modal de configuration d'appareil
+     */
+    showDeviceConfigModal(device) {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="device-config-modal">
+                <div class="modal-header">
+                    <h3>⚙️ Configuration - ${device.name || device.ip}</h3>
+                    <button onclick="closeDeviceConfigModal()" class="btn-close">×</button>
+                </div>
+                <form class="device-config-form" onsubmit="app.saveDeviceConfig(event, '${device.ip}')">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>📝 Nom personnalisé</label>
+                            <input type="text" id="device-name" value="${device.name || ''}" 
+                                   placeholder="Ex: PC Bureau, Serveur NAS..." class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>🌐 IP Principale</label>
+                            <input type="text" id="device-ip" value="${device.ip || ''}" 
+                                   placeholder="192.168.1.100" class="form-control" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="device-vpn" ${device.is_vpn ? 'checked' : ''} onchange="app.toggleVpnFields()">
+                                🔒 VPN (Tailscale)
+                            </label>
+                        </div>
+                        
+                        <div class="form-group vpn-fields" id="vpn-fields" style="display: ${device.is_vpn ? 'block' : 'none'}">
+                            <label>🌐 IP Secondaire (Tailscale)</label>
+                            <input type="text" id="device-ip2" value="${device.ip_secondary || ''}" 
+                                   placeholder="100.64.0.10" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>🔧 Adresse MAC</label>
+                            <input type="text" id="device-mac" value="${device.mac || ''}" 
+                                   placeholder="AA:BB:CC:DD:EE:FF" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>📱 Type d'appareil</label>
+                            <select id="device-type" class="form-control">
+                                <option value="PC" ${device.type === 'PC' ? 'selected' : ''}>🖥️ PC/Ordinateur</option>
+                                <option value="Serveur" ${device.type === 'Serveur' ? 'selected' : ''}>🖲️ Serveur</option>
+                                <option value="Réseau" ${device.type === 'Réseau' ? 'selected' : ''}>🌐 Équipement réseau</option>
+                                <option value="Mobile" ${device.type === 'Mobile' ? 'selected' : ''}>📱 Appareil mobile</option>
+                                <option value="IoT" ${device.type === 'IoT' ? 'selected' : ''}>🏠 Objet connecté</option>
+                                <option value="Autre" ${device.type === 'Autre' ? 'selected' : ''}>📟 Autre</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>📝 Description</label>
+                            <textarea id="device-description" class="form-control" rows="2" 
+                                      placeholder="Description optionnelle...">${device.description || ''}</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="device-wol" ${device.wake_on_lan ? 'checked' : ''}>
+                                💻 Activer Wake-on-LAN
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" onclick="closeDeviceConfigModal()" class="btn btn-secondary">Annuler</button>
+                        <button type="submit" class="btn btn-primary">💾 Sauvegarder</button>
+                    </div>
+                </form>
+            </div>
+        `;
+        
+        modal.onclick = (e) => {
+            if (e.target === modal) modal.remove();
+        };
+        
+        // Fonction globale pour fermer la modal
+        window.closeDeviceConfigModal = () => {
+            modal.remove();
+            document.removeEventListener('keydown', escapeHandler);
+        };
+        
+        // Fermer avec Escape
+        const escapeHandler = (e) => {
+            if (e.key === 'Escape') {
+                window.closeDeviceConfigModal();
+            }
+        };
+        document.addEventListener('keydown', escapeHandler);
+        
+        document.body.appendChild(modal);
+    }
+
+    /**
+     * Basculer l'affichage des champs VPN
+     */
+    toggleVpnFields() {
+        const vpnCheckbox = document.getElementById('device-vpn');
+        const vpnFields = document.getElementById('vpn-fields');
+        const ip2Field = document.getElementById('device-ip2');
+        
+        if (vpnCheckbox.checked) {
+            vpnFields.style.display = 'block';
+            ip2Field.required = false; // Optionnel même avec VPN
+        } else {
+            vpnFields.style.display = 'none';
+            ip2Field.value = ''; // Vider le champ si VPN désactivé
+        }
+    }
+
+    /**
+     * Sauvegarder la configuration d'un appareil
+     */
+    async saveDeviceConfig(event, deviceIp) {
+        event.preventDefault();
+        
+        const formData = {
+            name: document.getElementById('device-name').value,
+            ip: document.getElementById('device-ip').value,
+            ip_secondary: document.getElementById('device-ip2').value,
+            mac: document.getElementById('device-mac').value,
+            type: document.getElementById('device-type').value,
+            description: document.getElementById('device-description').value,
+            wake_on_lan: document.getElementById('device-wol').checked,
+            is_vpn: document.getElementById('device-vpn').checked
+        };
+        
+        try {
+            const response = await fetch(`${this.apiBase}/api/devices/${deviceIp}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                window.closeDeviceConfigModal();
+                this.loadDevices();
+                this.showNotification('✅ Configuration sauvegardée', 'success');
+            } else {
+                this.showNotification('❌ Erreur lors de la sauvegarde', 'error');
+            }
+        } catch (error) {
+            console.error('❌ Erreur sauvegarde:', error);
+            this.showNotification('❌ Erreur lors de la sauvegarde', 'error');
+        }
+    }
+
+    /**
+     * Wake-on-LAN pour un appareil
+     */
+    async wakeDevice(mac) {
+        if (!mac) {
+            this.showNotification('❌ Adresse MAC requise pour Wake-on-LAN', 'error');
+            return;
+        }
+        
+        try {
+            const response = await fetch(`${this.apiBase}/api/wake/${mac}`, {
+                method: 'POST'
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.showNotification('✅ Signal Wake-on-LAN envoyé', 'success');
+            } else {
+                this.showNotification('❌ Erreur Wake-on-LAN', 'error');
+            }
+        } catch (error) {
+            console.error('❌ Erreur Wake-on-LAN:', error);
+            this.showNotification('❌ Erreur Wake-on-LAN', 'error');
+        }
+    }
+
+    /**
+     * Réparer les MACs manquantes en utilisant l'historique réseau
+     */
+    async repairMissingMacs() {
+        try {
+            // 1. Charger les appareils gérés
+            const devicesResponse = await fetch(`${this.apiBase}/api/devices`);
+            const devicesData = await devicesResponse.json();
+            
+            // 2. Charger l'historique réseau
+            const historyResponse = await fetch(`${this.apiBase}/api/network/devices-history`);
+            const historyData = await historyResponse.json();
+            
+            if (!devicesData.success || !historyData.success) {
+                console.log('❌ Impossible de charger les données pour réparation');
+                return;
+            }
+            
+            const devices = devicesData.devices;
+            const history = historyData.history.devices_by_mac;
+            
+            // 3. Pour chaque appareil sans MAC, chercher dans l'historique
+            for (const device of devices) {
+                if (!device.mac && device.ip) {
+                    // Chercher dans l'historique par IP
+                    for (const [mac, deviceHistory] of Object.entries(history)) {
+                        const currentData = deviceHistory.current_data;
+                        if (currentData && currentData.ip === device.ip && !mac.startsWith('no_mac_')) {
+                            console.log(`🔧 MAC trouvée pour ${device.ip}: ${mac}`);
+                            
+                            // Mettre à jour l'appareil
+                            const updateData = { ...device, mac: mac };
+                            const updateResponse = await fetch(`${this.apiBase}/api/devices/${device.ip}`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(updateData)
+                            });
+                            
+                            if (updateResponse.ok) {
+                                console.log(`✅ MAC réparée pour ${device.name || device.ip}`);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            
+        } catch (error) {
+            console.error('❌ Erreur réparation MACs:', error);
         }
     }
 }

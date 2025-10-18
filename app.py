@@ -199,6 +199,36 @@ async def get_monitoring_stats():
         logging.error(f"Erreur monitoring stats: {e}")
         raise HTTPException(status_code=500, detail="Erreur serveur")
 
+@app.post("/api/wake/{mac}")
+async def wake_on_lan(mac: str):
+    """Envoyer un paquet Wake-on-LAN"""
+    try:
+        import struct
+        import socket
+        
+        # Nettoyer l'adresse MAC
+        mac = mac.replace(':', '').replace('-', '').upper()
+        
+        if len(mac) != 12:
+            raise HTTPException(status_code=400, detail="Adresse MAC invalide")
+        
+        # Créer le paquet magic
+        mac_bytes = bytes.fromhex(mac)
+        magic_packet = b'\xff' * 6 + mac_bytes * 16
+        
+        # Envoyer via broadcast UDP
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        sock.sendto(magic_packet, ('255.255.255.255', 9))
+        sock.close()
+        
+        logger.info(f"Wake-on-LAN envoyé pour MAC {mac}")
+        return {"success": True, "message": f"Wake-on-LAN envoyé pour {mac}"}
+        
+    except Exception as e:
+        logger.error(f"Erreur Wake-on-LAN: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur Wake-on-LAN: {str(e)}")
+
 @app.post("/api/monitoring/clear-cache")
 async def clear_monitoring_cache():
     """Vider le cache de monitoring"""

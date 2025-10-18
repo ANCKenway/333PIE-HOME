@@ -1,7 +1,7 @@
 {
   "last_scan": {
-    "timestamp": 1760828743.0472593,
-    "datetime": "2025-10-19T01:05:43.047262",
+    "timestamp": 1760830568.640537,
+    "datetime": "2025-10-19T01:36:08.640539",
     "devices": [
       {
         "ip": "192.168.1.23",
@@ -14,8 +14,8 @@
         "confidence": 0,
         "open_ports": [],
         "services": [],
-        "response_time": 8.042763710021973,
-        "last_seen": 1760828708.891832,
+        "response_time": 5.0805275440216064,
+        "last_seen": 1760830534.7110684,
         "fingerprint": {},
         "status": "up",
         "detection_method": "privacy_mac",
@@ -67,8 +67,8 @@
             "version": ""
           }
         ],
-        "response_time": 0.06850075721740723,
-        "last_seen": 1760828708.8920002,
+        "response_time": 0.12723231315612793,
+        "last_seen": 1760830534.7112668,
         "fingerprint": {
           "windows": 0.75
         },
@@ -107,8 +107,8 @@
         "confidence": 0,
         "open_ports": [],
         "services": [],
-        "response_time": 3.361095428466797,
-        "last_seen": 1760828708.8924196,
+        "response_time": 3.3081929683685303,
+        "last_seen": 1760830534.7116945,
         "fingerprint": {},
         "status": "up",
         "detection_method": "privacy_mac",
@@ -137,8 +137,8 @@
         "confidence": 0,
         "open_ports": [],
         "services": [],
-        "response_time": 8.037836074829102,
-        "last_seen": 1760828708.8925173,
+        "response_time": 8.026941537857056,
+        "last_seen": 1760830534.7118354,
         "fingerprint": {},
         "status": "up",
         "detection_method": "local_oui_extended",
@@ -201,8 +201,8 @@
             "version": ""
           }
         ],
-        "response_time": 5.304363250732422,
-        "last_seen": 1760828708.8925989,
+        "response_time": 5.3095948696136475,
+        "last_seen": 1760830534.7119715,
         "fingerprint": {
           "windows": 0.25,
           "linux": 0.25,
@@ -263,8 +263,8 @@
             "version": ""
           }
         ],
-        "response_time": 0.08067011833190918,
-        "last_seen": 1760828708.8927724,
+        "response_time": 0.12317538261413574,
+        "last_seen": 1760830534.7122152,
         "fingerprint": {
           "windows": 0.75
         },
@@ -343,8 +343,8 @@
             "version": ""
           }
         ],
-        "response_time": 0.09930992126464844,
-        "last_seen": 1760828708.892853,
+        "response_time": 0.12248516082763672,
+        "last_seen": 1760830534.7123353,
         "fingerprint": {
           "windows": 0.75,
           "linux": 0.25,
@@ -402,8 +402,8 @@
         "confidence": 0,
         "open_ports": [],
         "services": [],
-        "response_time": 8.057657241821289,
-        "last_seen": 1760828708.8922188,
+        "response_time": 8.0310640335083,
+        "last_seen": 1760830534.7114267,
         "fingerprint": {},
         "status": "up",
         "detection_method": "local_oui_extended",
@@ -450,8 +450,8 @@
         "confidence": 0,
         "open_ports": [],
         "services": [],
-        "response_time": 8.026641368865967,
-        "last_seen": 1760828708.8923225,
+        "response_time": 8.043079137802124,
+        "last_seen": 1760830534.711551,
         "fingerprint": {},
         "status": "up",
         "detection_method": "local_oui_extended",
@@ -508,8 +508,8 @@
             "version": ""
           }
         ],
-        "response_time": 3.0539186000823975,
-        "last_seen": 1760828708.8929362,
+        "response_time": 3.057328939437866,
+        "last_seen": 1760830534.7124553,
         "fingerprint": {
           "windows": 0.25
         },
@@ -558,8 +558,8 @@
         "confidence": 0,
         "open_ports": [],
         "services": [],
-        "response_time": 3.0620083808898926,
-        "last_seen": 1760828708.8926842,
+        "response_time": 3.0740203857421875,
+        "last_seen": 1760830534.7120924,
         "fingerprint": {},
         "status": "up",
         "detection_method": "local_oui_extended",
@@ -599,10 +599,28 @@
     "stats": {
       "total_devices": 11,
       "online_devices": 0,
-      "scan_duration": 74.99
+      "scan_duration": 75.19
     }
   },
   "scan_history": [
+    {
+      "timestamp": 1760830568.640537,
+      "datetime": "2025-10-19T01:36:08.640539",
+      "device_count": 11,
+      "duration": 75.18851923942566
+    },
+    {
+      "timestamp": 1760830439.421515,
+      "datetime": "2025-10-19T01:33:59.421516",
+      "device_count": 11,
+      "duration": 89.46141004562378
+    },
+    {
+      "timestamp": 1760830314.9957657,
+      "datetime": "2025-10-19T01:31:54.995767",
+      "device_count": 11,
+      "duration": 71.29001498222351
+    },
     {
       "timestamp": 1760828743.0472593,
       "datetime": "2025-10-19T01:05:43.047262",
