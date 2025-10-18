@@ -534,12 +534,7 @@ class HomeApp {
         resultsDiv.innerHTML = `
             <div class="scan-results">
                 <div class="scan-header">
-                    <h3>🎯 Scan Réseau Terminé</h3>
-                    <div class="scan-stats">
-                        <span class="stat">📊 ${stats.total_devices || 0} appareils</span>
-                        <span class="stat">🏷️ ${stats.vendor_percentage || 0}% identifiés</span>
-                        <span class="stat">🏠 ${stats.devices_with_hostname || 0} nommés</span>
-                    </div>
+                    <h3>🎯 ${devices.length} appareils détectés</h3>
                 </div>
                 
                 ${Object.entries(categories)

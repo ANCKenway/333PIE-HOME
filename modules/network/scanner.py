@@ -798,18 +798,24 @@ class NetworkScanner:
             # Test rapide iOS Companion pour les IPs sans vendor
             apple_quick = mdns_scanner.quick_apple_detection(unknown_ips[:8])
             
-            # Merge des résultats mDNS
+            # Merge des résultats mDNS avec LOGS DÉTAILLÉS
             mdns_found = 0
+            logger.info(f"🔍 mDNS merge: {len(mdns_devices)} devices + {len(apple_quick)} quick")
+            
             for ip, mdns_info in {**mdns_devices, **apple_quick}.items():
+                logger.info(f"🍎 mDNS candidat {ip}: {mdns_info}")
                 for device in devices:
                     if device['ip'] == ip:
+                        old_vendor = device.get('vendor', '')
                         if not device.get('vendor') or device.get('vendor') == '':
                             device['vendor'] = mdns_info.get('vendor', '')
                             device['device_type'] = mdns_info.get('device_type', device.get('device_type', ''))
                             device['mdns_services'] = mdns_info.get('services', [])
                             device['detection_method'] = mdns_info.get('detection_method', 'mDNS')
                             mdns_found += 1
-                            logger.info(f"✅ mDNS: {ip} = {device['vendor']} ({device['device_type']})")
+                            logger.info(f"✅ mDNS APPLIQUÉ: {ip} '{old_vendor}' → '{device['vendor']}' ({device['device_type']})")
+                        else:
+                            logger.info(f"⏭️ mDNS IGNORÉ: {ip} a déjà vendor '{old_vendor}'")
             
             logger.info(f"🍎 mDNS: {mdns_found} appareils Apple découverts")
             
@@ -832,7 +838,7 @@ class NetworkScanner:
                             device['vendor_details'] = local_info
                             device['detection_method'] = 'local_oui_extended'
                             local_found += 1
-                            logger.debug(f"✅ LOCAL: {device['ip']} = {local_info['vendor']}")
+                            logger.info(f"✅ LOCAL VENDOR: {device['ip']} ({mac[:8]}) = {local_info['vendor']}")
                             continue
                         
                         # Fallback API macvendors.com
@@ -867,11 +873,20 @@ class NetworkScanner:
             logger.info("🔄 Re-détection OS avec vendors...")
             for device in devices:
                 if device.get('vendor'):  # Si vendor trouvé après scan
+                    old_os = device.get('os_detected', 'N/A')
+                    vendor = device.get('vendor', 'N/A')
+                    logger.info(f"🔄 Re-détection {device['ip']}: vendor='{vendor}', old_os='{old_os}'")
+                    
                     os_detection = self.advanced_os_detection(device)
+                    
                     device['os_detected'] = os_detection['os']
                     device['os_confidence'] = os_detection['confidence_level']
                     device['os_all_scores'] = os_detection['all_scores']
                     device['os_detection_details'] = os_detection['detection_details']
+                    
+                    logger.info(f"✅ Re-détection {device['ip']}: '{old_os}' → '{device['os_detected']}'")
+                else:
+                    logger.info(f"⏭️ Re-détection ignorée {device['ip']}: pas de vendor")
                     
             return devices
             
