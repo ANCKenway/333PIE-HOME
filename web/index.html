@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>333HOME - Gestion de Parc Informatique</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Menu mobile hamburger -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+
+        <!-- Overlay mobile -->
+        <div class="mobile-overlay" id="mobile-overlay"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>🏠 333HOME</h1>
+                <div class="status-indicator" id="status-indicator">⚡ En ligne</div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-tab="status">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Statut</span>
+                </button>
+                <button class="nav-btn" data-tab="devices">
+                    <span class="nav-icon">📱</span>
+                    <span class="nav-text">Appareils</span>
+                </button>
+                <button class="nav-btn" data-tab="network">
+                    <span class="nav-icon">🌐</span>
+                    <span class="nav-text">Scan Réseau</span>
+                </button>
+                <button class="nav-btn" data-tab="test">
+                    <span class="nav-icon">🔧</span>
+                    <span class="nav-text">Test API</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Contenu principal -->
+        <main class="main-content">
+            <!-- Tab Statut -->
+            <div id="tab-status" class="tab-content active">
+                <h2>📊 Statut du Système</h2>
+                <div class="status-grid">
+                    <div class="card">
+                        <h3>🏠 Application</h3>
+                        <div id="app-status">Chargement...</div>
+                    </div>
+                    <div class="card">
+                        <h3>📡 Base de Données</h3>
+                        <div id="db-status">Chargement...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Appareils -->
+            <div id="tab-devices" class="tab-content">
+                <div class="page-header">
+                    <h2>📱 Appareils Gérés</h2>
+                    <p>Appareils ajoutés à votre parc informatique avec fonctionnalités avancées</p>
+                </div>
+                
+                <div class="devices-actions">
+                    <button class="btn btn-primary" id="refresh-devices">🔄 Actualiser</button>
+                    <button class="btn btn-success" id="add-device">➕ Ajouter Appareil</button>
+                </div>
+                
+                <div class="devices-container">
+                    <div id="devices-list">
+                        <div class="card">
+                            <p class="empty-state">🔍 Aucun appareil géré. Utilisez le scan réseau pour découvrir et ajouter des appareils.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Scan Réseau -->
+            <div id="tab-network" class="tab-content">
+                <div class="page-header">
+                    <h2>🌐 Scan Réseau</h2>
+                    <p>Découverte automatique des appareils sur votre réseau local</p>
+                </div>
+                
+                <div class="network-controls">
+                    <button class="btn btn-primary" id="start-scan">🔍 Lancer Scan</button>
+                    <button class="btn btn-secondary" id="stop-scan" disabled>⏹️ Arrêter</button>
+                    <div class="scan-progress" id="scan-progress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <span id="scan-status">Scan en cours...</span>
+                    </div>
+                </div>
+                
+                <div class="network-results">
+                    <div id="network-devices">
+                        <div class="card">
+                            <p class="empty-state">🎯 Cliquez sur "Lancer Scan" pour découvrir les appareils réseau</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Test -->
+            <div id="tab-test" class="tab-content">
+                <h2>🔧 Test API</h2>
+                <div class="test-container">
+                    <button id="test-get" class="btn">Test GET</button>
+                    <button id="test-post" class="btn">Test POST</button>
+                    <div id="test-results"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Pied de page -->
+        <footer class="footer">
+            <div class="footer-content">
+                <span>333HOME v4.0.0 - Architecture Modulaire</span>
+                <span id="connection-status">🟢 Connecté</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

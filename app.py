@@ -1,50 +1,371 @@
 """
-🏠 Home Automation v3.0 - Application principale
-Version propre et organisée
+🏠 333HOME - Application FastAPI principale
+Serveur moderne pour la gestion de parc informatique avec scanner réseau avancé
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+import logging
+import asyncio
+import time
+import json
+from pathlib import Path
 
-# Import des modules d'API
-from src.api.devices import router as devices_router
-from src.api.network import router as network_router
+# Configuration
+BASE_DIR = Path(__file__).parent
+DATA_DIR = BASE_DIR / "data"
 
-# Application FastAPI
+# Modules selon architecture RULES.md
+from modules.devices import DeviceManager, DeviceMonitor
+
+# Instance globale du gestionnaire de devices
+device_manager = DeviceManager(DATA_DIR)
+device_monitor = DeviceMonitor()
+
+# Configuration des logs
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Configuration de l'app
 app = FastAPI(
-    title="Home Automation",
-    description="Système de domotique pour Raspberry Pi",
-    version="3.0.0"
+    title="333HOME",
+    description="Système de domotique et gestion de parc informatique",
+    version="2.0.0",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc"
 )
 
-# Fichiers statiques
-app.mount("/web/static", StaticFiles(directory="web/static"), name="static")
-app.mount("/css", StaticFiles(directory="web/static/css"), name="css")
-app.mount("/js", StaticFiles(directory="web/static/js"), name="js")
+# Configuration CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# Routeurs API
-app.include_router(devices_router, prefix="/api/devices", tags=["devices"])
-app.include_router(network_router, prefix="/api/network", tags=["network"])
+# Chemins
+BASE_DIR = Path(__file__).parent
+WEB_DIR = BASE_DIR / "web"
+STATIC_DIR = WEB_DIR / "static"
+
+# Scanner réseau selon architecture modulaire
+from modules.network import NetworkScanner
+network_scanner = NetworkScanner()
+
+# ===== API ENDPOINTS DE BASE =====
+
+@app.get("/api/status")
+async def get_status():
+    """Status de l'application avec format attendu par le JS"""
+    import psutil
+    
+    return {
+        "success": True,
+        "data": {
+            "app_name": "333HOME v2.0.0",
+            "version": "2.0.0",
+            "status": "running",
+            "cpu_percent": psutil.cpu_percent(),
+            "memory_percent": psutil.virtual_memory().percent,
+            "disk_percent": psutil.disk_usage('/').percent,
+            "scanner_available": True
+        },
+        "message": "Serveur opérationnel avec scanner réseau avancé"
+    }
+
+@app.get("/api/info")
+async def get_info():
+    """Informations détaillées du système"""
+    import psutil
+    import platform
+    from datetime import datetime
+    
+    return {
+        "success": True,
+        "data": {
+            "system": {
+                "platform": platform.system(),
+                "platform_release": platform.release(),
+                "architecture": platform.machine(),
+                "hostname": platform.node(),
+                "python_version": platform.python_version()
+            },
+            "resources": {
+                "cpu_percent": psutil.cpu_percent(),
+                "memory_percent": psutil.virtual_memory().percent,
+                "disk_percent": psutil.disk_usage('/').percent
+            },
+            "timestamp": datetime.now().isoformat(),
+            "app_name": "333HOME v2.0.0",
+            "app_version": "2.0.0"
+        }
+    }
+
+@app.get("/api/devices")
+async def get_devices():
+    """Obtenir la liste des appareils configurés avec monitoring intelligent"""
+    try:
+        # Charger les appareils via le gestionnaire
+        devices = device_manager.load_devices()
+        
+        # Monitoring intelligent: ping rapide + lookup MAC pour DHCP
+        enriched_devices = await device_monitor.get_devices_with_status(devices)
+        
+        # Ajouter informations de monitoring
+        for device in enriched_devices:
+            if device.get('last_checked'):
+                last_check_ago = int(time.time() - device['last_checked'])
+                if last_check_ago < 60:
+                    device["last_seen"] = f"Il y a {last_check_ago}s"
+                elif last_check_ago < 3600:
+                    device["last_seen"] = f"Il y a {last_check_ago//60}min"
+                else:
+                    device["last_seen"] = f"Il y a {last_check_ago//3600}h"
+            else:
+                device["last_seen"] = "Jamais vérifié"
+        
+        return {"success": True, "devices": enriched_devices}
+    except Exception as e:
+        logger.error(f"Erreur lors de la récupération des appareils: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.post("/api/devices")
+async def add_device(device_data: dict):
+    """Ajouter un nouvel appareil"""
+    try:
+        success = device_manager.add_device(device_data)
+        if success:
+            return {"success": True, "message": "Appareil ajouté"}
+        else:
+            return {"success": False, "message": "Appareil déjà existant"}
+    except Exception as e:
+        logger.error(f"Erreur ajout appareil: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.put("/api/devices/{device_id}")
+async def update_device(device_id: str, updates: dict):
+    """Mettre à jour un appareil"""
+    try:
+        success = device_manager.update_device(device_id, updates)
+        if success:
+            return {"success": True, "message": "Appareil mis à jour"}
+        else:
+            raise HTTPException(status_code=404, detail="Appareil non trouvé")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Erreur mise à jour appareil: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.delete("/api/devices/{device_id}")
+async def delete_device(device_id: str):
+    """Supprimer un appareil"""
+    try:
+        success = device_manager.remove_device(device_id)
+        if success:
+            return {"success": True, "message": "Appareil supprimé"}
+        else:
+            raise HTTPException(status_code=404, detail="Appareil non trouvé")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Erreur suppression appareil: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.get("/api/monitoring/stats")
+async def get_monitoring_stats():
+    """Statistiques du monitoring en temps réel"""
+    try:
+        stats = device_monitor.get_monitoring_stats()
+        device_stats = device_manager.get_stats()
+        
+        return {
+            "success": True, 
+            "monitoring": stats,
+            "devices": device_stats
+        }
+    except Exception as e:
+        logging.error(f"Erreur monitoring stats: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.post("/api/monitoring/clear-cache")
+async def clear_monitoring_cache():
+    """Vider le cache de monitoring"""
+    try:
+        device_monitor.clear_cache()
+        return {"success": True, "message": "Cache vidé"}
+    except Exception as e:
+        logging.error(f"Erreur clear cache: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+# ===== ENDPOINTS SCANNER RÉSEAU =====
+
+@app.get("/api/network/scan")
+async def professional_network_scan():
+    """🔥 SCANNER RÉSEAU PROFESSIONNEL COMPLET"""
+    try:
+        logger.info("🚀 Lancement scan professionnel")
+        result = network_scanner.professional_network_scan()
+        return {"success": True, "scan_results": result}
+    except Exception as e:
+        logger.error(f"Erreur scan professionnel: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.get("/api/network/quick-scan")
+async def quick_network_scan():
+    """Scanner rapide du réseau local"""
+    try:
+        # Scan rapide de la plage réseau
+        result = network_scanner.scan_network_range()
+        return {"success": True, "devices": result}
+    except Exception as e:
+        logger.error(f"Erreur scan rapide: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.get("/api/network/detailed-scan")
+async def detailed_network_scan(target: str = None):
+    """Scanner détaillé avec ports et services"""
+    try:
+        if target:
+            result = network_scanner.scan_host_detailed(target)
+        else:
+            result = network_scanner.scan_network_detailed()
+        return {"success": True, "result": result}
+    except Exception as e:
+        logger.error(f"Erreur scan détaillé: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.get("/api/network/discovery")
+async def network_discovery():
+    """Découverte réseau avec identification"""
+    try:
+        from modules.network.device_identifier import DeviceIdentifier
+        identifier = DeviceIdentifier()
+        
+        # Scan de base
+        devices = network_scanner.scan_network_range()
+        
+        # Enrichissement avec identification
+        enriched_devices = []
+        for device in devices:
+            if device.get('mac'):
+                device_info = await identifier.identify_device(device['mac'])
+                device.update(device_info)
+            enriched_devices.append(device)
+        
+        return {"success": True, "devices": enriched_devices}
+    except Exception as e:
+        logger.error(f"Erreur discovery: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.get("/api/network/stats")
+async def network_stats():
+    """Statistiques du scanner réseau"""
+    try:
+        stats = {
+            "last_scan": network_scanner.last_scan_time,
+            "total_scanned": len(network_scanner.scan_results),
+            "scan_timeout": network_scanner.scan_timeout,
+            "active_threads": network_scanner.max_threads
+        }
+        return {"success": True, "stats": stats}
+    except Exception as e:
+        logger.error(f"Erreur stats réseau: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+# ===== SERVEUR DE FICHIERS STATIQUES =====
+
+# Vérifier et créer les répertoires si nécessaire
+if not WEB_DIR.exists():
+    WEB_DIR.mkdir(parents=True, exist_ok=True)
+if not STATIC_DIR.exists():
+    STATIC_DIR.mkdir(parents=True, exist_ok=True)
+
+# Monter les fichiers statiques
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 @app.get("/")
-async def dashboard():
-    """Page d'accueil - Dashboard principal"""
-    return FileResponse("web/templates/index.html")
+async def read_root():
+    """Page d'accueil"""
+    index_file = WEB_DIR / "index.html"
+    if index_file.exists():
+        return FileResponse(str(index_file))
+    else:
+        raise HTTPException(status_code=404, detail="Page d'accueil non trouvée")
 
-@app.get("/favicon.ico")
-async def favicon():
-    """Favicon simple pour éviter les erreurs 404"""
-    return {"message": "No favicon"}
+@app.get("/{filename}")
+async def serve_web_files(filename: str):
+    """Servir les fichiers web (templates, etc.)"""
+    file_path = WEB_DIR / filename
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(str(file_path))
+    else:
+        raise HTTPException(status_code=404, detail="Fichier non trouvé")
 
-if __name__ == "__main__":
-    print("🏠 Home Automation v3.0")
-    print("🌐 Dashboard: http://localhost:8000")
+# ===== GESTION DES ERREURS =====
+
+from fastapi.responses import JSONResponse
+
+@app.exception_handler(404)
+async def not_found_handler(request, exc):
+    return JSONResponse(
+        status_code=404,
+        content={
+            "success": False,
+            "error": "Endpoint non trouvé",
+            "detail": f"L'endpoint {request.url.path} n'existe pas"
+        }
+    )
+
+@app.exception_handler(500)
+async def internal_error_handler(request, exc):
+    logger.error(f"Erreur interne: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={
+            "success": False,
+            "error": "Erreur interne du serveur",
+            "detail": str(exc)
+        }
+    )
+
+# ===== ÉVÉNEMENTS DE L'APPLICATION =====
+
+@app.on_event("startup")
+async def startup_event():
+    """Actions au démarrage"""
+    logger.info("🚀 Démarrage de 333HOME v2.0.0")
+    logger.info(f"📁 Répertoire: {BASE_DIR}")
+    logger.info(f"🌐 Interface web: {WEB_DIR}")
+    logger.info("✅ Scanner réseau avancé disponible")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Actions à l'arrêt"""
+    logger.info("🛑 Arrêt de 333HOME")
+
+# ===== FONCTION DE DÉMARRAGE =====
+
+def start_server(host: str = "0.0.0.0", port: int = 8000, reload: bool = False):
+    """Démarrer le serveur FastAPI"""
+    logger.info(f"🌐 Serveur: http://{host}:{port}")
+    logger.info("📖 Documentation API: http://localhost:8000/api/docs")
+    logger.info("🔗 Interface: http://localhost:8000")
     
     uvicorn.run(
         "app:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True
+        host=host,
+        port=port,
+        reload=reload,
+        log_level="info"
     )
+
+if __name__ == "__main__":
+    start_server(reload=True)
