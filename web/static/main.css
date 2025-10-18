@@ -1000,6 +1000,12 @@ body {
     font-size: var(--font-size-lg);
 }
 
+.device-title {
+    font-weight: 600;
+    color: var(--dark);
+    font-size: var(--font-size-lg);
+}
+
 .device-status.online {
     color: var(--success);
     font-size: 1.2rem;

@@ -557,28 +557,33 @@ class HomeApp {
      * Rendu d'une carte d'appareil
      */
     renderDeviceCard(device) {
-        const hostname = device.hostname || 'N/A';
-        const vendor = device.vendor || 'Inconnu';
+        const hostname = device.hostname || '';
+        const vendor = device.vendor || '';
         const os = device.os_detected || 'Inconnu';
         const deviceType = device.device_type || 'Inconnu';
         const confidence = device.os_confidence || 'Inconnue';
         
-        // Emoji selon la qualité de détection
-        let qualityEmoji = '❓';
-        if (hostname !== 'N/A' && vendor !== 'Inconnu') qualityEmoji = '🏆';
-        else if (vendor !== 'Inconnu') qualityEmoji = '⭐';
-        else if (hostname !== 'N/A') qualityEmoji = '📝';
+        // Titre intelligent : Hostname > Vendor > IP
+        let deviceTitle = '';
+        if (hostname && hostname !== 'N/A') {
+            deviceTitle = hostname;
+        } else if (vendor && vendor !== 'Inconnu') {
+            deviceTitle = vendor;
+        } else {
+            deviceTitle = device.ip;
+        }
         
         return `
             <div class="device-card">
                 <div class="device-header">
-                    <span class="device-ip">${qualityEmoji} ${device.ip}</span>
+                    <span class="device-title">${deviceTitle}</span>
                     <span class="device-status online">●</span>
                 </div>
                 <div class="device-details">
                     <div class="device-info">
-                        <p><strong>🏷️ Nom:</strong> ${hostname}</p>
-                        <p><strong>🏭 Fabricant:</strong> ${vendor}</p>
+                        <p><strong>📍 IP:</strong> ${device.ip}</p>
+                        <p><strong>🏷️ Nom:</strong> ${hostname || 'N/A'}</p>
+                        <p><strong>🏭 Fabricant:</strong> ${vendor || 'Inconnu'}</p>
                         <p><strong>💻 OS:</strong> ${os}</p>
                         <p><strong>📱 Type:</strong> ${deviceType}</p>
                         <p><strong>📊 Confiance:</strong> ${confidence}</p>

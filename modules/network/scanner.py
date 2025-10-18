@@ -788,7 +788,46 @@ class NetworkScanner:
             
             logger.info(f"🔍 Vendor lookup amélioré pour {len(devices)} appareils")
             
-            # Phase 3.1: mDNS scan pour appareils Apple cachés
+            # Phase 3.1: Vendor lookup classique + base locale étendue D'ABORD
+            local_found = 0
+            api_found = 0
+            
+            for i, device in enumerate(devices, 1):
+                mac = device.get('mac_address')
+                if mac and mac.strip() and (not device.get('vendor') or device.get('vendor') == ''):
+                    try:
+                        logger.debug(f"Vendor lookup {i}/{len(devices)}: {device['ip']} ({mac[:8]}...)")
+                        
+                        # Tentative base locale étendue d'abord (plus rapide)
+                        local_info = extended_oui.get_comprehensive_device_info(mac)
+                        if local_info['vendor'] != 'Unknown':
+                            device['vendor'] = local_info['vendor']
+                            device['device_type'] = local_info['device_type']
+                            device['category'] = local_info['category'] 
+                            device['vendor_details'] = local_info
+                            device['detection_method'] = 'local_oui_extended'
+                            local_found += 1
+                            logger.info(f"✅ LOCAL VENDOR: {device['ip']} ({mac[:8]}) = {local_info['vendor']}")
+                            continue
+                        
+                        # Fallback API macvendors.com
+                        vendor_info = vendor_api.get_vendor_info(mac)
+                        
+                        if vendor_info.get('vendor') and vendor_info['vendor'] != 'Unknown':
+                            device['vendor'] = vendor_info['vendor']
+                            device['vendor_details'] = vendor_info
+                            device['detection_method'] = 'macvendors_api'
+                            api_found += 1
+                            logger.info(f"✅ API VENDOR: {device['ip']} = {vendor_info['vendor']}")
+                        else:
+                            device['detection_method'] = 'no_mac'
+                    except Exception as e:
+                        logger.warning(f"❌ Erreur vendor lookup {device['ip']}: {e}")
+                        device['detection_method'] = 'no_mac'
+            
+            logger.info(f"� Vendor lookup local/API: {local_found} local + {api_found} API")
+            
+            # Phase 3.2: mDNS/Bonjour pour appareils Apple (après vendor lookup pour éviter l'écrasement)
             logger.info("🍎 Scan mDNS/Bonjour pour appareils Apple...")
             unknown_ips = [d['ip'] for d in devices if not d.get('vendor') or d.get('vendor') == '']
             
@@ -819,55 +858,15 @@ class NetworkScanner:
             
             logger.info(f"🍎 mDNS: {mdns_found} appareils Apple découverts")
             
-            # Phase 3.2: Vendor lookup classique + base locale étendue
-            local_found = 0
-            api_found = 0
-            
-            for i, device in enumerate(devices, 1):
-                mac = device.get('mac_address')
-                if mac and mac.strip() and (not device.get('vendor') or device.get('vendor') == ''):
-                    try:
-                        logger.debug(f"Vendor lookup {i}/{len(devices)}: {device['ip']} ({mac[:8]}...)")
-                        
-                        # Tentative base locale étendue d'abord (plus rapide)
-                        local_info = extended_oui.get_comprehensive_device_info(mac)
-                        if local_info['vendor'] != 'Unknown':
-                            device['vendor'] = local_info['vendor']
-                            device['device_type'] = local_info['device_type']
-                            device['category'] = local_info['category'] 
-                            device['vendor_details'] = local_info
-                            device['detection_method'] = 'local_oui_extended'
-                            local_found += 1
-                            logger.info(f"✅ LOCAL VENDOR: {device['ip']} ({mac[:8]}) = {local_info['vendor']}")
-                            continue
-                        
-                        # Fallback API macvendors.com
-                        vendor_info = vendor_api.get_vendor_info(mac)
-                        
-                        if vendor_info.get('vendor') and vendor_info['vendor'] != 'Unknown':
-                            device['vendor'] = vendor_info['vendor']
-                            device['vendor_details'] = vendor_info
-                            device['detection_method'] = 'macvendors_api'
-                            api_found += 1
-                            logger.debug(f"✅ API: {device['ip']} = {vendor_info['vendor']}")
-                        else:
-                            device['vendor'] = device.get('vendor', '')
-                            device['detection_method'] = 'failed'
-                            logger.debug(f"❌ {device['ip']}: vendor non trouvé")
-                    except Exception as e:
-                        logger.warning(f"Erreur vendor lookup {device['ip']}: {e}")
-                        device['vendor'] = device.get('vendor', '')
-                        device['detection_method'] = 'error'
-                else:
-                    if device.get('vendor'):
-                        device['detection_method'] = 'existing'
-                    else:
-                        device['vendor'] = device.get('vendor', '')
-                        device['detection_method'] = 'no_mac'
+            # Finalisation des appareils sans vendor
+            for device in devices:
+                if not device.get('vendor'):
+                    device['vendor'] = ''
+                    device['detection_method'] = 'no_mac'
             
             total_found = mdns_found + local_found + api_found
             logger.info(f"🎯 Vendor lookup terminé: {total_found}/{len(devices)} identifiés")
-            logger.info(f"   📱 mDNS: {mdns_found}, 🏠 Local: {local_found}, 🌐 API: {api_found}")
+            logger.info(f"   🏠 Local: {local_found}, 🌐 API: {api_found}, 📱 mDNS: {mdns_found}")
             
             # RE-DÉTECTION OS après vendor lookup (important pour Apple mDNS)
             logger.info("🔄 Re-détection OS avec vendors...")
