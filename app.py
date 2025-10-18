@@ -20,10 +20,14 @@ DATA_DIR = BASE_DIR / "data"
 
 # Modules selon architecture RULES.md
 from modules.devices import DeviceManager, DeviceMonitor
+from modules.network.scan_storage import get_scan_storage
+from modules.network.network_history import get_network_history
 
 # Instance globale du gestionnaire de devices
 device_manager = DeviceManager(DATA_DIR)
 device_monitor = DeviceMonitor()
+scan_storage = get_scan_storage(DATA_DIR)
+network_history = get_network_history(DATA_DIR)
 
 # Configuration des logs
 logging.basicConfig(
@@ -212,10 +216,32 @@ async def professional_network_scan():
     """🔥 SCANNER RÉSEAU PROFESSIONNEL COMPLET"""
     try:
         logger.info("🚀 Lancement scan professionnel")
+        start_time = time.time()
+        
         result = network_scanner.professional_network_scan()
+        
+        # Calculer la durée du scan
+        scan_duration = time.time() - start_time
+        
+        # Sauvegarder le scan (ancien système)
+        if result and 'devices' in result:
+            success = scan_storage.save_scan_result(result['devices'], scan_duration)
+            logger.info(f"Scan sauvegardé (legacy): {success}")
+            
+            # Nouveau système d'historique unifié
+            try:
+                changes = network_history.update_scan_results(result['devices'], scan_duration)
+                logger.info(f"Historique unifié mis à jour: {changes}")
+            except Exception as history_error:
+                logger.error(f"Erreur historique spécifique: {history_error}")
+                import traceback
+                logger.error(f"Traceback historique: {traceback.format_exc()}")
+        
         return {"success": True, "scan_results": result}
     except Exception as e:
         logger.error(f"Erreur scan professionnel: {e}")
+        import traceback
+        logger.error(f"Traceback complet: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail="Erreur serveur")
 
 @app.get("/api/network/quick-scan")
@@ -263,6 +289,103 @@ async def network_discovery():
         return {"success": True, "devices": enriched_devices}
     except Exception as e:
         logger.error(f"Erreur discovery: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+# ===== ENDPOINTS HISTORIQUE SCANS =====
+
+@app.get("/api/network/last-scan")
+async def get_last_scan():
+    """Récupérer le dernier scan effectué"""
+    try:
+        last_scan = scan_storage.get_last_scan()
+        return {"success": True, "last_scan": last_scan}
+    except Exception as e:
+        logger.error(f"Erreur last scan: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.get("/api/network/scan-history")
+async def get_scan_history(limit: int = 10):
+    """Récupérer l'historique des scans"""
+    try:
+        history = scan_storage.get_scan_history(limit)
+        return {"success": True, "history": history}
+    except Exception as e:
+        logger.error(f"Erreur history: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.get("/api/network/disconnected-devices")
+async def get_disconnected_devices(limit: int = 20):
+    """Récupérer les appareils récemment déconnectés"""
+    try:
+        disconnected = scan_storage.get_disconnected_devices(limit)
+        return {"success": True, "disconnected_devices": disconnected}
+    except Exception as e:
+        logger.error(f"Erreur disconnected: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.get("/api/network/scan-stats")
+async def get_scan_stats():
+    """Récupérer les statistiques des scans (NOUVEAU: historique unifié)"""
+    try:
+        # Nouvelles stats depuis l'historique unifié
+        stats = network_history.get_stats()
+        return {"success": True, "stats": stats}
+    except Exception as e:
+        logger.error(f"Erreur scan stats: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+# ===== NOUVEAUX ENDPOINTS HISTORIQUE UNIFIÉ =====
+
+@app.get("/api/network/devices-history")
+async def get_devices_with_history():
+    """Récupérer tous les appareils avec leur historique enrichi"""
+    try:
+        history_data = network_history.get_history()
+        return {"success": True, "history": history_data}
+    except Exception as e:
+        logger.error(f"Erreur devices history: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.get("/api/network/device-history/{mac}")
+async def get_device_history(mac: str):
+    """Récupérer l'historique détaillé d'un appareil spécifique via MAC"""
+    try:
+        device_data = network_history.get_device_by_mac(mac)
+        if device_data:
+            return {"success": True, "device": device_data}
+        else:
+            raise HTTPException(status_code=404, detail="Appareil non trouvé")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Erreur device history: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.get("/api/network/recent-events")
+async def get_recent_network_events(limit: int = 20):
+    """Récupérer les événements réseau récents (connexions, déconnexions, changements)"""
+    try:
+        events = network_history.get_recent_events(limit)
+        return {"success": True, "events": events}
+    except Exception as e:
+        logger.error(f"Erreur recent events: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.get("/api/network/scan-stats-legacy")
+async def get_scan_stats_legacy():
+    """Récupérer les statistiques des scans (ancien système)"""
+    try:
+        stats = scan_storage.get_stats()
+        return {"success": True, "stats": stats}
+    except Exception as e:
+        logger.error(f"Erreur scan stats legacy: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+    """Récupérer les statistiques des scans"""
+    try:
+        stats = scan_storage.get_stats()
+        return {"success": True, "stats": stats}
+    except Exception as e:
+        logger.error(f"Erreur scan stats: {e}")
         raise HTTPException(status_code=500, detail="Erreur serveur")
 
 @app.get("/api/network/stats")

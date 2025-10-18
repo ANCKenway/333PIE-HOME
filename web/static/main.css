@@ -1109,6 +1109,454 @@ body {
     background: #eff6ff;
 }
 
+/* ===== NOUVELLES SECTIONS SCAN ===== */
+
+/* Section informations de scan */
+.scan-info-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.scan-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm);
+    background: var(--light);
+    border-radius: 6px;
+    border-left: 3px solid var(--primary);
+}
+
+.stat-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.no-scan-data {
+    text-align: center;
+    padding: var(--spacing-lg);
+    color: var(--text-muted);
+}
+
+/* Section appareils déconnectés */
+.disconnected-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.disconnected-device {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: var(--spacing-sm);
+    background: var(--white);
+    transition: all 0.2s ease;
+}
+
+.disconnected-device:hover {
+    border-color: var(--primary);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+}
+
+.disconnected-device:last-child {
+    margin-bottom: 0;
+}
+
+.disconnected-device .device-info {
+    flex-grow: 1;
+}
+
+.disconnected-device .device-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+}
+
+.disconnected-device .device-title strong {
+    color: var(--dark);
+    font-size: var(--font-size-base);
+}
+
+.disconnected-device .device-ip {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    background: var(--light);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+}
+
+.disconnected-device .device-details {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+.disconnected-device .separator {
+    color: var(--border-color);
+}
+
+.disconnected-device .time-ago {
+    color: var(--warning);
+    font-weight: 500;
+}
+
+.disconnected-device .device-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+}
+
+.btn-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(37, 99, 235, 0.1);
+}
+
+/* ===== SECTION HISTORIQUE RÉSEAU ===== */
+
+.network-history-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.history-tabs {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    font-weight: 600;
+}
+
+.tab-btn:hover {
+    color: var(--primary);
+    background: rgba(37, 99, 235, 0.05);
+}
+
+.history-tab-content {
+    display: none;
+}
+
+.history-tab-content.active {
+    display: block;
+}
+
+/* Tableau historique des appareils */
+.history-devices-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--spacing-md);
+}
+
+.history-devices-table th,
+.history-devices-table td {
+    text-align: left;
+    padding: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+    font-size: var(--font-size-sm);
+}
+
+.history-devices-table th {
+    background: var(--light);
+    font-weight: 600;
+    color: var(--dark);
+}
+
+/* Styles pour adresses MAC */
+.mac-address {
+    font-family: 'Courier New', monospace;
+    font-size: var(--font-size-xs);
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--primary);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+}
+
+.mac-unknown {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: var(--font-size-xs);
+}
+
+/* Styles pour adresses IP */
+.ip-connected {
+    font-family: 'Courier New', monospace;
+    font-size: var(--font-size-xs);
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    border-left: 3px solid var(--success);
+}
+
+.ip-disconnected {
+    font-family: 'Courier New', monospace;
+    font-size: var(--font-size-xs);
+    background: rgba(107, 114, 128, 0.1);
+    color: var(--text-muted);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    border-left: 3px solid var(--text-muted);
+}
+
+/* Centrage de certaines colonnes */
+.text-center {
+    text-align: center !important;
+}
+
+/* Badges de changements améliorés */
+.device-changes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.change-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.change-badge.ip {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+}
+
+.change-badge.hostname {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--warning);
+}
+
+.change-badge.vendor {
+    background: rgba(139, 92, 246, 0.15);
+    color: #8b5cf6;
+}
+
+.no-changes {
+    color: var(--text-muted);
+    font-size: var(--font-size-xs);
+}
+
+/* Indicateurs de statut d'appareil */
+.device-status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: var(--spacing-xs);
+}
+
+.device-status-recent {
+    background: var(--success);
+    box-shadow: 0 0 4px rgba(16, 185, 129, 0.4);
+}
+
+.device-status-old {
+    background: var(--text-muted);
+}
+
+/* Historique des changements dans les détails */
+.device-change-history {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--light);
+    border-radius: var(--radius);
+    border-left: 4px solid var(--primary);
+}
+
+.device-change-history h4 {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--primary);
+    font-size: var(--font-size-sm);
+}
+
+.change-section {
+    margin-bottom: var(--spacing-sm);
+}
+
+.change-section:last-child {
+    margin-bottom: 0;
+}
+
+.change-section strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--dark);
+    font-size: var(--font-size-xs);
+}
+
+.change-section ul {
+    margin: 0;
+    padding-left: var(--spacing-md);
+    list-style-type: none;
+}
+
+.change-section li {
+    padding: 2px 0;
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    position: relative;
+}
+
+.change-section li::before {
+    content: '→';
+    position: absolute;
+    left: -12px;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.change-section small {
+    color: var(--text-light);
+    font-size: 10px;
+}
+
+.history-devices-table tr:hover {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+.device-status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: var(--spacing-xs);
+}
+
+.device-status-recent {
+    background: var(--success);
+}
+
+.device-status-old {
+    background: var(--text-muted);
+}
+
+.device-changes {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.change-badge {
+    background: var(--light);
+    color: var(--text-muted);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.change-badge.ip {
+    background: #e0f2fe;
+    color: #0277bd;
+}
+
+.change-badge.mac {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.change-badge.hostname {
+    background: #e8f5e8;
+    color: #2e7d32;
+}
+
+/* Événements réseau */
+.network-events {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.network-event {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-bottom: var(--spacing-sm);
+    background: var(--white);
+}
+
+.network-event:last-child {
+    margin-bottom: 0;
+}
+
+.event-icon {
+    font-size: var(--font-size-lg);
+    width: 32px;
+    text-align: center;
+}
+
+.event-icon.new { color: var(--success); }
+.event-icon.disconnection { color: var(--danger); }
+.event-icon.reconnection { color: var(--warning); }
+.event-icon.change { color: var(--primary); }
+
+.event-details {
+    flex-grow: 1;
+}
+
+.event-title {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 2px;
+}
+
+.event-description {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+.event-time {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
 /* Responsive pour scan réseau */
 @media (max-width: 768px) {
     .devices-grid {
@@ -1118,11 +1566,23 @@ body {
     
     .scan-stats {
         gap: var(--spacing-sm);
+        grid-template-columns: 1fr;
     }
     
     .scan-stats .stat {
         font-size: var(--font-size-xs);
         padding: var(--spacing-xs) var(--spacing-sm);
+    }
+    
+    .disconnected-device {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+    
+    .disconnected-device .device-actions {
+        align-self: stretch;
+        justify-content: center;
     }
     
     .device-actions {

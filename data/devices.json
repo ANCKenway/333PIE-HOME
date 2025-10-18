@@ -39,7 +39,38 @@
       "description": "Box internet",
       "wake_on_lan": false,
       "status": "online"
+    },
+    {
+      "ip": "192.168.1.175",
+      "name": "Appareil 192.168.1.175",
+      "type": "discovered"
+    },
+    {
+      "ip": "192.168.1.24",
+      "name": "CLACLA",
+      "hostname": "CLACLA",
+      "vendor": "ASUSTek COMPUTER INC.",
+      "type": "Appareil",
+      "description": "ASUSTek COMPUTER INC. - Windows",
+      "wake_on_lan": false,
+      "os_detected": "Windows",
+      "device_type": "🪟 PC Windows (clacla)",
+      "added_from_scan": true,
+      "scan_timestamp": 1760826209.5629487
+    },
+    {
+      "ip": "192.168.1.174",
+      "name": "TITO",
+      "hostname": "TITO",
+      "vendor": "Micro-Star International",
+      "type": "Appareil",
+      "description": "Micro-Star International - Windows",
+      "wake_on_lan": false,
+      "os_detected": "Windows",
+      "device_type": "🪟 PC Windows (tito)",
+      "added_from_scan": true,
+      "scan_timestamp": 1760826209.5629487
     }
   ],
-  "last_updated": "2025-10-18T20:50:00Z"
+  "last_updated": "2025-10-19T00:26:28.959014"
 }

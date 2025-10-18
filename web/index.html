@@ -91,14 +91,54 @@
                     <p>Découverte automatique des appareils sur votre réseau local</p>
                 </div>
                 
+                <!-- Informations dernier scan -->
+                <div class="scan-info-section">
+                    <div class="card">
+                        <h3>📊 Informations de Scan</h3>
+                        <div id="scan-info-content">
+                            <div class="loading">🔄 Chargement des informations...</div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="network-controls">
                     <button class="btn btn-primary" id="start-scan">🔍 Lancer Scan</button>
                     <button class="btn btn-secondary" id="stop-scan" disabled>⏹️ Arrêter</button>
+                    <button class="btn btn-outline" id="show-history" onclick="app.toggleNetworkHistory()">📋 Historique Réseau</button>
                     <div class="scan-progress" id="scan-progress" style="display: none;">
                         <div class="progress-bar">
                             <div class="progress-fill" id="progress-fill"></div>
                         </div>
                         <span id="scan-status">Scan en cours...</span>
+                    </div>
+                </div>
+                
+                <!-- Section Historique Réseau -->
+                <div class="network-history-section" id="network-history-section" style="display: none;">
+                    <div class="card">
+                        <h3>📋 Historique des Appareils Réseau</h3>
+                        <div class="history-tabs">
+                            <button class="tab-btn active" onclick="app.showHistoryTab('devices')">🖥️ Appareils</button>
+                            <button class="tab-btn" onclick="app.showHistoryTab('events')">📅 Événements</button>
+                        </div>
+                        
+                        <div id="history-devices" class="history-tab-content active">
+                            <div class="loading">🔄 Chargement de l'historique...</div>
+                        </div>
+                        
+                        <div id="history-events" class="history-tab-content" style="display: none;">
+                            <div class="loading">🔄 Chargement des événements...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Appareils récemment déconnectés -->
+                <div class="disconnected-section" id="disconnected-section" style="display: none;">
+                    <div class="card">
+                        <h3>📵 Appareils Récemment Déconnectés</h3>
+                        <div id="disconnected-devices">
+                            <div class="loading">🔄 Chargement...</div>
+                        </div>
                     </div>
                 </div>
                 

@@ -858,15 +858,43 @@ class NetworkScanner:
             
             logger.info(f"🍎 mDNS: {mdns_found} appareils Apple découverts")
             
+            # Phase 3.3: Fallback intelligent pour MACs randomisées
+            logger.info("🎭 Détection des MACs randomisées...")
+            randomized_count = 0
+            context_found = 0
+            
+            for device in devices:
+                if not device.get('vendor') or device.get('vendor') == '':
+                    mac = device.get('mac_address', '')
+                    if self.is_randomized_mac(mac):
+                        randomized_count += 1
+                        logger.info(f"🎭 MAC randomisée détectée: {device['ip']} ({mac[:8]}...)")
+                        
+                        # Essayer de deviner depuis le contexte (SEULEMENT si fiable)
+                        context_vendor = self.guess_vendor_from_context(device)
+                        if context_vendor:
+                            device['vendor'] = context_vendor
+                            device['detection_method'] = 'hostname_based'
+                            context_found += 1
+                            logger.info(f"✅ HOSTNAME VENDOR: {device['ip']} = {context_vendor}")
+                        else:
+                            # Approche neutre et factuelle
+                            device['vendor'] = 'Appareil avec MAC Privée'
+                            device['detection_method'] = 'privacy_mac'
+                            logger.info(f"� PRIVACY MAC: {device['ip']} = Adresse MAC randomisée")
+            
+            if randomized_count > 0:
+                logger.info(f"🔒 MACs privées: {randomized_count} détectées, {context_found} identifiées par hostname")
+            
             # Finalisation des appareils sans vendor
             for device in devices:
                 if not device.get('vendor'):
                     device['vendor'] = ''
                     device['detection_method'] = 'no_mac'
             
-            total_found = mdns_found + local_found + api_found
+            total_found = mdns_found + local_found + api_found + context_found
             logger.info(f"🎯 Vendor lookup terminé: {total_found}/{len(devices)} identifiés")
-            logger.info(f"   🏠 Local: {local_found}, 🌐 API: {api_found}, 📱 mDNS: {mdns_found}")
+            logger.info(f"   🏠 Local: {local_found}, 🌐 API: {api_found}, 📱 mDNS: {mdns_found}, 🎭 Contexte: {context_found}")
             
             # RE-DÉTECTION OS après vendor lookup (important pour Apple mDNS)
             logger.info("🔄 Re-détection OS avec vendors...")
@@ -1266,6 +1294,43 @@ class NetworkScanner:
             return vendor_info.get('vendor', 'Inconnu')
         except Exception:
             return 'Inconnu'
+    
+    def is_randomized_mac(self, mac_address: str) -> bool:
+        """Détecter si une MAC est randomisée (privacy feature)"""
+        if not mac_address or len(mac_address) < 17:
+            return False
+        
+        try:
+            # Extraire le premier octet
+            first_octet = mac_address.split(':')[0]
+            first_byte = int(first_octet, 16)
+            
+            # Bit 1 (locally administered) = MAC randomisée
+            return bool(first_byte & 0x02)
+        except:
+            return False
+    
+    def guess_vendor_from_context(self, device: Dict) -> str:
+        """Deviner le vendor à partir du contexte pour MACs randomisées - APPROCHE CONSERVATIVE"""
+        hostname = device.get('hostname', '').lower()
+        
+        # SEULEMENT si hostname est très spécifique et fiable
+        xiaomi_patterns = ['redmi', 'mi-', 'xiaomi', 'poco']
+        samsung_patterns = ['galaxy', 'samsung', 'sm-']
+        apple_patterns = ['iphone', 'ipad', 'macbook', 'imac']
+        
+        # Détection fiable par hostname uniquement
+        if any(pattern in hostname for pattern in xiaomi_patterns):
+            return 'Xiaomi Inc.'
+        
+        if any(pattern in hostname for pattern in samsung_patterns):
+            return 'Samsung Electronics'
+            
+        if any(pattern in hostname for pattern in apple_patterns):
+            return 'Apple Inc.'
+        
+        # SINON : Rester neutre, pas de spéculation OS-based
+        return ''
     
     def classify_and_enrich_devices(self, devices: List[Dict]) -> List[Dict]:
         """Classification finale et enrichissement"""

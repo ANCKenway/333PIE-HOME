@@ -1,0 +1,681 @@
+{
+  "last_scan": {
+    "timestamp": 1760828743.0472593,
+    "datetime": "2025-10-19T01:05:43.047262",
+    "devices": [
+      {
+        "ip": "192.168.1.23",
+        "hostname": "",
+        "mac_address": "CA:08:C5:BF:00:13",
+        "vendor": "Appareil avec MAC Privée",
+        "device_type": "🤖 Appareil Android",
+        "os_family": "Inconnu",
+        "os_details": "Impossible à déterminer",
+        "confidence": 0,
+        "open_ports": [],
+        "services": [],
+        "response_time": 8.042763710021973,
+        "last_seen": 1760828708.891832,
+        "fingerprint": {},
+        "status": "up",
+        "detection_method": "privacy_mac",
+        "os_detected": "Android",
+        "os_confidence": "Faible",
+        "os_all_scores": {
+          "Android": 20,
+          "iOS/macOS": 20,
+          "Windows": 5
+        },
+        "os_detection_details": {
+          "ping_speed": "Ping lent (mobile probable)",
+          "no_ports": "Aucun port ouvert (mobile/firewall)"
+        },
+        "global_confidence": 70,
+        "category": "Autres"
+      },
+      {
+        "ip": "192.168.1.24",
+        "hostname": "CLACLA",
+        "mac_address": "10:7C:61:78:72:8B",
+        "vendor": "ASUSTek COMPUTER INC.",
+        "device_type": "🪟 PC Windows (clacla)",
+        "os_family": "Windows",
+        "os_details": "Windows avec RPC | Windows NetBIOS | Windows avec partage SMB",
+        "confidence": 75,
+        "open_ports": [
+          135,
+          139,
+          445
+        ],
+        "services": [
+          {
+            "port": 135,
+            "service": "msrpc",
+            "product": "",
+            "version": ""
+          },
+          {
+            "port": 139,
+            "service": "netbios-ssn",
+            "product": "",
+            "version": ""
+          },
+          {
+            "port": 445,
+            "service": "microsoft-ds",
+            "product": "",
+            "version": ""
+          }
+        ],
+        "response_time": 0.06850075721740723,
+        "last_seen": 1760828708.8920002,
+        "fingerprint": {
+          "windows": 0.75
+        },
+        "status": "up",
+        "detection_method": "macvendors_api",
+        "os_detected": "Windows",
+        "os_confidence": "Très élevée",
+        "os_all_scores": {
+          "Windows": 90,
+          "Android": 5,
+          "iOS/macOS": 5
+        },
+        "os_detection_details": {
+          "vendor_hint": "Vendor PC: asustek computer inc.",
+          "smb_detected": "SMB ouvert (Windows)",
+          "ping_speed": "Ping lent (mobile probable)"
+        },
+        "vendor_details": {
+          "vendor": "ASUSTek COMPUTER INC.",
+          "source": "macvendors.com",
+          "confidence": "high",
+          "oui": "10:7C:61",
+          "cached": false
+        },
+        "global_confidence": 63,
+        "category": "Autres"
+      },
+      {
+        "ip": "192.168.1.99",
+        "hostname": "",
+        "mac_address": "9E:67:44:B4:B8:7D",
+        "vendor": "Appareil avec MAC Privée",
+        "device_type": "🤖 Appareil Android",
+        "os_family": "Inconnu",
+        "os_details": "Impossible à déterminer",
+        "confidence": 0,
+        "open_ports": [],
+        "services": [],
+        "response_time": 3.361095428466797,
+        "last_seen": 1760828708.8924196,
+        "fingerprint": {},
+        "status": "up",
+        "detection_method": "privacy_mac",
+        "os_detected": "Android",
+        "os_confidence": "Faible",
+        "os_all_scores": {
+          "Android": 20,
+          "iOS/macOS": 20,
+          "Windows": 5
+        },
+        "os_detection_details": {
+          "ping_speed": "Ping lent (mobile probable)",
+          "no_ports": "Aucun port ouvert (mobile/firewall)"
+        },
+        "global_confidence": 70,
+        "category": "Autres"
+      },
+      {
+        "ip": "192.168.1.100",
+        "hostname": "",
+        "mac_address": "8C:97:EA:14:9D:1B",
+        "vendor": "FREEBOX SAS",
+        "device_type": "🤖 Appareil Android",
+        "os_family": "Inconnu",
+        "os_details": "Impossible à déterminer",
+        "confidence": 0,
+        "open_ports": [],
+        "services": [],
+        "response_time": 8.037836074829102,
+        "last_seen": 1760828708.8925173,
+        "fingerprint": {},
+        "status": "up",
+        "detection_method": "local_oui_extended",
+        "os_detected": "Android",
+        "os_confidence": "Faible",
+        "os_all_scores": {
+          "Android": 20,
+          "iOS/macOS": 20,
+          "Windows": 5
+        },
+        "os_detection_details": {
+          "ping_speed": "Ping lent (mobile probable)",
+          "no_ports": "Aucun port ouvert (mobile/firewall)"
+        },
+        "category": "Autres",
+        "vendor_details": {
+          "vendor": "FREEBOX SAS",
+          "device_type": "🌐 Freebox",
+          "category": "Réseau",
+          "confidence": "high",
+          "source": "local_oui_database",
+          "device_category": "router",
+          "note": "Freebox",
+          "oui": "8C:97:EA",
+          "raw_info": {
+            "vendor": "FREEBOX SAS",
+            "type": "router",
+            "note": "Freebox",
+            "source": "local_oui_database",
+            "oui": "8C:97:EA",
+            "confidence": "high"
+          }
+        },
+        "global_confidence": 70
+      },
+      {
+        "ip": "192.168.1.150",
+        "hostname": "",
+        "mac_address": "",
+        "vendor": "",
+        "device_type": "Inconnu",
+        "os_family": "Windows",
+        "os_details": "Windows avec RDP activé",
+        "confidence": 25,
+        "open_ports": [
+          22,
+          3389
+        ],
+        "services": [
+          {
+            "port": 22,
+            "service": "ssh",
+            "product": "",
+            "version": ""
+          },
+          {
+            "port": 3389,
+            "service": "ms-wbt-server",
+            "product": "",
+            "version": ""
+          }
+        ],
+        "response_time": 5.304363250732422,
+        "last_seen": 1760828708.8925989,
+        "fingerprint": {
+          "windows": 0.25,
+          "linux": 0.25,
+          "macos": 0.25,
+          "router": 0.2
+        },
+        "status": "up",
+        "detection_method": "no_mac",
+        "os_detected": "Linux (xrdp)",
+        "os_confidence": "Très élevée",
+        "os_all_scores": {
+          "Linux": 55,
+          "Windows": 45,
+          "Android": 5,
+          "iOS/macOS": 5
+        },
+        "os_detection_details": {
+          "ssh_detected": "SSH ouvert (Linux probable)",
+          "rdp_detected": "RDP ouvert (Windows)",
+          "ping_speed": "Ping lent (mobile probable)",
+          "ssh_rdp_combo": "SSH + RDP = Linux avec tunneling/WSL probable",
+          "linux_rdp_override": "SSH + RDP détectés = Linux avec xrdp forcé (scores ignorés)"
+        },
+        "global_confidence": 42,
+        "category": "Autres"
+      },
+      {
+        "ip": "192.168.1.174",
+        "hostname": "TITO",
+        "mac_address": "34:5A:60:7F:12:C1",
+        "vendor": "Micro-Star International",
+        "device_type": "🪟 PC Windows (tito)",
+        "os_family": "Windows",
+        "os_details": "Windows avec RPC | Windows NetBIOS | Windows avec partage SMB",
+        "confidence": 75,
+        "open_ports": [
+          135,
+          139,
+          445
+        ],
+        "services": [
+          {
+            "port": 135,
+            "service": "msrpc",
+            "product": "",
+            "version": ""
+          },
+          {
+            "port": 139,
+            "service": "netbios-ssn",
+            "product": "",
+            "version": ""
+          },
+          {
+            "port": 445,
+            "service": "microsoft-ds",
+            "product": "",
+            "version": ""
+          }
+        ],
+        "response_time": 0.08067011833190918,
+        "last_seen": 1760828708.8927724,
+        "fingerprint": {
+          "windows": 0.75
+        },
+        "status": "up",
+        "detection_method": "local_oui_extended",
+        "os_detected": "Windows",
+        "os_confidence": "Très élevée",
+        "os_all_scores": {
+          "Windows": 60,
+          "Android": 5,
+          "iOS/macOS": 5
+        },
+        "os_detection_details": {
+          "smb_detected": "SMB ouvert (Windows)",
+          "ping_speed": "Ping lent (mobile probable)"
+        },
+        "category": "Autres",
+        "vendor_details": {
+          "vendor": "Micro-Star International",
+          "device_type": "💻 PC/Laptop MSI",
+          "category": "Ordinateurs",
+          "confidence": "high",
+          "source": "local_oui_database",
+          "device_category": "computer",
+          "note": "PC/Laptop MSI",
+          "oui": "34:5A:60",
+          "raw_info": {
+            "vendor": "Micro-Star International",
+            "type": "computer",
+            "note": "PC/Laptop MSI",
+            "source": "local_oui_database",
+            "oui": "34:5A:60",
+            "confidence": "high"
+          }
+        },
+        "global_confidence": 63
+      },
+      {
+        "ip": "192.168.1.175",
+        "hostname": "333SRV",
+        "mac_address": "C8:7F:54:53:1D:40",
+        "vendor": "ASUSTeK Computer Inc.",
+        "device_type": "💻 PC/Laptop ASUS",
+        "os_family": "Windows",
+        "os_details": "Windows NetBIOS | Windows avec partage SMB | Windows avec RDP activé",
+        "confidence": 75,
+        "open_ports": [
+          22,
+          139,
+          445,
+          3389
+        ],
+        "services": [
+          {
+            "port": 22,
+            "service": "ssh",
+            "product": "",
+            "version": ""
+          },
+          {
+            "port": 139,
+            "service": "netbios-ssn",
+            "product": "",
+            "version": ""
+          },
+          {
+            "port": 445,
+            "service": "microsoft-ds",
+            "product": "",
+            "version": ""
+          },
+          {
+            "port": 3389,
+            "service": "ms-wbt-server",
+            "product": "",
+            "version": ""
+          }
+        ],
+        "response_time": 0.09930992126464844,
+        "last_seen": 1760828708.892853,
+        "fingerprint": {
+          "windows": 0.75,
+          "linux": 0.25,
+          "macos": 0.25,
+          "router": 0.2
+        },
+        "status": "up",
+        "detection_method": "local_oui_extended",
+        "os_detected": "Linux (xrdp)",
+        "os_confidence": "Très élevée",
+        "os_all_scores": {
+          "Linux": 95,
+          "Windows": 105,
+          "Android": 5,
+          "iOS/macOS": 5
+        },
+        "os_detection_details": {
+          "vendor_hint": "Vendor PC: asustek computer inc. avec SSH+RDP = Linux+xrdp",
+          "ssh_detected": "SSH ouvert (Linux probable)",
+          "smb_detected": "SMB ouvert (Windows)",
+          "rdp_detected": "RDP ouvert (Windows)",
+          "ping_speed": "Ping lent (mobile probable)",
+          "ssh_rdp_combo": "SSH + RDP = Linux avec tunneling/WSL probable",
+          "linux_rdp_override": "SSH + RDP détectés = Linux avec xrdp forcé (scores ignorés)"
+        },
+        "category": "Ordinateurs",
+        "vendor_details": {
+          "vendor": "ASUSTeK Computer Inc.",
+          "device_type": "💻 PC/Laptop ASUS",
+          "category": "Ordinateurs",
+          "confidence": "high",
+          "source": "local_oui_database",
+          "device_category": "computer",
+          "note": "PC/Laptop ASUS",
+          "oui": "C8:7F:54",
+          "raw_info": {
+            "vendor": "ASUSTeK Computer Inc.",
+            "type": "computer",
+            "note": "PC/Laptop ASUS",
+            "source": "local_oui_database",
+            "oui": "C8:7F:54",
+            "confidence": "high"
+          }
+        },
+        "global_confidence": 63
+      },
+      {
+        "ip": "192.168.1.77",
+        "hostname": "",
+        "mac_address": "C8:FF:77:59:DE:E1",
+        "vendor": "Dyson Limited",
+        "device_type": "🏠 IoT (Dyson Limited)",
+        "os_family": "Inconnu",
+        "os_details": "Impossible à déterminer",
+        "confidence": 0,
+        "open_ports": [],
+        "services": [],
+        "response_time": 8.057657241821289,
+        "last_seen": 1760828708.8922188,
+        "fingerprint": {},
+        "status": "up",
+        "detection_method": "local_oui_extended",
+        "os_detected": "Android",
+        "os_confidence": "Faible",
+        "os_all_scores": {
+          "Android": 20,
+          "iOS/macOS": 20,
+          "Windows": 5
+        },
+        "os_detection_details": {
+          "ping_speed": "Ping lent (mobile probable)",
+          "no_ports": "Aucun port ouvert (mobile/firewall)"
+        },
+        "category": "Périphériques",
+        "vendor_details": {
+          "vendor": "Dyson Limited",
+          "device_type": "💨 Aspirateur/Ventilateur Dyson",
+          "category": "IoT",
+          "confidence": "high",
+          "source": "local_oui_database",
+          "device_category": "iot",
+          "note": "Aspirateur/Ventilateur Dyson",
+          "oui": "C8:FF:77",
+          "raw_info": {
+            "vendor": "Dyson Limited",
+            "type": "iot",
+            "note": "Aspirateur/Ventilateur Dyson",
+            "source": "local_oui_database",
+            "oui": "C8:FF:77",
+            "confidence": "high"
+          }
+        },
+        "global_confidence": 70
+      },
+      {
+        "ip": "192.168.1.82",
+        "hostname": "",
+        "mac_address": "F4:FE:FB:77:5C:26",
+        "vendor": "Samsung Electronics",
+        "device_type": "�📺 Smart TV Samsung",
+        "os_family": "Inconnu",
+        "os_details": "Impossible à déterminer",
+        "confidence": 0,
+        "open_ports": [],
+        "services": [],
+        "response_time": 8.026641368865967,
+        "last_seen": 1760828708.8923225,
+        "fingerprint": {},
+        "status": "up",
+        "detection_method": "local_oui_extended",
+        "os_detected": "Android",
+        "os_confidence": "Très élevée",
+        "os_all_scores": {
+          "Android": 65,
+          "iOS/macOS": 20,
+          "Windows": 5
+        },
+        "os_detection_details": {
+          "vendor_hint": "Vendor TV/Mobile: samsung electronics",
+          "ping_speed": "Ping lent (mobile probable)",
+          "no_ports": "Aucun port ouvert (mobile/firewall)"
+        },
+        "category": "Périphériques",
+        "vendor_details": {
+          "vendor": "Samsung Electronics",
+          "device_type": "📺 Smart TV Samsung",
+          "category": "Périphériques",
+          "confidence": "high",
+          "source": "local_oui_database",
+          "device_category": "tv",
+          "note": "Smart TV Samsung",
+          "oui": "F4:FE:FB",
+          "raw_info": {
+            "vendor": "Samsung Electronics",
+            "type": "tv",
+            "note": "Smart TV Samsung",
+            "source": "local_oui_database",
+            "oui": "F4:FE:FB",
+            "confidence": "high"
+          }
+        },
+        "global_confidence": 70
+      },
+      {
+        "ip": "192.168.1.254",
+        "hostname": "",
+        "mac_address": "8C:97:EA:31:C0:A2",
+        "vendor": "FREEBOX SAS",
+        "device_type": "🌐 Routeur (Freebox Sas)",
+        "os_family": "Windows",
+        "os_details": "Windows avec partage SMB",
+        "confidence": 25,
+        "open_ports": [
+          445
+        ],
+        "services": [
+          {
+            "port": 445,
+            "service": "microsoft-ds",
+            "product": "",
+            "version": ""
+          }
+        ],
+        "response_time": 3.0539186000823975,
+        "last_seen": 1760828708.8929362,
+        "fingerprint": {
+          "windows": 0.25
+        },
+        "status": "up",
+        "detection_method": "local_oui_extended",
+        "os_detected": "Windows",
+        "os_confidence": "Moyenne",
+        "os_all_scores": {
+          "Windows": 30,
+          "Android": 5,
+          "iOS/macOS": 5
+        },
+        "os_detection_details": {
+          "smb_detected": "SMB ouvert (Windows)",
+          "ping_speed": "Ping lent (mobile probable)"
+        },
+        "category": "Réseau",
+        "vendor_details": {
+          "vendor": "FREEBOX SAS",
+          "device_type": "🌐 Freebox",
+          "category": "Réseau",
+          "confidence": "high",
+          "source": "local_oui_database",
+          "device_category": "router",
+          "note": "Freebox",
+          "oui": "8C:97:EA",
+          "raw_info": {
+            "vendor": "FREEBOX SAS",
+            "type": "router",
+            "note": "Freebox",
+            "source": "local_oui_database",
+            "oui": "8C:97:EA",
+            "confidence": "high"
+          }
+        },
+        "global_confidence": 51
+      },
+      {
+        "ip": "192.168.1.171",
+        "hostname": "",
+        "mac_address": "A4:E5:7C:31:54:36",
+        "vendor": "Espressif Inc.",
+        "device_type": "🔧 Microcontrôleur (Espressif Inc.)",
+        "os_family": "Inconnu",
+        "os_details": "Impossible à déterminer",
+        "confidence": 0,
+        "open_ports": [],
+        "services": [],
+        "response_time": 3.0620083808898926,
+        "last_seen": 1760828708.8926842,
+        "fingerprint": {},
+        "status": "up",
+        "detection_method": "local_oui_extended",
+        "os_detected": "Android",
+        "os_confidence": "Faible",
+        "os_all_scores": {
+          "Android": 20,
+          "iOS/macOS": 20,
+          "Windows": 5
+        },
+        "os_detection_details": {
+          "ping_speed": "Ping lent (mobile probable)",
+          "no_ports": "Aucun port ouvert (mobile/firewall)"
+        },
+        "category": "Serveurs",
+        "vendor_details": {
+          "vendor": "Espressif Inc.",
+          "device_type": "🔧 ESP32/ESP8266",
+          "category": "Développement",
+          "confidence": "high",
+          "source": "local_oui_database",
+          "device_category": "microcontroller",
+          "note": "ESP32/ESP8266",
+          "oui": "A4:E5:7C",
+          "raw_info": {
+            "vendor": "Espressif Inc.",
+            "type": "microcontroller",
+            "note": "ESP32/ESP8266",
+            "source": "local_oui_database",
+            "oui": "A4:E5:7C",
+            "confidence": "high"
+          }
+        },
+        "global_confidence": 70
+      }
+    ],
+    "stats": {
+      "total_devices": 11,
+      "online_devices": 0,
+      "scan_duration": 74.99
+    }
+  },
+  "scan_history": [
+    {
+      "timestamp": 1760828743.0472593,
+      "datetime": "2025-10-19T01:05:43.047262",
+      "device_count": 11,
+      "duration": 74.98643612861633
+    },
+    {
+      "timestamp": 1760828398.235213,
+      "datetime": "2025-10-19T00:59:58.235215",
+      "device_count": 11,
+      "duration": 75.87387204170227
+    },
+    {
+      "timestamp": 1760828278.9229765,
+      "datetime": "2025-10-19T00:57:58.922979",
+      "device_count": 11,
+      "duration": 77.44206714630127
+    },
+    {
+      "timestamp": 1760828062.649951,
+      "datetime": "2025-10-19T00:54:22.649953",
+      "device_count": 11,
+      "duration": 77.52151942253113
+    },
+    {
+      "timestamp": 1760827974.7905276,
+      "datetime": "2025-10-19T00:52:54.790530",
+      "device_count": 11,
+      "duration": 81.87661623954773
+    },
+    {
+      "timestamp": 1760827631.7319434,
+      "datetime": "2025-10-19T00:47:11.731946",
+      "device_count": 11,
+      "duration": 71.40275430679321
+    },
+    {
+      "timestamp": 1760827438.168153,
+      "datetime": "2025-10-19T00:43:58.168157",
+      "device_count": 11,
+      "duration": 75.84055042266846
+    },
+    {
+      "timestamp": 1760826686.1344416,
+      "datetime": "2025-10-19T00:31:26.134445",
+      "device_count": 11,
+      "duration": 79.04714941978455
+    },
+    {
+      "timestamp": 1760826209.5629487,
+      "datetime": "2025-10-19T00:23:29.562951",
+      "device_count": 11,
+      "duration": 74.59545516967773
+    },
+    {
+      "timestamp": 1760826047.0323622,
+      "datetime": "2025-10-19T00:20:47.032365",
+      "device_count": 11,
+      "duration": 83.375648021698
+    },
+    {
+      "timestamp": 1760825720.5310156,
+      "datetime": "2025-10-19T00:15:20.531018",
+      "device_count": 11,
+      "duration": 77.99278688430786
+    },
+    {
+      "timestamp": 1760825367.1247745,
+      "datetime": "2025-10-19T00:09:27.124776",
+      "device_count": 11,
+      "duration": 75.7198383808136
+    }
+  ],
+  "disconnected_devices": [],
+  "version": "1.0"
+}
