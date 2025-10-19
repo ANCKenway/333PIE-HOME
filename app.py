@@ -147,8 +147,15 @@ async def get_tailscale_config():
     except Exception as e:
         return {"success": False, "error": str(e)}
 
+# Cache global pour éviter les appels API répétés
+tailscale_cache = {
+    'devices': None,
+    'timestamp': 0,
+    'cache_duration': 300  # 5 minutes
+}
+
 async def auto_add_vpn_ips_from_tailscale(devices):
-    """Auto-ajouter l'IP VPN Tailscale si correspondance nom trouvée"""
+    """Auto-ajouter l'IP VPN Tailscale si correspondance nom trouvée (avec cache intelligent)"""
     try:
         config_file = os.path.join(os.path.dirname(__file__), 'config', 'tailscale_config.json')
         if not os.path.exists(config_file):
@@ -160,8 +167,25 @@ async def auto_add_vpn_ips_from_tailscale(devices):
         if not config.get('api_key'):
             return
         
-        # Récupérer appareils Tailscale
-        tailscale_devices = await fetch_tailscale_devices_internal(config['api_key'], config['tailnet'])
+        # Vérifier le cache avant d'appeler l'API
+        now = time.time()
+        if (tailscale_cache['devices'] is None or 
+            now - tailscale_cache['timestamp'] > tailscale_cache['cache_duration']):
+            
+            logger.info("🔄 Actualisation cache Tailscale (5min écoulées)")
+            # Cache expiré, récupérer les données fraîches
+            tailscale_devices = await fetch_tailscale_devices_internal(config['api_key'], config['tailnet'])
+            if tailscale_devices:
+                tailscale_cache['devices'] = tailscale_devices
+                tailscale_cache['timestamp'] = now
+            else:
+                logger.warning("❌ Échec récupération Tailscale, utilisation cache existant")
+                tailscale_devices = tailscale_cache['devices'] or []
+        else:
+            # Utiliser le cache
+            logger.debug("✅ Utilisation cache Tailscale (valide)")
+            tailscale_devices = tailscale_cache['devices'] or []
+        
         if not tailscale_devices:
             return
         
@@ -203,6 +227,13 @@ async def auto_add_vpn_ips_from_tailscale(devices):
             
     except Exception as e:
         logger.warning(f"Auto-ajout IP VPN Tailscale échoué (non critique): {e}")
+
+def clear_tailscale_cache():
+    """Vider le cache Tailscale pour forcer un nouvel appel API"""
+    global tailscale_cache
+    tailscale_cache['devices'] = None
+    tailscale_cache['timestamp'] = 0
+    logger.info("🗑️ Cache Tailscale vidé")
 
 
 async def fetch_tailscale_devices_internal(api_key: str, tailnet: str):
@@ -536,6 +567,16 @@ async def add_device(device_data: dict):
             return {"success": False, "message": "Appareil déjà existant"}
     except Exception as e:
         logger.error(f"Erreur ajout appareil: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+@app.post("/api/tailscale/clear-cache")
+async def clear_tailscale_cache_endpoint():
+    """Vider le cache Tailscale pour forcer un nouvel appel API"""
+    try:
+        clear_tailscale_cache()
+        return {"success": True, "message": "Cache Tailscale vidé"}
+    except Exception as e:
+        logger.error(f"Erreur vidage cache: {e}")
         raise HTTPException(status_code=500, detail="Erreur serveur")
 
 @app.put("/api/devices/{device_id}")

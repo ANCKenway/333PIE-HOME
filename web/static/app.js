@@ -148,7 +148,7 @@ class HomeApp {
         // Boutons de rafraîchissement
         this.setupButton('refresh-devices', () => this.refreshDevices());
         this.setupButton('add-device', () => this.showAddDevice());
-        this.setupButton('sync-vpn-devices', () => this.syncVpnDevices());
+        // Sync VPN automatique maintenant - bouton supprimé
         
         // Boutons de scan réseau
         this.setupButton('start-scan', () => this.startNetworkScan());
@@ -1145,31 +1145,7 @@ class HomeApp {
         }
     }
 
-    /**
-     * Synchronisation VPN intelligente
-     */
-    async syncVpnDevices() {
-        this.showNotification('🔄 Synchronisation VPN en cours...', 'info');
-        
-        try {
-            const response = await fetch(`${this.apiBase}/api/sync/enable-auto-vpn`, {
-                method: 'POST'
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                this.showNotification(`✅ ${data.message}`, 'success');
-                // Recharger les appareils pour voir les changements
-                await this.refreshDevices();
-            } else {
-                this.showNotification(`❌ Erreur de synchronisation: ${data.error}`, 'error');
-            }
-        } catch (error) {
-            console.error('Erreur sync VPN:', error);
-            this.showNotification('❌ Erreur de connexion lors de la synchronisation', 'error');
-        }
-    }
+    // Fonction syncVpnDevices() supprimée - synchronisation VPN automatique maintenant
 
     /**
      * Rafraîchir les appareils

@@ -78,9 +78,9 @@
       "name": "333SRV",
       "hostname": "333SRV",
       "vendor": "ASUSTeK Computer Inc.",
-      "type": "Appareil",
+      "type": "PC",
       "description": "ASUSTeK Computer Inc. - Linux (xrdp)",
-      "wake_on_lan": false,
+      "wake_on_lan": true,
       "os_detected": "Linux (xrdp)",
       "device_type": "💻 PC/Laptop ASUS",
       "added_from_scan": true,
@@ -105,5 +105,5 @@
       "ip_secondary": "100.80.31.55"
     }
   ],
-  "last_updated": "2025-10-19T04:45:43.311641"
+  "last_updated": "2025-10-19T04:52:27.931794"
 }
