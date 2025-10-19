@@ -62,7 +62,16 @@
       "ip_changed": false,
       "detection_method": "ping_original_ip",
       "last_checked": 1760831310.4958282,
-      "last_seen": "Il y a 59s"
+      "last_seen": "Il y a 59s",
+      "vpn": {
+        "connected": true,
+        "tailscale_ip": "100.93.236.71",
+        "tailscale_id": "6291419409011182",
+        "last_seen": "2025-10-19T02:15:52Z",
+        "online": false,
+        "exit_node": false,
+        "authorized": true
+      }
     },
     {
       "ip": "192.168.1.175",
@@ -82,8 +91,19 @@
       "detection_method": "ping_original_ip",
       "last_checked": 1760831310.4965088,
       "last_seen": "Il y a 59s",
-      "mac": "C8:7F:54:53:1D:40"
+      "mac": "C8:7F:54:53:1D:40",
+      "vpn": {
+        "connected": true,
+        "tailscale_ip": "100.80.31.55",
+        "tailscale_id": "1146164586079085",
+        "last_seen": "2025-10-19T02:15:52Z",
+        "online": false,
+        "exit_node": false,
+        "authorized": true
+      },
+      "is_vpn": true,
+      "ip_secondary": "100.80.31.55"
     }
   ],
-  "last_updated": "2025-10-19T01:49:45.031464"
+  "last_updated": "2025-10-19T04:45:43.311641"
 }

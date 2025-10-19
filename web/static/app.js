@@ -34,6 +34,11 @@ class HomeApp {
         this.setupInteractions();
         this.switchTab('status');
         this.updateConnectionStatus();
+        this.autoSyncVpn(); // Auto-sync VPN au démarrage
+        
+        // Pré-charger les appareils dès le démarrage
+        setTimeout(() => this.loadDevices(), 1000);
+        
         console.log('✅ Application prête');
     }
 
@@ -143,10 +148,21 @@ class HomeApp {
         // Boutons de rafraîchissement
         this.setupButton('refresh-devices', () => this.refreshDevices());
         this.setupButton('add-device', () => this.showAddDevice());
+        this.setupButton('sync-vpn-devices', () => this.syncVpnDevices());
         
         // Boutons de scan réseau
         this.setupButton('start-scan', () => this.startNetworkScan());
         this.setupButton('stop-scan', () => this.stopNetworkScan());
+        
+        // Boutons VPN Tailscale
+        this.setupButton('refresh-tailscale', () => this.refreshTailscale());
+        this.setupButton('tailscale-settings', () => this.toggleTailscaleSettings());
+        
+        // Formulaire de configuration Tailscale
+        const tailscaleForm = document.getElementById('tailscale-config-form');
+        if (tailscaleForm) {
+            tailscaleForm.addEventListener('submit', (event) => this.saveTailscaleConfig(event));
+        }
         
         // Boutons de test
         this.setupButton('test-get', () => this.testApiGet());
@@ -228,6 +244,9 @@ class HomeApp {
             case 'network':
                 this.loadNetworkInterface();
                 break;
+            case 'vpn':
+                this.loadVpnInterface();
+                break;
             case 'test':
                 this.loadTestInterface();
                 break;
@@ -303,7 +322,7 @@ class HomeApp {
             const response = await fetch(`${this.apiBase}/api/devices`);
             const data = await response.json();
             
-            if (data.success && data.devices && data.devices.length > 0) {
+            if (data.devices && data.devices.length > 0) {
                 this.displayDevices(data.devices);
             } else {
                 this.showEmptyDevices();
@@ -342,9 +361,12 @@ class HomeApp {
             <div class="device-card" data-device-id="${device.ip}">
                 <div class="device-card-header">
                     <div class="device-icon">${deviceIcon}</div>
-                    <div class="device-status ${statusClass}">
-                        <span class="status-indicator">${statusIcon}</span>
-                        <span class="status-text">${device.status || 'Inconnu'}</span>
+                    <div class="status-indicators">
+                        <div class="device-status ${statusClass}">
+                            <span class="status-indicator">${statusIcon}</span>
+                            <span class="status-text">${device.status || 'Inconnu'}</span>
+                        </div>
+                        ${this.renderVpnIndicator(device)}
                     </div>
                 </div>
                 
@@ -375,6 +397,22 @@ class HomeApp {
                             <span class="detail-label">⏱️ Dernière vérification:</span>
                             <span class="detail-value">${device.last_seen || 'Jamais'}</span>
                         </div>
+                        ${device.vpn && device.vpn.connected ? `
+                        <div class="detail-row vpn-info">
+                            <span class="detail-label">🔒 Tailscale IP:</span>
+                            <span class="detail-value">${device.vpn.tailscale_ip}</span>
+                        </div>
+                        <div class="detail-row vpn-info">
+                            <span class="detail-label">🌐 VPN Status:</span>
+                            <span class="detail-value">${device.vpn.online ? '🟢 En ligne' : '🔴 Hors ligne'}</span>
+                        </div>
+                        ${device.vpn.exit_node ? `
+                        <div class="detail-row vpn-info">
+                            <span class="detail-label">🚪 Exit Node:</span>
+                            <span class="detail-value">✅ Activé</span>
+                        </div>
+                        ` : ''}
+                        ` : ''}
                     </div>
                 </div>
                 
@@ -407,6 +445,55 @@ class HomeApp {
             'discovered': '❓'
         };
         return icons[type] || '📟';
+    }
+
+    /**
+     * Rendu de l'indicateur VPN
+     */
+    renderVpnIndicator(device) {
+        // Nouveau système VPN Tailscale intégré
+        if (device.vpn && device.vpn.connected) {
+            const vpnClass = device.vpn.online ? 'vpn-online' : 'vpn-offline';
+            const vpnTitle = `Tailscale: ${device.vpn.online ? 'En ligne' : 'Hors ligne'} (${device.vpn.tailscale_ip})`;
+            
+            return `
+                <div class="vpn-indicator ${vpnClass}" title="${vpnTitle}">
+                    <span class="vpn-label">🔒 VPN</span>
+                </div>
+            `;
+        }
+        
+        // Ancien système VPN (fallback)
+        if (!device.is_vpn || !device.ip_secondary) {
+            return '';
+        }
+        
+        // Déterminer le statut VPN depuis les données de monitoring
+        let vpnStatus = 'unknown';
+        let vpnClass = 'vpn-unknown';
+        let vpnTitle = 'VPN: Statut inconnu';
+        
+        if (device.vpn_status) {
+            if (device.vpn_status.status === 'online') {
+                vpnStatus = 'online';
+                vpnClass = 'vpn-online';
+                vpnTitle = `VPN: En ligne (${device.vpn_status.ip})`;
+            } else if (device.vpn_status.status === 'offline') {
+                vpnStatus = 'offline';
+                vpnClass = 'vpn-offline';
+                vpnTitle = `VPN: Hors ligne (${device.vpn_status.ip})`;
+            } else if (device.vpn_status.status === 'error') {
+                vpnStatus = 'error';
+                vpnClass = 'vpn-error';
+                vpnTitle = `VPN: Erreur (${device.vpn_status.ip})`;
+            }
+        }
+        
+        return `
+            <div class="vpn-indicator ${vpnClass}" title="${vpnTitle}">
+                <span class="vpn-label">VPN</span>
+            </div>
+        `;
     }
 
     /**
@@ -1031,11 +1118,86 @@ class HomeApp {
     }
 
     /**
+     * Synchronisation VPN automatique au démarrage
+     */
+    async autoSyncVpn() {
+        try {
+            // Vérifier si Tailscale est configuré
+            const configResponse = await fetch(`${this.apiBase}/api/tailscale/config`);
+            const configData = await configResponse.json();
+            
+            if (configData.configured) {
+                console.log('🔒 Auto-sync VPN activé');
+                // Synchronisation silencieuse au démarrage
+                const response = await fetch(`${this.apiBase}/api/sync/enable-auto-vpn`, {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    console.log('✅ Sync VPN automatique réussie');
+                } else {
+                    console.warn('⚠️ Sync VPN automatique échouée:', data.error);
+                }
+            }
+        } catch (error) {
+            console.warn('⚠️ Auto-sync VPN non disponible:', error.message);
+        }
+    }
+
+    /**
+     * Synchronisation VPN intelligente
+     */
+    async syncVpnDevices() {
+        this.showNotification('🔄 Synchronisation VPN en cours...', 'info');
+        
+        try {
+            const response = await fetch(`${this.apiBase}/api/sync/enable-auto-vpn`, {
+                method: 'POST'
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.showNotification(`✅ ${data.message}`, 'success');
+                // Recharger les appareils pour voir les changements
+                await this.refreshDevices();
+            } else {
+                this.showNotification(`❌ Erreur de synchronisation: ${data.error}`, 'error');
+            }
+        } catch (error) {
+            console.error('Erreur sync VPN:', error);
+            this.showNotification('❌ Erreur de connexion lors de la synchronisation', 'error');
+        }
+    }
+
+    /**
      * Rafraîchir les appareils
      */
-    refreshDevices() {
+    async refreshDevices() {
+        console.log('🔄 Actualisation forcée des appareils');
         this.dataCache.delete('devices');
-        this.loadDevices();
+        
+        const container = document.getElementById('devices-list');
+        if (container) {
+            container.innerHTML = '<div class="loading">🔄 Actualisation forcée des appareils...</div>';
+        }
+
+        try {
+            const response = await fetch(`${this.apiBase}/api/devices/refresh`);
+            const data = await response.json();
+
+            if (data.success && data.devices && data.devices.length > 0) {
+                this.displayDevices(data.devices);
+                this.showNotification('✅ Appareils actualisés', 'success');
+            } else {
+                this.showEmptyDevices();
+            }
+        } catch (error) {
+            console.error('❌ Erreur actualisation:', error);
+            this.showError('devices-list', 'Erreur lors de l\'actualisation');
+            this.showNotification('❌ Erreur lors de l\'actualisation', 'error');
+        }
     }
 
     /**
@@ -1783,6 +1945,670 @@ class HomeApp {
         } catch (error) {
             console.error('❌ Erreur réparation MACs:', error);
         }
+    }
+
+    /**
+     * ===== SECTION VPN TAILSCALE =====
+     */
+    
+    /**
+     * Charger l'interface VPN Tailscale
+     */
+    loadVpnInterface() {
+        console.log('🔒 Chargement interface VPN Tailscale');
+        
+        // Vérifier si la config existe
+        this.checkTailscaleConfig();
+        
+        // Charger les appareils si configuré
+        this.loadTailscaleDevices();
+    }
+    
+    /**
+     * Vérifier la configuration Tailscale
+     */
+    async checkTailscaleConfig() {
+        try {
+            const response = await fetch(`${this.apiBase}/api/tailscale/config`);
+            const data = await response.json();
+            
+            // Ne pas afficher automatiquement la configuration
+            // L'utilisateur doit cliquer sur "Paramètres" pour la voir
+            if (!data.success || !data.config.api_key_configured) {
+                console.log('ℹ️ Configuration Tailscale non trouvée');
+                this.showTailscaleStats(null);
+            }
+        } catch (error) {
+            console.log('ℹ️ Erreur lors de la vérification de la configuration Tailscale');
+            this.showTailscaleStats(null);
+        }
+    }
+    
+    /**
+     * Charger les appareils Tailscale
+     */
+    async loadTailscaleDevices() {
+        console.log('🔄 Chargement appareils Tailscale');
+        
+        const container = document.getElementById('tailscale-devices');
+        container.innerHTML = '<div class="loading">🔄 Connexion à Tailscale...</div>';
+        
+        try {
+            const response = await fetch(`${this.apiBase}/api/tailscale/devices`);
+            const data = await response.json();
+            
+            if (data.success && data.devices) {
+                this.displayTailscaleDevices(data.devices);
+                this.showTailscaleStats(data.devices);
+            } else {
+                // Gestion spécifique des erreurs API
+                if (data.error_type === 'expired_api_key') {
+                    container.innerHTML = `
+                        <div class="api-error-panel">
+                            <div class="error-icon">🔑⏰</div>
+                            <h3>Clé API Expirée</h3>
+                            <p>${data.error}</p>
+                            <p class="help-text">${data.help_text}</p>
+                            <div class="error-actions">
+                                <a href="${data.help_url}" target="_blank" class="btn btn-primary">
+                                    📝 Générer une nouvelle clé
+                                </a>
+                                <button onclick="app.showTailscaleSettings()" class="btn btn-secondary">
+                                    ⚙️ Configurer
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    this.showNotification('Clé API Tailscale expirée - Veuillez la renouveler', 'warning');
+                } else if (data.error_type === 'missing_api_key') {
+                    container.innerHTML = `
+                        <div class="api-error-panel">
+                            <div class="error-icon">🔑❌</div>
+                            <h3>Configuration Requise</h3>
+                            <p>Aucune clé API Tailscale configurée.</p>
+                            <div class="error-actions">
+                                <a href="${data.help_url}" target="_blank" class="btn btn-primary">
+                                    📝 Obtenir une clé API
+                                </a>
+                                <button onclick="app.showTailscaleSettings()" class="btn btn-secondary">
+                                    ⚙️ Configurer
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `<div class="error">❌ ${data.error || 'Erreur lors du chargement'}</div>`;
+                }
+                this.showTailscaleStats(null);
+            }
+        } catch (error) {
+            console.error('❌ Erreur Tailscale:', error);
+            container.innerHTML = '<div class="error">❌ Erreur de connexion à l\'API Tailscale</div>';
+            this.showTailscaleStats(null);
+        }
+    }
+    
+    /**
+     * Afficher les appareils Tailscale
+     */
+    displayTailscaleDevices(devices) {
+        const container = document.getElementById('tailscale-devices');
+        
+        if (!devices || devices.length === 0) {
+            container.innerHTML = '<div class="empty-state">📱 Aucun appareil Tailscale trouvé</div>';
+            return;
+        }
+        
+        const devicesHtml = devices.map(device => this.renderTailscaleDevice(device)).join('');
+        container.innerHTML = `
+            <div class="tailscale-devices-grid">
+                ${devicesHtml}
+            </div>
+        `;
+    }
+    
+    /**
+     * Vérifier si un appareil est récemment actif (moins de 5 minutes)
+     */
+    isRecentlyActive(lastSeenStr) {
+        try {
+            const lastSeen = new Date(lastSeenStr);
+            const now = new Date();
+            const diffMinutes = (now - lastSeen) / (1000 * 60);
+            return diffMinutes < 5; // Considéré en ligne si vu dans les 5 dernières minutes
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * Rendu d'un appareil Tailscale
+     */
+    renderTailscaleDevice(device) {
+        // Tentative de détection du statut selon différents formats API
+        const isOnline = device.online || 
+                        device.connected || 
+                        device.status === 'online' || 
+                        device.status === 'active' ||
+                        (device.lastSeen && this.isRecentlyActive(device.lastSeen));
+        
+        const statusClass = isOnline ? 'online' : 'offline';
+        const statusIcon = isOnline ? '🟢' : '🔴';
+        const lastSeen = device.lastSeen ? new Date(device.lastSeen).toLocaleString('fr-FR') : 'Jamais';
+        
+        return `
+            <div class="tailscale-device-card ${statusClass}">
+                <div class="device-header">
+                    <h4>${device.hostname || device.name || 'Appareil inconnu'}</h4>
+                    <span class="status-badge ${statusClass}">
+                        ${statusIcon} ${isOnline ? 'En ligne' : 'Hors ligne'}
+                    </span>
+                </div>
+                <div class="device-details">
+                    <div class="detail-row">
+                        <span>🔗 IP Tailscale:</span>
+                        <code>${device.addresses?.[0] || 'N/A'}</code>
+                    </div>
+                    <div class="detail-row">
+                        <span>💻 OS:</span>
+                        <span>${device.os || 'Inconnu'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>👤 Utilisateur:</span>
+                        <span>${device.user || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>⏱️ Dernière vue:</span>
+                        <span>${lastSeen}</span>
+                    </div>
+                    ${device.id ? `
+                    <div class="device-actions">
+                        <button onclick="app.renameDevice('${device.id}', '${device.hostname || device.name}')" 
+                                class="btn btn-sm btn-secondary" title="Renommer">
+                            ✏️ Renommer
+                        </button>
+                        ${!device.authorized ? `
+                        <button onclick="app.authorizeDevice('${device.id}')" 
+                                class="btn btn-sm btn-success" title="Autoriser">
+                            ✅ Autoriser
+                        </button>
+                        ` : ''}
+                        <button onclick="app.deleteDevice('${device.id}', '${device.hostname || device.name}')" 
+                                class="btn btn-sm btn-danger" title="Supprimer">
+                            🗑️ Supprimer
+                        </button>
+                    </div>
+                    ` : ''}
+                </div>
+                ${device.advertisesExitNode ? '<div class="exit-node-badge">🚪 Exit Node</div>' : ''}
+                ${!device.authorized ? '<div class="auth-required-badge">⚠️ Autorisation requise</div>' : ''}
+            </div>
+        `;
+    }
+    
+    /**
+     * Afficher les statistiques Tailscale
+     */
+    showTailscaleStats(devices) {
+        if (!devices) {
+            document.getElementById('total-devices').textContent = '-';
+            document.getElementById('online-devices').textContent = '-';
+            document.getElementById('offline-devices').textContent = '-';
+            document.getElementById('last-sync').textContent = '-';
+            return;
+        }
+        
+        const total = devices.length;
+        
+        // Utiliser la même logique de détection que renderTailscaleDevice
+        const online = devices.filter(device => {
+            return device.online || 
+                   device.connected || 
+                   device.status === 'online' || 
+                   device.status === 'active' ||
+                   (device.lastSeen && this.isRecentlyActive(device.lastSeen));
+        }).length;
+        
+        const offline = total - online;
+        
+        document.getElementById('total-devices').textContent = total;
+        document.getElementById('online-devices').textContent = online;
+        document.getElementById('offline-devices').textContent = offline;
+        document.getElementById('last-sync').textContent = new Date().toLocaleTimeString('fr-FR');
+    }
+    
+    /**
+     * Actualiser les données Tailscale
+     */
+    async refreshTailscale() {
+        this.showNotification('🔄 Actualisation Tailscale...', 'info');
+        await this.loadTailscaleDevices();
+        
+        // Recharger aussi les autres sections si elles sont visibles
+        if (document.getElementById('vpn-tab-routes').classList.contains('active')) {
+            await this.loadTailscaleRoutes();
+        }
+        if (document.getElementById('vpn-tab-acl').classList.contains('active')) {
+            await this.loadTailscaleACL();
+        }
+        
+        this.showNotification('✅ Tailscale actualisé', 'success');
+    }
+
+    /**
+     * Afficher un sous-onglet VPN
+     */
+    showVpnTab(tabName) {
+        // Masquer tous les onglets
+        document.querySelectorAll('.vpn-tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelectorAll('.vpn-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Afficher l'onglet sélectionné
+        const targetTab = document.getElementById(`vpn-tab-${tabName}`);
+        const targetButton = document.querySelector(`.vpn-tab[onclick="app.showVpnTab('${tabName}')"]`);
+        
+        if (targetTab && targetButton) {
+            targetTab.classList.add('active');
+            targetButton.classList.add('active');
+            
+            // Charger les données seulement si l'onglet est vide
+            if (tabName === 'routes') {
+                const container = document.getElementById('tailscale-routes');
+                if (container && container.querySelector('.loading')) {
+                    this.loadTailscaleRoutes();
+                }
+            } else if (tabName === 'acl') {
+                const container = document.getElementById('tailscale-acl');
+                if (container && container.querySelector('.loading')) {
+                    this.loadTailscaleACL();
+                }
+            }
+        }
+    }
+
+    /**
+     * Charger les routes Tailscale
+     */
+    async loadTailscaleRoutes() {
+        const container = document.getElementById('tailscale-routes');
+        container.innerHTML = '<div class="loading">🔄 Chargement des routes...</div>';
+        
+        try {
+            const response = await fetch(`${this.apiBase}/api/tailscale/routes`);
+            const data = await response.json();
+            
+            if (data.success) {
+                this.displayTailscaleRoutes(data.routes);
+            } else {
+                container.innerHTML = `<div class="error">❌ ${data.error}</div>`;
+            }
+        } catch (error) {
+            console.error('Erreur routes Tailscale:', error);
+            container.innerHTML = '<div class="error">❌ Erreur de chargement des routes</div>';
+        }
+    }
+
+    /**
+     * Afficher les routes Tailscale
+     */
+    displayTailscaleRoutes(routes) {
+        const container = document.getElementById('tailscale-routes');
+        
+        if (!routes || routes.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <h4>🛣️ Aucune route subnet configurée</h4>
+                    <p>Les routes subnet permettent d'accéder aux réseaux locaux via Tailscale.</p>
+                    <p>💡 <strong>Pour configurer des routes :</strong></p>
+                    <ol style="text-align: left; max-width: 500px; margin: 16px auto;">
+                        <li>Installez Tailscale sur un appareil du réseau local</li>
+                        <li>Lancez: <code>tailscale up --advertise-routes=192.168.1.0/24</code></li>
+                        <li>Autorisez les routes dans l'admin Tailscale</li>
+                    </ol>
+                </div>
+            `;
+            return;
+        }
+        
+        const routesHtml = routes.map(route => `
+            <div class="route-item card">
+                <div class="route-info">
+                    <strong>🎯 ${route.destination}</strong>
+                    <span class="route-via">via ${route.advertiser}</span>
+                </div>
+                <div class="route-status">
+                    <span class="status ${route.enabled ? 'status-success' : 'status-warning'}">
+                        ${route.enabled ? '✅ Activée' : '⏸️ Désactivée'}
+                    </span>
+                </div>
+            </div>
+        `).join('');
+        
+        container.innerHTML = routesHtml;
+    }
+
+    /**
+     * Charger les règles ACL Tailscale
+     */
+    async loadTailscaleACL() {
+        const container = document.getElementById('tailscale-acl');
+        container.innerHTML = '<div class="loading">🔄 Chargement des règles...</div>';
+        
+        try {
+            const response = await fetch(`${this.apiBase}/api/tailscale/acl`);
+            const data = await response.json();
+            
+            if (data.success) {
+                this.displayTailscaleACL(data.acl);
+            } else {
+                const errorMessage = data.error === "Permissions insuffisantes pour accéder aux ACL" ?
+                    `<div class="alert alert-warning">
+                        <h4>🔒 Permissions Limitées</h4>
+                        <p>Votre clé API n'a pas les permissions pour accéder aux règles ACL.</p>
+                        <p>💡 <strong>Solution :</strong> Générez une nouvelle clé API avec les permissions "Access controls: Read"</p>
+                        <a href="https://login.tailscale.com/admin/settings/keys" target="_blank" class="btn btn-primary btn-sm">
+                            🔑 Gérer les clés API
+                        </a>
+                    </div>` :
+                    `<div class="alert alert-error">❌ ${data.error}</div>`;
+                
+                container.innerHTML = errorMessage;
+            }
+        } catch (error) {
+            console.error('Erreur ACL Tailscale:', error);
+            container.innerHTML = `
+                <div class="alert alert-error">
+                    <h4>❌ Erreur de connexion</h4>
+                    <p>Impossible de charger les règles ACL. Vérifiez votre configuration.</p>
+                </div>
+            `;
+        }
+    }
+
+    /**
+     * Afficher les règles ACL Tailscale
+     */
+    displayTailscaleACL(acl) {
+        const container = document.getElementById('tailscale-acl');
+        
+        if (!acl) {
+            container.innerHTML = '<div class="empty-state">🛡️ Aucune règle ACL configurée</div>';
+            return;
+        }
+        
+        // Afficher un résumé des règles ACL
+        const groupsCount = Object.keys(acl.groups || {}).length;
+        const rulesCount = (acl.acls || []).length;
+        const testsCount = (acl.tests || []).length;
+        
+        const aclHtml = `
+            <div class="card">
+                <h4>📋 Résumé de la Politique de Sécurité</h4>
+                
+                <div class="stats-grid" style="margin: 20px 0;">
+                    <div class="stat-card">
+                        <h3>${groupsCount}</h3>
+                        <p>Groupes</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>${rulesCount}</h3>
+                        <p>Règles ACL</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>${testsCount}</h3>
+                        <p>Tests</p>
+                    </div>
+                </div>
+                
+                ${Object.keys(acl.groups || {}).length > 0 ? `
+                <div class="section">
+                    <h5>👥 Groupes configurés</h5>
+                    <div class="groups-list">
+                        ${Object.keys(acl.groups).map(group => `
+                            <span class="tag">${group}</span>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div class="alert alert-info">
+                    <p><strong>💡 Information :</strong> Les règles ACL contrôlent qui peut accéder à quoi dans votre réseau Tailscale.</p>
+                    <p>Pour des modifications avancées, utilisez l'interface d'administration Tailscale.</p>
+                    <p><a href="https://login.tailscale.com/admin/acls" target="_blank" class="btn btn-primary btn-sm">
+                        🔗 Gérer les ACL
+                    </a></p>
+                </div>
+            </div>
+        `;
+        
+        container.innerHTML = aclHtml;
+    }
+    
+    /**
+     * Basculer l'affichage des paramètres
+     */
+    toggleTailscaleSettings() {
+        const section = document.getElementById('vpn-config-section');
+        section.style.display = section.style.display === 'none' ? 'block' : 'none';
+    }
+
+    /**
+     * Afficher les paramètres Tailscale
+     */
+    showTailscaleSettings() {
+        const section = document.getElementById('vpn-config-section');
+        section.style.display = 'block';
+        
+        // Focus sur le champ API Key si vide
+        const apiKeyField = document.getElementById('tailscale-api-key');
+        if (!apiKeyField.value.trim()) {
+            apiKeyField.focus();
+        }
+    }
+
+    /**
+     * Sauvegarder la configuration Tailscale
+     */
+    async saveTailscaleConfig(event) {
+        event.preventDefault();
+        
+        const apiKey = document.getElementById('tailscale-api-key').value.trim();
+        const tailnet = document.getElementById('tailscale-tailnet').value.trim();
+        
+        if (!apiKey) {
+            this.showNotification('Veuillez saisir une clé API Tailscale', 'error');
+            return;
+        }
+        
+        if (!tailnet) {
+            this.showNotification('Veuillez saisir le nom de votre Tailnet', 'error');
+            return;
+        }
+        
+        // Afficher l'indicateur de chargement
+        const submitButton = event.target.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        submitButton.textContent = '⏳ Test de la connexion...';
+        submitButton.disabled = true;
+        
+        try {
+            const response = await fetch(`${this.apiBase}/api/tailscale/config`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    api_key: apiKey,
+                    tailnet: tailnet
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.showNotification('✅ Configuration Tailscale sauvegardée avec succès !', 'success');
+                
+                // Cacher la section de configuration
+                document.getElementById('vpn-config-section').style.display = 'none';
+                
+                // Recharger les appareils
+                this.loadTailscaleDevices();
+                this.checkTailscaleConfig();
+                
+            } else {
+                // Gestion des erreurs spécifiques
+                if (data.help_text && data.help_url) {
+                    this.showNotification(`❌ ${data.error}`, 'error');
+                    
+                    // Afficher un message d'aide détaillé
+                    setTimeout(() => {
+                        const helpHtml = `
+                            <div class="api-error-help">
+                                <p><strong>💡 Aide :</strong> ${data.help_text}</p>
+                                <a href="${data.help_url}" target="_blank" class="help-link">
+                                    📝 Générer une nouvelle clé API
+                                </a>
+                            </div>
+                        `;
+                        
+                        // Insérer l'aide sous le formulaire
+                        const form = document.getElementById('tailscale-config-form');
+                        const existingHelp = form.querySelector('.api-error-help');
+                        if (existingHelp) existingHelp.remove();
+                        
+                        form.insertAdjacentHTML('afterend', helpHtml);
+                    }, 1000);
+                } else {
+                    this.showNotification(`❌ ${data.error}`, 'error');
+                }
+            }
+        } catch (error) {
+            console.error('Erreur lors de la sauvegarde:', error);
+            this.showNotification('❌ Erreur de connexion lors de la sauvegarde', 'error');
+        } finally {
+            // Restaurer le bouton
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+        }
+    }
+
+    /**
+     * Renommer un appareil Tailscale
+     */
+    async renameDevice(deviceId, currentName) {
+        const newName = prompt(`Nouveau nom pour "${currentName}":`, currentName);
+        if (!newName || newName === currentName) return;
+        
+        try {
+            const response = await fetch(`${this.apiBase}/api/tailscale/device/${deviceId}/rename`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: newName })
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                this.showNotification(data.message, 'success');
+                this.loadTailscaleDevices(); // Recharger la liste
+            } else {
+                this.showNotification(`Erreur: ${data.error}`, 'error');
+            }
+        } catch (error) {
+            this.showNotification('Erreur de connexion', 'error');
+        }
+    }
+
+    /**
+     * Autoriser un appareil Tailscale
+     */
+    async authorizeDevice(deviceId) {
+        if (!confirm('Autoriser cet appareil sur le réseau ?')) return;
+        
+        try {
+            const response = await fetch(`${this.apiBase}/api/tailscale/device/${deviceId}/authorize`, {
+                method: 'POST'
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                this.showNotification(data.message, 'success');
+                this.loadTailscaleDevices(); // Recharger la liste
+            } else {
+                this.showNotification(`Erreur: ${data.error}`, 'error');
+            }
+        } catch (error) {
+            this.showNotification('Erreur de connexion', 'error');
+        }
+    }
+
+    /**
+     * Supprimer un appareil Tailscale
+     */
+    async deleteDevice(deviceId, deviceName) {
+        if (!confirm(`⚠️ ATTENTION ⚠️\n\nSupprimer "${deviceName}" du réseau Tailscale ?\n\nCette action est irréversible !`)) return;
+        
+        try {
+            const response = await fetch(`${this.apiBase}/api/tailscale/device/${deviceId}`, {
+                method: 'DELETE'
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                this.showNotification(data.message, 'success');
+                this.loadTailscaleDevices(); // Recharger la liste
+            } else {
+                this.showNotification(`Erreur: ${data.error}`, 'error');
+            }
+        } catch (error) {
+            this.showNotification('Erreur de connexion', 'error');
+        }
+    }
+
+    /**
+     * Afficher une notification toast
+     */
+    showNotification(message, type = 'info', duration = 3000) {
+        // Supprimer les anciennes notifications
+        document.querySelectorAll('.toast-notification').forEach(toast => toast.remove());
+        
+        // Créer la nouvelle notification
+        const toast = document.createElement('div');
+        toast.className = `toast-notification toast-${type}`;
+        
+        const icon = {
+            'success': '✅',
+            'error': '❌', 
+            'warning': '⚠️',
+            'info': 'ℹ️'
+        }[type] || 'ℹ️';
+        
+        toast.innerHTML = `
+            <div class="toast-content">
+                <span class="toast-icon">${icon}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.parentElement.remove()">×</button>
+            </div>
+        `;
+        
+        // Ajouter au DOM
+        document.body.appendChild(toast);
+        
+        // Animation d'entrée
+        requestAnimationFrame(() => {
+            toast.classList.add('toast-show');
+        });
+        
+        // Auto-suppression
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.classList.remove('toast-show');
+                setTimeout(() => toast.remove(), 300);
+            }
+        }, duration);
     }
 }
 

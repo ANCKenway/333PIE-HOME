@@ -66,6 +66,51 @@ class DeviceMonitor:
         
         return arp_table
     
+    async def check_vpn_status(self, device: Dict) -> Dict:
+        """
+        Vérifier le statut VPN d'un appareil
+        """
+        vpn_result = {
+            'enabled': False,
+            'ip': None,
+            'status': 'disabled',
+            'ping_success': False
+        }
+        
+        # Debug: Afficher les propriétés VPN
+        device_name = device.get('name', 'Unknown')
+        logger.debug(f"VPN Check for {device_name}: is_vpn={device.get('is_vpn')}, ip_secondary={device.get('ip_secondary')}")
+        
+        # Vérifier si VPN est activé et IP secondaire configurée
+        if not device.get('is_vpn', False) or not device.get('ip_secondary'):
+            logger.debug(f"VPN disabled or no secondary IP for {device_name}")
+            return vpn_result
+            
+        vpn_ip = device['ip_secondary']
+        vpn_result.update({
+            'enabled': True,
+            'ip': vpn_ip,
+            'status': 'offline'
+        })
+        
+        # Ping de l'IP VPN
+        try:
+            if await self.quick_ping(vpn_ip):
+                vpn_result.update({
+                    'status': 'online',
+                    'ping_success': True
+                })
+                logger.debug(f"VPN ping successful for {device.get('name', 'Unknown')} → {vpn_ip}")
+            else:
+                vpn_result['status'] = 'offline'
+                logger.debug(f"VPN ping failed for {device.get('name', 'Unknown')} → {vpn_ip}")
+                
+        except Exception as e:
+            vpn_result['status'] = 'error'
+            logger.error(f"VPN ping error for {vpn_ip}: {e}")
+            
+        return vpn_result
+    
     def find_device_by_mac(self, target_mac: str) -> Optional[str]:
         """Trouver l'IP actuelle d'un appareil via sa MAC (gestion DHCP)"""
         if not target_mac:
@@ -102,10 +147,11 @@ class DeviceMonitor:
     
     async def check_device_status(self, device: Dict) -> Dict:
         """
-        Vérifier le statut d'un appareil avec gestion DHCP complète
+        Vérifier le statut d'un appareil avec gestion DHCP complète + VPN
         - Priorité 1: Ping IP configurée
         - Priorité 2: Ping par hostname (si configuré)
         - Priorité 3: Recherche par MAC dans ARP puis ping nouvelle IP
+        - Bonus: Ping IP VPN si configurée
         """
         original_ip = device['ip']
         mac_address = device.get('mac', '')
@@ -174,6 +220,10 @@ class DeviceMonitor:
         if status_result['status'] == 'offline' and status_result['method'] == 'unknown':
             status_result['method'] = 'no_fallback_method'
         
+        # BONUS: Test ping VPN si IP secondaire configurée
+        vpn_status = await self.check_vpn_status(device)
+        status_result['vpn_status'] = vpn_status
+        
         # Mettre en cache
         self.status_cache[cache_key] = status_result
         
@@ -200,6 +250,7 @@ class DeviceMonitor:
                 device_copy['ip_changed'] = result['ip_changed']
                 device_copy['detection_method'] = result['method']
                 device_copy['last_checked'] = result['timestamp']
+                device_copy['vpn_status'] = result.get('vpn_status', {})
                 
                 # Mise à jour de l'IP si elle a changé
                 if result['ip_changed']:

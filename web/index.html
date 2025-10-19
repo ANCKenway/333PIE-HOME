@@ -39,6 +39,10 @@
                     <span class="nav-icon">🌐</span>
                     <span class="nav-text">Scan Réseau</span>
                 </button>
+                <button class="nav-btn" data-tab="vpn">
+                    <span class="nav-icon">🔒</span>
+                    <span class="nav-text">VPN Tailscale</span>
+                </button>
                 <button class="nav-btn" data-tab="test">
                     <span class="nav-icon">🔧</span>
                     <span class="nav-text">Test API</span>
@@ -73,6 +77,7 @@
                 <div class="devices-actions">
                     <button class="btn btn-primary" id="refresh-devices">🔄 Actualiser</button>
                     <button class="btn btn-success" id="add-device">➕ Ajouter Appareil</button>
+                    <button class="btn btn-secondary" id="sync-vpn-devices">🔒 Sync VPN</button>
                 </div>
                 
                 <div class="devices-container">
@@ -147,6 +152,105 @@
                         <div class="card">
                             <p class="empty-state">🎯 Cliquez sur "Lancer Scan" pour découvrir les appareils réseau</p>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab VPN Tailscale -->
+            <div id="tab-vpn" class="tab-content">
+                <div class="page-header">
+                    <h2>🔒 VPN Tailscale</h2>
+                    <p>Gestion et monitoring de votre réseau Tailscale</p>
+                </div>
+                
+                <div class="vpn-actions">
+                    <button class="btn btn-primary" id="refresh-tailscale">🔄 Actualiser</button>
+                    <button class="btn btn-secondary" id="tailscale-settings">⚙️ Configuration</button>
+                </div>
+                
+                <!-- Sub-tabs VPN -->
+                <div class="vpn-tabs">
+                    <button class="vpn-tab active" onclick="app.showVpnTab('devices')">📱 Appareils</button>
+                    <button class="vpn-tab" onclick="app.showVpnTab('routes')">🛣️ Routes</button>
+                    <button class="vpn-tab" onclick="app.showVpnTab('acl')">🛡️ Sécurité</button>
+                </div>
+                
+                <!-- Tab Appareils -->
+                <div id="vpn-tab-devices" class="vpn-tab-content active">
+                    <!-- Statistiques VPN -->
+                <div class="vpn-stats">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 id="total-devices">-</h3>
+                            <p>Appareils Total</p>
+                        </div>
+                        <div class="stat-card online">
+                            <h3 id="online-devices">-</h3>
+                            <p>En Ligne</p>
+                        </div>
+                        <div class="stat-card offline">
+                            <h3 id="offline-devices">-</h3>
+                            <p>Hors Ligne</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="last-sync">-</h3>
+                            <p>Dernière Synch</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Liste des appareils Tailscale -->
+                <div class="vpn-devices">
+                    <div class="card">
+                        <h3>🌐 Appareils Tailscale</h3>
+                        <div id="tailscale-devices">
+                            <div class="loading">🔄 Chargement des appareils Tailscale...</div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                
+                <!-- Tab Routes -->
+                <div id="vpn-tab-routes" class="vpn-tab-content">
+                    <div class="card">
+                        <h3>🛣️ Routes Subnet</h3>
+                        <p>Configuration des routes pour accéder aux réseaux locaux via Tailscale.</p>
+                        <div id="tailscale-routes">
+                            <div class="loading">🔄 Chargement des routes...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab ACL/Sécurité -->
+                <div id="vpn-tab-acl" class="vpn-tab-content">
+                    <div class="card">
+                        <h3>🛡️ Contrôle d'Accès (ACL)</h3>
+                        <p>Règles de sécurité et politique d'accès du réseau Tailscale.</p>
+                        <div id="tailscale-acl">
+                            <div class="loading">🔄 Chargement des règles...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Configuration API -->
+                <div class="vpn-config" id="vpn-config-section" style="display: none;">
+                    <div class="card">
+                        <h3>⚙️ Configuration API</h3>
+                        <form id="tailscale-config-form">
+                            <div class="form-group">
+                                <label>🔑 Clé API Tailscale</label>
+                                <input type="password" id="tailscale-api-key" class="form-control" 
+                                       placeholder="tskey-api-...">
+                                <small>Obtenez votre clé sur https://login.tailscale.com/admin/settings/keys</small>
+                            </div>
+                            <div class="form-group">
+                                <label>🏢 Tailnet (Organisation)</label>
+                                <input type="text" id="tailscale-tailnet" class="form-control" 
+                                       placeholder="tail12345.ts.net ou votre@email.com">
+                                <small>Format: tail&lt;hash&gt;.ts.net (visible dans Admin → Settings) ou votre email pour compte personnel</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">💾 Sauvegarder</button>
+                        </form>
                     </div>
                 </div>
             </div>
