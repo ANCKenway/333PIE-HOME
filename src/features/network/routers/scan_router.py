@@ -155,7 +155,8 @@ async def scan_network(
         )
         
         # 🔥 ENRICHIR LE NETWORK REGISTRY (suivi persistant)
-        registry = NetworkRegistry()
+        from ..registry import get_network_registry
+        registry = get_network_registry()
         
         # Convertir devices en format dict pour le registry
         devices_for_registry = []
@@ -311,7 +312,7 @@ async def quick_ping_check() -> dict:
 
 
 @router.get("/registry")
-async def get_network_registry() -> dict:
+async def get_network_registry_endpoint() -> dict:
     """
     Récupérer le Network Registry complet
     
@@ -319,7 +320,8 @@ async def get_network_registry() -> dict:
     C'est le fichier central de suivi persistant du réseau.
     """
     try:
-        registry = NetworkRegistry()
+        from ..registry import get_network_registry
+        registry = get_network_registry()
         devices = registry.get_all_devices()
         stats = registry.get_statistics()
         
@@ -345,7 +347,8 @@ async def get_device_history(mac: str) -> dict:
         Historique complet (IPs, hostnames, détections)
     """
     try:
-        registry = NetworkRegistry()
+        from ..registry import get_network_registry
+        registry = get_network_registry()
         device = registry.get_device(mac)
         
         if not device:
@@ -368,7 +371,8 @@ async def get_registry_statistics() -> dict:
         Stats: total, online, offline, VPN, managed, DHCP dynamics
     """
     try:
-        registry = NetworkRegistry()
+        from ..registry import get_network_registry
+        registry = get_network_registry()
         return registry.get_statistics()
     except Exception as e:
         logger.error(f"Registry stats failed: {e}")

@@ -33,6 +33,14 @@ async def lifespan(app: FastAPI):
     settings.data_dir.mkdir(parents=True, exist_ok=True)
     logger.info("✅ Répertoires OK")
     
+    # 🔧 Charger le NetworkRegistry au démarrage (singleton - Phase 6)
+    try:
+        from src.features.network.registry import get_network_registry
+        registry = get_network_registry()
+        logger.info(f"✅ NetworkRegistry chargé: {len(registry.devices)} devices")
+    except Exception as e:
+        logger.error(f"❌ Erreur chargement NetworkRegistry: {e}")
+    
     # ⚠️ MONITORING DÉSACTIVÉ : Scans ON-DEMAND uniquement via API
     # Raison : Éviter perturbations réseau et détection antivirus
     # Utiliser : POST /api/network/scan ou POST /api/network/v2/scan

@@ -10,7 +10,7 @@ import logging
 from typing import Optional, List
 from fastapi import APIRouter, HTTPException, Query
 
-from ..registry import NetworkRegistry
+from ..registry import get_network_registry
 from ..schemas import DeviceRegistryResponse, RegistryStatistics
 
 logger = logging.getLogger(__name__)
@@ -44,7 +44,7 @@ async def get_all_registry_devices(
     Récupérer tous les devices du registry avec filtres optionnels.
     """
     try:
-        registry = NetworkRegistry()
+        registry = get_network_registry()
         devices = registry.get_all_devices()
         
         # Filtres
@@ -100,7 +100,7 @@ async def get_device_by_mac(mac: str):
     Retourne son historique complet (IP changes, hostname changes, etc.)
     """
     try:
-        registry = NetworkRegistry()
+        registry = get_network_registry()
         device = registry.get_device(mac)
         
         if not device:
@@ -132,7 +132,7 @@ async def get_registry_statistics():
     Récupérer les statistiques globales du registry.
     """
     try:
-        registry = NetworkRegistry()
+        registry = get_network_registry()
         stats = registry.get_statistics()
         
         logger.debug(f"📊 Registry stats: {stats['total_devices']} devices, {stats['online']} online")
@@ -160,7 +160,7 @@ async def get_recent_changes(
     Utile pour timeline d'événements dans le dashboard.
     """
     try:
-        registry = NetworkRegistry()
+        registry = get_network_registry()
         recent = registry.get_recent_changes(limit=limit)
         
         logger.info(f"📊 Recent changes: {len(recent)} devices")
@@ -190,7 +190,7 @@ async def mark_device_as_managed(mac: str, managed: bool = True):
     Les devices gérés apparaissent dans l'onglet "Appareils".
     """
     try:
-        registry = NetworkRegistry()
+        registry = get_network_registry()
         registry.mark_as_managed(mac, managed=managed)
         
         logger.info(f"✅ Device {mac} marked as {'managed' if managed else 'unmanaged'}")

@@ -35,8 +35,8 @@ class DeviceMonitor:
         Évite les pings redondants avec les scans réseau.
         """
         try:
-            from src.features.network.registry import NetworkRegistry
-            registry = NetworkRegistry()
+            from src.features.network.registry import get_network_registry
+            registry = get_network_registry()
             
             # Construire cache {MAC: {is_online, last_seen, current_ip}}
             self._registry_cache = {}

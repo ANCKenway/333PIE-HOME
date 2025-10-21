@@ -24,6 +24,23 @@ from dataclasses import dataclass, asdict, field
 logger = logging.getLogger(__name__)
 
 
+# Singleton global pour partager une seule instance du registry
+_registry_instance: Optional['NetworkRegistry'] = None
+
+
+def get_network_registry() -> 'NetworkRegistry':
+    """
+    Récupérer l'instance singleton du NetworkRegistry
+    
+    Garantit qu'une seule instance existe et persiste en mémoire.
+    Évite de recharger le fichier JSON à chaque requête API.
+    """
+    global _registry_instance
+    if _registry_instance is None:
+        _registry_instance = NetworkRegistry()
+    return _registry_instance
+
+
 @dataclass
 class IPHistoryEntry:
     """Entrée d'historique IP"""

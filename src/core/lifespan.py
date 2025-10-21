@@ -36,6 +36,14 @@ class AppLifespan:
         logger.info("🚀 333HOME - Démarrage de l'application")
         logger.info("=" * 60)
         
+        # 🔧 Charger le NetworkRegistry au démarrage (singleton)
+        try:
+            from src.features.network.registry import get_network_registry
+            registry = get_network_registry()
+            logger.info(f"✅ NetworkRegistry chargé: {len(registry.devices)} devices")
+        except Exception as e:
+            logger.error(f"❌ Erreur chargement NetworkRegistry: {e}")
+        
         # Exécuter les tâches de démarrage personnalisées
         for task, name in self.startup_tasks:
             try:
