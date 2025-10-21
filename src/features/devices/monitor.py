@@ -1,6 +1,10 @@
 """
 📊 333HOME - Device Monitor
 Monitoring du statut des appareils (ping, online/offline)
+
+Phase 6 Étape 2: Utilise NetworkRegistry comme source unique de vérité.
+Au lieu de ping individuel (lent), récupère le statut depuis le registry
+(enrichi par les scans réseau réguliers).
 """
 
 import asyncio
@@ -19,7 +23,36 @@ class DeviceMonitor:
     
     def __init__(self):
         self.ping_timeout = 2  # secondes
-        logger.info("📊 DeviceMonitor initialisé")
+        self._registry_cache: Dict[str, Dict] = {}  # Cache du registry
+        self._cache_timestamp = None
+        logger.info("📊 DeviceMonitor initialisé (avec NetworkRegistry)")
+    
+    def _load_registry_cache(self):
+        """
+        Charger le cache depuis le NetworkRegistry
+        
+        Phase 6: Source unique de vérité pour statuts online/offline.
+        Évite les pings redondants avec les scans réseau.
+        """
+        try:
+            from src.features.network.registry import NetworkRegistry
+            registry = NetworkRegistry()
+            
+            # Construire cache {MAC: {is_online, last_seen, current_ip}}
+            self._registry_cache = {}
+            for device in registry.get_all_devices():
+                mac = device['mac'].upper()
+                self._registry_cache[mac] = {
+                    'is_online': device.get('is_online', False),
+                    'last_seen': device.get('last_seen'),
+                    'current_ip': device.get('current_ip')
+                }
+            
+            logger.debug(f"📊 Registry cache loaded: {len(self._registry_cache)} devices")
+            
+        except Exception as e:
+            logger.warning(f"⚠️ Could not load registry cache: {e}")
+            self._registry_cache = {}
     
     async def ping(self, ip: str, timeout: int = None) -> bool:
         """
@@ -53,16 +86,37 @@ class DeviceMonitor:
         """
         Vérifier le statut d'un appareil
         
+        Phase 6: Priorité au NetworkRegistry (scan enrichi automatique).
+        Fallback sur ping si device pas dans registry (cas rare).
+        
         Args:
             device: Dictionnaire avec les infos de l'appareil
             
         Returns:
             Device avec statut mis à jour
         """
+        mac = device.get('mac', '').upper()
         ip = device.get('ip')
+        
+        # 1. Essayer d'abord depuis le registry cache (source unique de vérité)
+        if mac and mac in self._registry_cache:
+            registry_status = self._registry_cache[mac]
+            online = registry_status['is_online']
+            
+            logger.debug(f"✅ Status from registry: {mac[:17]} = {online}")
+            
+            return {
+                **device,
+                'status': 'online' if online else 'offline',
+                'online': online,
+                'last_seen': registry_status.get('last_seen')
+            }
+        
+        # 2. Fallback: ping direct si pas dans registry (device géré mais pas encore scanné)
         if not ip:
             return {**device, 'status': 'unknown', 'online': False}
         
+        logger.debug(f"⚠️ Device {mac[:17]} not in registry, fallback to ping")
         online = await self.ping(ip)
         
         return {
@@ -75,12 +129,18 @@ class DeviceMonitor:
         """
         Vérifier le statut de plusieurs appareils en parallèle
         
+        Phase 6: Charge le registry cache une fois, puis check tous devices.
+        Évite N pings redondants (source unique = registry).
+        
         Args:
             devices: Liste d'appareils
             
         Returns:
             Liste d'appareils avec statuts mis à jour
         """
+        # Charger le registry cache AVANT de vérifier les devices
+        self._load_registry_cache()
+        
         tasks = [self.check_device_status(device) for device in devices]
         results = await asyncio.gather(*tasks)
         return list(results)

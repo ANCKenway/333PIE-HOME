@@ -31,12 +31,12 @@ wol_service = WakeOnLanService()
 
 
 @router.get("/", response_model=List[DeviceResponse])
-async def list_devices(check_status: bool = False):
+async def list_devices(check_status: bool = True):
     """
     Lister tous les appareils
     
     Args:
-        check_status: Si True, vérifie le statut online/offline de chaque appareil
+        check_status: Si True, vérifie le statut online/offline depuis NetworkRegistry (Phase 6)
     """
     try:
         devices = device_manager.get_all_devices()
