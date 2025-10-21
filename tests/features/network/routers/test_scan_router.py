@@ -29,7 +29,7 @@ def sample_scan_result():
         scan_id="test_scan_123",
         timestamp=datetime.now(),
         subnet="192.168.1.0/24",
-        scan_type="quick",  # Enum valide
+        scan_type="full",  # Phase 6: Seul type valide
         devices_found=3,
         new_devices=1,
         duration_ms=5200,  # En millisecondes
@@ -80,7 +80,7 @@ class TestScanRouter:
         # Request
         scan_request = {
             "subnet": "192.168.1.0/24",
-            "scan_type": "quick",  # Enum valide
+            "scan_type": "full",  # Phase 6: Seul type valide
             "timeout_ms": 2000
         }
         
@@ -100,7 +100,7 @@ class TestScanRouter:
         """Test POST /scan quand scan déjà en cours"""
         scan_request = {
             "subnet": "192.168.1.0/24",
-            "scan_type": "quick"
+            "scan_type": "full"  # Phase 6: Seul type valide
         }
         
         response = client.post("/api/network/scan", json=scan_request)
@@ -131,7 +131,7 @@ class TestScanRouter:
         
         scan_request = {
             "subnet": "192.168.1.0/24",
-            "scan_type": "quick"
+            "scan_type": "full"  # Phase 6: Seul type valide
         }
         
         response = client.post("/api/network/scan", json=scan_request)

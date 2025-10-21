@@ -80,25 +80,14 @@ async def scan_network(
     
     try:
         _scan_in_progress = True
-        logger.info(f"🌐 Starting MULTI-SOURCE network scan: {scan_request.scan_type}")
+        logger.info(f"🌐 Starting MULTI-SOURCE network scan (FULL)")
         
-        # Créer le MultiSourceScanner (avec NetBIOS pour Windows!)
+        # Phase 6: 1 seul scan type = FULL (toutes sources activées)
+        # RULES.MD: "Pas de versions multiples" → quick/arp/mdns supprimés
         scanner = MultiSourceScanner(subnet=scan_request.subnet)
+        logger.info("🔥 Full scan: nmap + ARP + mDNS + NetBIOS + Tailscale")
         
-        # Activer/désactiver sources selon scan_type
-        if scan_request.scan_type.value == "quick":
-            scanner.enabled_sources['nmap'] = False  # Skip nmap pour quick
-            logger.info("⚡ Quick scan: ARP + mDNS + NetBIOS only")
-        elif scan_request.scan_type.value == "arp_only":
-            scanner.enabled_sources.update({'nmap': False, 'mdns': False, 'netbios': False})
-            logger.info("⚡ ARP-only scan")
-        elif scan_request.scan_type.value == "mdns_only":
-            scanner.enabled_sources.update({'nmap': False, 'arp': False, 'netbios': False})
-            logger.info("⚡ mDNS-only scan")
-        else:
-            logger.info("🔥 Full scan: nmap + ARP + mDNS + NetBIOS")
-        
-        # Lancer le scan multi-sources
+        # Lancer le scan multi-sources (toutes sources)
         unified_devices = await scanner.scan_all()
         
         # Filtrer devices VPN-only (pas d'IP locale)

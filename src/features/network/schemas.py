@@ -14,11 +14,13 @@ from enum import Enum
 # === ENUMS ===
 
 class ScanType(str, Enum):
-    """Types de scan réseau"""
-    FULL = "full"              # ICMP + mDNS + ARP complet
-    QUICK = "quick"            # ICMP uniquement
-    MDNS_ONLY = "mdns_only"    # mDNS uniquement
-    ARP_ONLY = "arp_only"      # ARP uniquement
+    """
+    Type de scan réseau
+    
+    Phase 6: Simplifié à FULL uniquement (RULES.MD: pas de versions multiples)
+    Quick/MDNS/ARP = subsets redondants → Supprimés
+    """
+    FULL = "full"  # Multi-source complet: nmap + ARP + mDNS + NetBIOS + Tailscale
 
 
 class NetworkEventType(str, Enum):

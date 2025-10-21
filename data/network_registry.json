@@ -1,6 +1,253 @@
 {
   "version": "1.0",
-  "last_updated": "2025-10-21T19:59:11.144148",
-  "total_devices": 0,
-  "devices": {}
+  "last_updated": "2025-10-21T20:36:48.459756",
+  "total_devices": 9,
+  "devices": {
+    "C8:FF:77:59:DE:E1": {
+      "mac": "C8:FF:77:59:DE:E1",
+      "current_ip": "192.168.1.77",
+      "current_hostname": null,
+      "vendor": null,
+      "os_detected": null,
+      "device_type": null,
+      "is_online": false,
+      "is_vpn_connected": false,
+      "vpn_ip": null,
+      "ip_history": [
+        {
+          "ip": "192.168.1.77",
+          "first_seen": "2025-10-21T20:36:48.459499",
+          "last_seen": "2025-10-21T20:36:48.459499",
+          "occurrences": 1
+        }
+      ],
+      "hostname_history": [],
+      "first_seen": "2025-10-21T20:36:48.459499",
+      "last_seen": "2025-10-21T20:36:48.459499",
+      "last_seen_online": null,
+      "total_detections": 1,
+      "notes": null,
+      "is_managed": false
+    },
+    "8C:97:EA:31:C0:A2": {
+      "mac": "8C:97:EA:31:C0:A2",
+      "current_ip": "192.168.1.254",
+      "current_hostname": "Freebox-Server.local",
+      "vendor": "Freebox",
+      "os_detected": null,
+      "device_type": null,
+      "is_online": true,
+      "is_vpn_connected": false,
+      "vpn_ip": null,
+      "ip_history": [
+        {
+          "ip": "192.168.1.254",
+          "first_seen": "2025-10-21T20:36:48.459499",
+          "last_seen": "2025-10-21T20:36:48.459499",
+          "occurrences": 1
+        }
+      ],
+      "hostname_history": [
+        {
+          "hostname": "Freebox-Server.local",
+          "first_seen": "2025-10-21T20:36:48.459499",
+          "last_seen": "2025-10-21T20:36:48.459499"
+        }
+      ],
+      "first_seen": "2025-10-21T20:36:48.459499",
+      "last_seen": "2025-10-21T20:36:48.459499",
+      "last_seen_online": "2025-10-21T20:36:48.459499",
+      "total_detections": 1,
+      "notes": null,
+      "is_managed": false
+    },
+    "A4:E5:7C:31:54:36": {
+      "mac": "A4:E5:7C:31:54:36",
+      "current_ip": "192.168.1.171",
+      "current_hostname": null,
+      "vendor": "Espressif",
+      "os_detected": null,
+      "device_type": null,
+      "is_online": false,
+      "is_vpn_connected": false,
+      "vpn_ip": null,
+      "ip_history": [
+        {
+          "ip": "192.168.1.171",
+          "first_seen": "2025-10-21T20:36:48.459499",
+          "last_seen": "2025-10-21T20:36:48.459499",
+          "occurrences": 1
+        }
+      ],
+      "hostname_history": [],
+      "first_seen": "2025-10-21T20:36:48.459499",
+      "last_seen": "2025-10-21T20:36:48.459499",
+      "last_seen_online": null,
+      "total_detections": 1,
+      "notes": null,
+      "is_managed": false
+    },
+    "8C:97:EA:14:9D:1B": {
+      "mac": "8C:97:EA:14:9D:1B",
+      "current_ip": "192.168.1.100",
+      "current_hostname": null,
+      "vendor": "Freebox",
+      "os_detected": null,
+      "device_type": null,
+      "is_online": false,
+      "is_vpn_connected": false,
+      "vpn_ip": null,
+      "ip_history": [
+        {
+          "ip": "192.168.1.100",
+          "first_seen": "2025-10-21T20:36:48.459499",
+          "last_seen": "2025-10-21T20:36:48.459499",
+          "occurrences": 1
+        }
+      ],
+      "hostname_history": [],
+      "first_seen": "2025-10-21T20:36:48.459499",
+      "last_seen": "2025-10-21T20:36:48.459499",
+      "last_seen_online": null,
+      "total_detections": 1,
+      "notes": null,
+      "is_managed": false
+    },
+    "34:5A:60:7F:12:C1": {
+      "mac": "34:5A:60:7F:12:C1",
+      "current_ip": "192.168.1.174",
+      "current_hostname": "TITO",
+      "vendor": null,
+      "os_detected": null,
+      "device_type": null,
+      "is_online": true,
+      "is_vpn_connected": true,
+      "vpn_ip": "100.93.236.71",
+      "ip_history": [
+        {
+          "ip": "192.168.1.174",
+          "first_seen": "2025-10-21T20:36:48.459499",
+          "last_seen": "2025-10-21T20:36:48.459499",
+          "occurrences": 1
+        }
+      ],
+      "hostname_history": [
+        {
+          "hostname": "TITO",
+          "first_seen": "2025-10-21T20:36:48.459499",
+          "last_seen": "2025-10-21T20:36:48.459499"
+        }
+      ],
+      "first_seen": "2025-10-21T20:36:48.459499",
+      "last_seen": "2025-10-21T20:36:48.459499",
+      "last_seen_online": "2025-10-21T20:36:48.459499",
+      "total_detections": 1,
+      "notes": null,
+      "is_managed": false
+    },
+    "9E:67:44:B4:B8:7D": {
+      "mac": "9E:67:44:B4:B8:7D",
+      "current_ip": "192.168.1.99",
+      "current_hostname": null,
+      "vendor": "Android Device",
+      "os_detected": null,
+      "device_type": null,
+      "is_online": false,
+      "is_vpn_connected": false,
+      "vpn_ip": null,
+      "ip_history": [
+        {
+          "ip": "192.168.1.99",
+          "first_seen": "2025-10-21T20:36:48.459499",
+          "last_seen": "2025-10-21T20:36:48.459499",
+          "occurrences": 1
+        }
+      ],
+      "hostname_history": [],
+      "first_seen": "2025-10-21T20:36:48.459499",
+      "last_seen": "2025-10-21T20:36:48.459499",
+      "last_seen_online": null,
+      "total_detections": 1,
+      "notes": null,
+      "is_managed": false
+    },
+    "10:7C:61:78:72:8B": {
+      "mac": "10:7C:61:78:72:8B",
+      "current_ip": "192.168.1.24",
+      "current_hostname": null,
+      "vendor": null,
+      "os_detected": null,
+      "device_type": null,
+      "is_online": false,
+      "is_vpn_connected": false,
+      "vpn_ip": null,
+      "ip_history": [
+        {
+          "ip": "192.168.1.24",
+          "first_seen": "2025-10-21T20:36:48.459499",
+          "last_seen": "2025-10-21T20:36:48.459499",
+          "occurrences": 1
+        }
+      ],
+      "hostname_history": [],
+      "first_seen": "2025-10-21T20:36:48.459499",
+      "last_seen": "2025-10-21T20:36:48.459499",
+      "last_seen_online": null,
+      "total_detections": 1,
+      "notes": null,
+      "is_managed": false
+    },
+    "CA:08:C5:BF:00:13": {
+      "mac": "CA:08:C5:BF:00:13",
+      "current_ip": "192.168.1.23",
+      "current_hostname": null,
+      "vendor": "Apple Inc.",
+      "os_detected": null,
+      "device_type": null,
+      "is_online": false,
+      "is_vpn_connected": false,
+      "vpn_ip": null,
+      "ip_history": [
+        {
+          "ip": "192.168.1.23",
+          "first_seen": "2025-10-21T20:36:48.459499",
+          "last_seen": "2025-10-21T20:36:48.459499",
+          "occurrences": 1
+        }
+      ],
+      "hostname_history": [],
+      "first_seen": "2025-10-21T20:36:48.459499",
+      "last_seen": "2025-10-21T20:36:48.459499",
+      "last_seen_online": null,
+      "total_detections": 1,
+      "notes": null,
+      "is_managed": false
+    },
+    "F4:FE:FB:77:5C:26": {
+      "mac": "F4:FE:FB:77:5C:26",
+      "current_ip": "192.168.1.82",
+      "current_hostname": null,
+      "vendor": "Samsung",
+      "os_detected": null,
+      "device_type": null,
+      "is_online": false,
+      "is_vpn_connected": false,
+      "vpn_ip": null,
+      "ip_history": [
+        {
+          "ip": "192.168.1.82",
+          "first_seen": "2025-10-21T20:36:48.459499",
+          "last_seen": "2025-10-21T20:36:48.459499",
+          "occurrences": 1
+        }
+      ],
+      "hostname_history": [],
+      "first_seen": "2025-10-21T20:36:48.459499",
+      "last_seen": "2025-10-21T20:36:48.459499",
+      "last_seen_online": null,
+      "total_detections": 1,
+      "notes": null,
+      "is_managed": false
+    }
+  }
 }
