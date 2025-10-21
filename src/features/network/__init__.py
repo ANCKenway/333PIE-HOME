@@ -51,7 +51,7 @@ from .schemas import (
 
 from .scanners.multi_source import MultiSourceScanner  # ✅ Déplacé dans scanners/
 from .detector import DeviceDetector
-from .port_scanner import PortScanner, get_scan_preset
+# ❌ port_scanner.py supprimé (orphelin - scanner.py n'existe plus)
 from .monitoring.latency_monitor import get_latency_monitor, LatencyStats  # ✅ Déplacé dans monitoring/
 from .monitoring.bandwidth_monitor import (  # ✅ Déplacé dans monitoring/
     get_bandwidth_monitor,
@@ -109,8 +109,7 @@ __all__ = [
     "NetworkHistory",
     
     # Professional monitoring
-    "PortScanner",
-    "get_scan_preset",
+    # ❌ PortScanner supprimé (orphelin)
     "get_latency_monitor",
     "LatencyStats",
     "get_bandwidth_monitor",
