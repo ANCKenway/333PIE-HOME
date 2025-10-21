@@ -15,6 +15,7 @@ from ..schemas import ScanRequest, ScanResult, NetworkDeviceCreate
 from ..multi_source_scanner import MultiSourceScanner
 from ..storage import save_scan_result, get_all_devices, get_device_by_mac
 from ..history import NetworkHistory
+from ..registry import NetworkRegistry
 from src.core.models.unified_device import DeviceStatus
 
 
@@ -164,15 +165,42 @@ async def scan_network(
             new_devices=0  # Sera calculé ci-dessous
         )
         
-        # Détecter les nouveaux devices
-        existing_macs = {d.mac for d in get_all_devices()}
-        new_devices_count = sum(
-            1 for device in scan_result.devices
-            if device.mac not in existing_macs
-        )
-        scan_result.new_devices = new_devices_count
+        # 🔥 ENRICHIR LE NETWORK REGISTRY (suivi persistant)
+        registry = NetworkRegistry()
         
-        # Détecter les changements et log events
+        # Convertir devices en format dict pour le registry
+        devices_for_registry = []
+        for device in devices:
+            devices_for_registry.append({
+                'mac': device.mac,
+                'current_ip': device.current_ip,
+                'current_hostname': device.current_hostname,
+                'vendor': device.vendor,
+                'os_detected': device.os_detected,
+                'device_type': device.device_type,
+                'is_online': device.currently_online,
+                'is_vpn_connected': device.is_vpn_connected,
+                'vpn_ip': device.vpn_ip
+            })
+        
+        # Enrichir le registry et récupérer les stats
+        registry_stats = registry.update_from_scan(devices_for_registry)
+        scan_result.new_devices = registry_stats['new']
+        
+        logger.info(
+            f"📊 Registry enrichi: {registry_stats['new']} nouveaux, "
+            f"{registry_stats['updated']} mis à jour, "
+            f"{len(registry_stats['changes'])} changements"
+        )
+        
+        # Log des changements importants
+        for change in registry_stats['changes'][:10]:  # Top 10
+            if change['type'] == 'ip_changed':
+                logger.info(f"🔄 DHCP change: {change['mac']} {change['old_ip']} → {change['new_ip']}")
+            elif change['type'] == 'hostname_changed':
+                logger.info(f"🔄 Hostname change: {change['mac']} {change['old_hostname']} → {change['new_hostname']}")
+        
+        # Détecter les changements et log events (legacy history)
         history = NetworkHistory()
         for device in scan_result.devices:
             previous = get_device_by_mac(device.mac)
@@ -291,3 +319,68 @@ async def quick_ping_check() -> dict:
             'devices': [],
             'error': str(e)
         }
+
+
+@router.get("/registry")
+async def get_network_registry() -> dict:
+    """
+    Récupérer le Network Registry complet
+    
+    Le registry contient TOUS les devices jamais vus avec leur historique.
+    C'est le fichier central de suivi persistant du réseau.
+    """
+    try:
+        registry = NetworkRegistry()
+        devices = registry.get_all_devices()
+        stats = registry.get_statistics()
+        
+        return {
+            'timestamp': datetime.now().isoformat(),
+            'statistics': stats,
+            'devices': devices
+        }
+    except Exception as e:
+        logger.error(f"Registry read failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/registry/{mac}")
+async def get_device_history(mac: str) -> dict:
+    """
+    Récupérer l'historique complet d'un device
+    
+    Args:
+        mac: Adresse MAC du device
+        
+    Returns:
+        Historique complet (IPs, hostnames, détections)
+    """
+    try:
+        registry = NetworkRegistry()
+        device = registry.get_device(mac)
+        
+        if not device:
+            raise HTTPException(status_code=404, detail=f"Device {mac} not found in registry")
+        
+        return device
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Device history read failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/registry/stats")
+async def get_registry_statistics() -> dict:
+    """
+    Statistiques globales du registry
+    
+    Returns:
+        Stats: total, online, offline, VPN, managed, DHCP dynamics
+    """
+    try:
+        registry = NetworkRegistry()
+        return registry.get_statistics()
+    except Exception as e:
+        logger.error(f"Registry stats failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

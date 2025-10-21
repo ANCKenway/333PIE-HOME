@@ -278,36 +278,22 @@
             
             <!-- Panel Scan (masqué par défaut) -->
             <div x-show="showScanPanel" x-collapse class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">🔍 Lancer un nouveau scan</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <button @click="startScan('full')" :disabled="scanning" class="p-6 bg-gradient-to-br from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 rounded-xl border-2 border-purple-200 text-left transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">🔍 Scanner le réseau</h3>
+                <div class="max-w-md mx-auto">
+                    <button @click="startScan('full')" :disabled="scanning" class="w-full p-6 bg-gradient-to-br from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 rounded-xl border-2 border-purple-200 text-left transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md">
                         <div class="flex items-start justify-between mb-3">
                             <div class="text-4xl">🔍</div>
-                            <span class="px-2 py-1 bg-purple-600 text-white rounded-full text-xs font-semibold">Recommandé</span>
+                            <span class="px-3 py-1 bg-purple-600 text-white rounded-full text-xs font-semibold">Scan Complet</span>
                         </div>
-                        <h4 class="font-bold text-gray-900 mb-2">Scan Complet</h4>
+                        <h4 class="font-bold text-gray-900 mb-2">Enrichir le monitoring réseau</h4>
                         <ul class="text-sm text-gray-600 space-y-1 mb-3">
-                            <li>✅ ICMP + mDNS + ARP</li>
-                            <li>✅ Ports ouverts par device</li>
-                            <li>✅ Informations détaillées</li>
-                            <li>⏱️ Durée: ~1-2 minutes</li>
+                            <li>✅ Détection multi-sources (nmap + ARP + mDNS + NetBIOS)</li>
+                            <li>✅ Vendor, OS, services détaillés</li>
+                            <li>✅ Enrichissement du registry (historique IP/hostname)</li>
+                            <li>✅ Détection changements DHCP</li>
+                            <li>⏱️ Durée: ~15-20 secondes</li>
                         </ul>
-                        <p class="text-xs text-purple-600 font-medium">Scan complet avec détection services</p>
-                    </button>
-                    
-                    <button @click="startScan('quick')" :disabled="scanning" class="p-6 bg-gradient-to-br from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 rounded-xl border-2 border-green-200 text-left transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                        <div class="flex items-start justify-between mb-3">
-                            <div class="text-4xl">⚡</div>
-                            <span class="px-2 py-1 bg-green-600 text-white rounded-full text-xs font-semibold">Rapide</span>
-                        </div>
-                        <h4 class="font-bold text-gray-900 mb-2">Scan Rapide</h4>
-                        <ul class="text-sm text-gray-600 space-y-1 mb-3">
-                            <li>✅ ICMP uniquement</li>
-                            <li>✅ Devices en ligne</li>
-                            <li>⚠️ Info limitées</li>
-                            <li>⏱️ Durée: ~20 secondes</li>
-                        </ul>
-                        <p class="text-xs text-green-600 font-medium">Ping scan réseau local</p>
+                        <p class="text-xs text-purple-600 font-medium">💾 Les données enrichissent le suivi persistant des devices</p>
                     </button>
                 </div>
             </div>
