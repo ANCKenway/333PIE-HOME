@@ -235,5 +235,25 @@ class PromoteToDevicesResponse(BaseModel):
     device_name: str
 
 
+# === REGISTRY RESPONSES (Phase 6 - Étape 2) ===
+
+class DeviceRegistryResponse(BaseModel):
+    """Réponse du registry avec tous les devices"""
+    total: int = Field(..., description="Nombre total de devices")
+    devices: List[Dict[str, Any]] = Field(..., description="Liste des devices du registry")
+    filters_applied: Dict[str, Any] = Field(default_factory=dict, description="Filtres appliqués")
+
+
+class RegistryStatistics(BaseModel):
+    """Statistiques du registry"""
+    total_devices: int = Field(..., description="Total devices dans le registry")
+    online: int = Field(..., description="Devices online")
+    offline: int = Field(..., description="Devices offline")
+    vpn_connected: int = Field(0, description="Devices VPN connectés")
+    managed: int = Field(0, description="Devices gérés (in Appareils)")
+    dhcp_dynamic: int = Field(0, description="Devices avec IP history multiple (DHCP)")
+    last_updated: Optional[str] = Field(None, description="Dernière mise à jour du registry")
+
+
 # Update forward refs
 NetworkDeviceDetailed.model_rebuild()

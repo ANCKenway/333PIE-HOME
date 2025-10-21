@@ -20,6 +20,7 @@ from .routers import (
     bandwidth_router,
 )
 from .dhcp_router import router as dhcp_router
+from .routers.registry_router import router as registry_router  # Phase 6 Étape 2
 
 
 logger = logging.getLogger(__name__)
@@ -33,7 +34,8 @@ router.include_router(device_router)
 router.include_router(latency_router)
 router.include_router(bandwidth_router)
 router.include_router(dhcp_router)
+router.include_router(registry_router)  # Phase 6 Étape 2: Source unique de vérité
 
 
 logger.info("✅ Network router aggregated (modular architecture)")
-logger.info("📂 Sub-routers: scan, device, latency, bandwidth, dhcp")
+logger.info("📂 Sub-routers: scan, device, latency, bandwidth, dhcp, registry")
