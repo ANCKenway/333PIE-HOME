@@ -25,7 +25,7 @@ from pathlib import Path
 # Add project root
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
-from src.features.network.multi_source_scanner import MultiSourceScanner
+from src.features.network.scanners.multi_source import MultiSourceScanner  # ✅ Déplacé dans scanners/
 from src.core.models.unified_device import UnifiedDevice
 from src.core.config import get_settings
 

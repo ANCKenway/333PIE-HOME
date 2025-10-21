@@ -7,7 +7,7 @@ import logging
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 
-from ..bandwidth_monitor import get_bandwidth_monitor
+from ..monitoring.bandwidth_monitor import get_bandwidth_monitor  # ✅ Déplacé dans monitoring/
 
 
 logger = logging.getLogger(__name__)

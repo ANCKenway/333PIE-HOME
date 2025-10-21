@@ -7,7 +7,7 @@ API pour le suivi DHCP et l'historique des IPs
 from fastapi import APIRouter, HTTPException
 from typing import List, Dict, Any
 
-from src.features.network.dhcp_tracker import get_dhcp_tracker
+from src.features.network.monitoring.dhcp_tracker import get_dhcp_tracker  # ✅ Déplacé dans monitoring/
 from src.core.logging_config import get_logger
 
 logger = get_logger(__name__)

@@ -7,7 +7,7 @@ import logging
 from typing import List
 from fastapi import APIRouter, HTTPException, BackgroundTasks, Query
 
-from ..latency_monitor import get_latency_monitor
+from ..monitoring.latency_monitor import get_latency_monitor  # ✅ Déplacé dans monitoring/
 
 
 logger = logging.getLogger(__name__)
