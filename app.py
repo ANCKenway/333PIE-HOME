@@ -15,7 +15,7 @@ from fastapi.responses import FileResponse
 from src.core import settings, setup_logging, get_logger
 from src.features.devices import router as devices_router
 from src.features.network import network_router
-from src.features.hub import router as hub_router
+from src.core.unified import router as hub_router  # ✅ Renommé: hub → unified
 from src.api.unified_router import router as unified_router
 
 setup_logging()

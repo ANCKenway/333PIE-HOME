@@ -8,7 +8,7 @@ from fastapi import APIRouter, HTTPException
 from typing import List, Dict, Any
 from datetime import datetime
 
-from src.features.hub.unified_service import (
+from src.core.unified.unified_service import (  # ✅ Corrigé: hub → unified
     get_unified_devices,
     get_unified_device_by_mac,
     get_unified_device_by_id,
