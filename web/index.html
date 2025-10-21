@@ -193,7 +193,7 @@
                         <span>➕</span>
                         <span>Ajouter</span>
                     </button>
-                    <button @click="loadDevices()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-all flex items-center space-x-2">
+                    <button @click="loadUnifiedDevices()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-all flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                         <span>Actualiser</span>
                     </button>
@@ -226,7 +226,7 @@
                             <div class="flex-1">
                                 <div class="flex items-center gap-2 mb-1">
                                     <h3 class="font-semibold text-gray-900" x-text="getDeviceTitle(d)"></h3>
-                                    <span x-show="d.vpn_ip" :class="d.is_vpn_connected ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-300 text-gray-600'" class="px-2 py-1 rounded-full text-xs font-semibold">🔒 VPN</span>
+                                    <span x-show="d.is_vpn_connected" class="px-2 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">🔒 VPN</span>
                                 </div>
                                 <p class="text-sm text-gray-600 font-mono" x-text="d.ip||d.current_ip"></p>
                                 <p x-show="d.is_vpn_connected && d.vpn_ip" class="text-xs text-emerald-600 font-mono" x-text="'VPN: '+d.vpn_ip"></p>
@@ -328,7 +328,7 @@
                                             <span x-show="d.current_hostname" class="text-xs text-gray-500" x-text="'('+d.current_ip+')'"></span>
                                         </div>
                                         <span :class="d.currently_online?'bg-green-100 text-green-800':'bg-red-100 text-red-800'" class="px-2 py-1 rounded-full text-xs font-semibold" x-text="d.currently_online?'✅':'❌'"></span>
-                                        <span x-show="d.vpn_ip" :class="d.is_vpn_connected ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-300 text-gray-600'" class="px-2 py-1 rounded-full text-xs font-semibold">🔒 VPN</span>
+                                        <span x-show="d.is_vpn_connected" class="px-2 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">🔒 VPN</span>
                                         <span x-show="d.in_devices" class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">✓ Géré</span>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-1 text-sm">
@@ -458,76 +458,70 @@
         
         async init(){
             console.log('🚀 333HOME v7.0 PRO - Unified');
-            await this.refreshAll();
-            await this.loadRegistryDevices(); // ✅ Charger registry (source unifiée)
+            await this.loadUnifiedDevices(); // ✅ Source unique
             
-            // ✅ Interval 30s : Refresh registry (ARP + VPN status)
+            // ✅ Interval 30s : Refresh registry puis reload
             setInterval(async ()=>{
-                if(this.tab==='dashboard'){
-                    await this.loadStats();
-                }
-                if(this.tab==='managed'){
-                    await this.loadDevices();
-                }
-                if(this.tab==='network'){
-                    // ✅ Refresh registry status puis recharger
-                    await this.refreshRegistryStatus();
-                    await this.loadRegistryDevices();
-                }
+                await this.refreshRegistryStatus();
+                await this.loadUnifiedDevices();
             },30000);
         },
         
         async refreshAll(){
-            await Promise.all([this.loadStats(),this.loadDevices()]);
+            await this.loadUnifiedDevices();
             this.lastUpdate=new Date().toLocaleTimeString('fr-FR');
         },
         
-        async loadRegistryDevices(){
-            // ✅ Charger devices depuis NetworkRegistry (source unifiée + enrichie)
+        async loadUnifiedDevices(){
+            // ✅ SOURCE UNIQUE : /api/hub/devices (enrichi depuis registry)
+            this.loading=true;
             try{
-                const r=await fetch('/api/network/registry/');
-                if(!r.ok)return;
-                const d=await r.json();
+                const r=await fetch('/api/hub/devices');
+                if(!r.ok)throw new Error('Hub devices API error');
+                const allDevices = await r.json();
                 
-                if(d.devices && Array.isArray(d.devices)){
-                    // Mapper les devices du registry vers le format UI
-                    this.scanResults = d.devices.map(device => ({
-                        // IDs
-                        mac: device.mac,
-                        current_ip: device.current_ip || device.ip,  // ✅ API retourne current_ip
-                        ip: device.current_ip || device.ip,
-                        
-                        // Noms
-                        current_hostname: device.current_hostname || device.hostname,
-                        hostname: device.current_hostname || device.hostname,
-                        name: device.current_hostname || device.hostname,
-                        
-                        // Infos enrichies
-                        vendor: device.vendor || 'Unknown',
-                        os_detected: device.os_detected || null,
-                        device_type: device.device_type || null,
-                        
-                        // Status online
-                        currently_online: device.is_online,
-                        is_online: device.is_online,
-                        
-                        // VPN (depuis enrichissement Tailscale) - ✅ Utiliser is_vpn_connected de l'API
-                        vpn_ip: device.vpn_ip || null,
-                        is_vpn_connected: device.is_vpn_connected || false,  // ✅ Pas juste !!vpn_ip
-                        
-                        // Metadata
-                        in_devices: device.is_managed || false,  // ✅ API retourne is_managed
-                        services: device.services || [],
-                        last_seen: device.last_seen,
-                        first_seen: device.first_seen,
-                    }));
-                    
-                    this.scanType = 'REGISTRY';
-                    this.lastScanTime = new Date().toLocaleTimeString('fr-FR');
-                    console.log(`📡 Registry chargé: ${this.scanResults.length} devices (vendor enrichi)`);
-                }
+                // ✅ Un seul dataset unifié
+                this.devices = allDevices;
+                
+                // ✅ Page Réseau : même source, même format
+                this.scanResults = allDevices.map(d => ({
+                    mac: d.mac,
+                    current_ip: d.ip,
+                    ip: d.ip,
+                    current_hostname: d.hostname || d.name,
+                    hostname: d.hostname || d.name,
+                    name: d.hostname || d.name,
+                    vendor: d.vendor || 'Unknown',
+                    os_detected: d.os_detected,
+                    device_type: d.device_type,
+                    currently_online: d.online,
+                    is_online: d.online,
+                    vpn_ip: d.vpn_ip,
+                    is_vpn_connected: d.is_vpn_connected || false,
+                    in_devices: d.in_devices,
+                    services: [],
+                    last_seen: d.last_seen,
+                    first_seen: d.first_seen,
+                }));
+                
+                // ✅ Stats (calculées depuis la même source)
+                this.stats = {
+                    total: allDevices.length,
+                    online: allDevices.filter(d => d.online).length,
+                    offline: allDevices.filter(d => !d.online).length,
+                    managed: allDevices.filter(d => d.in_devices).length,
+                };
+                
+                this.scanType = 'UNIFIED';
+                this.lastScanTime = new Date().toLocaleTimeString('fr-FR');
+                
+                console.log(`� Unified devices: ${allDevices.length} total, ${this.stats.online} online, ${this.stats.managed} managed`);
             }catch(e){
-                console.error('LoadRegistry:',e);
+                console.error('LoadUnifiedDevices:',e);
+                this.devices=[];
+                this.scanResults=[];
+            }finally{
+                this.loading=false;
             }
         },
         
@@ -544,32 +538,6 @@
             }catch(e){
                 console.error('RefreshRegistry:',e);
             }
-        },
-        
-        async loadLastScan(){
-            // Legacy: garder pour compatibilité mais utiliser loadRegistryDevices() à la place
-            await this.loadRegistryDevices();
-        },
-        
-        async loadStats(){
-            try{
-                const r=await fetch('/api/hub/stats');
-                if(!r.ok)throw new Error('Stats API error');
-                const d=await r.json();
-                this.stats=d.devices||this.stats;
-            }catch(e){console.error('Stats:',e)}
-        },
-        
-        async loadDevices(){
-            this.loading=true;
-            try{
-                const r=await fetch('/api/hub/devices');
-                if(!r.ok)throw new Error('Devices API error');
-                const d=await r.json();
-                this.devices=Array.isArray(d)?d:(d.devices||[]);
-                console.log('📱 Devices loaded:',this.devices.length,'(managed:'+this.managedDevices().length+')');
-            }catch(e){console.error('Devices:',e);this.devices=[]}
-            finally{this.loading=false}
         },
         
         async startScan(type){
@@ -597,10 +565,9 @@
                 const result=await r.json();
                 console.log('✅ Scan result:',result);
                 
-                // ✅ Recharger depuis registry (avec vendor enrichi)
-                await this.loadRegistryDevices();
-                await this.loadDevices();
-                await this.loadStats();
+                // ✅ Recharger depuis source unifiée
+                await this.refreshRegistryStatus(); // Refresh ARP+VPN
+                await this.loadUnifiedDevices(); // Reload tout
                 
                 this.showToast(`Scan ${type} terminé: ${this.scanResults.length} appareil(s) détecté(s)`,'success');
             }catch(e){
@@ -630,8 +597,8 @@
                     body:JSON.stringify(payload)
                 });
                 if(!r.ok)throw new Error('Failed to add device');
-                await this.loadDevices();
-                await this.loadStats();
+                await this.loadUnifiedDevices();
+                
                 this.showToast('Appareil ajouté','success');
                 this.showAddModal=false;
                 this.newDevice={ip:'',name:'',mac:''};
@@ -659,8 +626,8 @@
                 });
                 if(!r.ok)throw new Error('Failed to add device');
                 device.in_devices=true;
-                await this.loadDevices();
-                await this.loadStats();
+                await this.loadUnifiedDevices();
+                
                 this.showToast('Appareil ajouté à la gestion','success');
             }catch(e){
                 console.error('Add device error:',e);
@@ -673,8 +640,8 @@
             try{
                 const r=await fetch(`/api/devices/${device.ip}`,{method:'DELETE'});
                 if(!r.ok)throw new Error('Failed to remove device');
-                await this.loadDevices();
-                await this.loadStats();
+                await this.loadUnifiedDevices();
+                
                 this.showToast('Appareil retiré','success');
             }catch(e){
                 console.error('Remove device error:',e);
@@ -691,7 +658,7 @@
                 const r=await fetch(`/api/devices/wake/${device.ip}`,{method:'POST'});
                 if(!r.ok)throw new Error('Wake-on-LAN failed');
                 this.showToast(`Wake-on-LAN envoyé à ${device.name||device.ip}`,'success');
-                setTimeout(()=>this.loadDevices(),5000);
+                setTimeout(()=>this.loadUnifiedDevices(),5000);
             }catch(e){
                 console.error('Wake error:',e);
                 this.showToast('Erreur: '+e.message,'error');

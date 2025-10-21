@@ -232,7 +232,7 @@ async def refresh_registry_status():
         Statistiques du refresh
     """
     try:
-        from ..scanners.arp_scanner import ArpScanner
+        from ..scanners.arp_scanner import ARPScanner
         from ..scanners.tailscale_scanner import TailscaleScanner
         
         registry = get_network_registry()
@@ -240,22 +240,20 @@ async def refresh_registry_status():
         logger.info("🔄 Registry refresh START (ARP + Tailscale)")
         
         # 1. ARP scan rapide (cache système)
-        arp_scanner = ArpScanner("192.168.1.0/24")
-        arp_devices = arp_scanner.scan()
+        arp_scanner = ARPScanner("192.168.1.0/24")
+        arp_devices = await arp_scanner.scan()
         
         # 2. Tailscale status
         ts_scanner = TailscaleScanner("192.168.1.0/24")
-        ts_devices = ts_scanner.scan()
+        ts_devices_map = await ts_scanner.scan()  # Returns dict {hostname: {...}}
         
-        # 3. Créer map VPN par hostname
+        # 3. Créer map VPN par hostname (déjà un dict)
         vpn_map = {}
-        for ts_device in ts_devices:
-            hostname = ts_device.get('hostname', '').upper()
-            if hostname:
-                vpn_map[hostname] = {
-                    'vpn_ip': ts_device.get('ip'),
-                    'is_vpn_connected': ts_device.get('is_online', False)
-                }
+        for hostname, ts_info in ts_devices_map.items():
+            vpn_map[hostname.upper()] = {
+                'vpn_ip': ts_info.get('vpn_ip'),
+                'is_vpn_connected': ts_info.get('is_online', True)  # Si dans tailscale status, assumé online
+            }
         
         # 4. Mettre à jour registry
         online_count = 0
@@ -266,7 +264,7 @@ async def refresh_registry_status():
             changed = False
             
             # Check ARP online status
-            arp_device = next((d for d in arp_devices if d.get('mac', '').upper() == mac), None)
+            arp_device = next((d for d in arp_devices if d.mac.upper() == mac), None)
             new_online = arp_device is not None
             
             if device.is_online != new_online:
@@ -277,8 +275,8 @@ async def refresh_registry_status():
                 online_count += 1
                 if arp_device:
                     # Update IP/hostname si changé
-                    new_ip = arp_device.get('ip')
-                    new_hostname = arp_device.get('hostname')
+                    new_ip = arp_device.ip
+                    new_hostname = arp_device.hostname
                     if new_ip and new_ip != device.current_ip:
                         device.current_ip = new_ip
                         changed = True

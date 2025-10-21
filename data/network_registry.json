@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "last_updated": "2025-10-22T00:44:59.252044",
+  "last_updated": "2025-10-22T01:25:25.271270",
   "total_devices": 9,
   "devices": {
     "C8:FF:77:59:DE:E1": {
@@ -121,7 +121,7 @@
       "os_detected": null,
       "device_type": null,
       "is_online": true,
-      "is_vpn_connected": true,
+      "is_vpn_connected": false,
       "vpn_ip": "100.93.236.71",
       "ip_history": [
         {

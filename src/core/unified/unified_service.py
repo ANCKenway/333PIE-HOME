@@ -61,6 +61,7 @@ class UnifiedDevice:
         
         # VPN
         self.vpn_ip = data.get('vpn_ip')
+        self.is_vpn_connected = data.get('is_vpn_connected', False)  # ✅ Statut VPN connexion
         
         # Metadata
         self.tags = data.get('tags', [])
@@ -110,6 +111,7 @@ class UnifiedDevice:
             },
             
             'vpn_ip': self.vpn_ip,
+            'is_vpn_connected': self.is_vpn_connected,  # ✅ VPN connection status
             'tags': self.tags,
             'metadata': self.metadata,
             'total_scans': self.total_scans,
@@ -224,6 +226,7 @@ def get_unified_devices() -> List[UnifiedDevice]:
             if registry_device:
                 # Enrichir VPN depuis registry (vérité terrain)
                 device_data['vpn_ip'] = registry_device.get('vpn_ip')
+                device_data['is_vpn_connected'] = registry_device.get('is_vpn_connected', False)  # ✅ Statut connexion
                 device_data['online'] = registry_device.get('is_online', device_data.get('online', False))
                 # Enrichir vendor/OS si manquants
                 if not device_data.get('vendor'):
