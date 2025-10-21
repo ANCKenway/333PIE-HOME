@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "last_updated": "2025-10-22T00:34:25.245595",
+  "last_updated": "2025-10-22T00:44:59.252044",
   "total_devices": 9,
   "devices": {
     "C8:FF:77:59:DE:E1": {
@@ -23,9 +23,9 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-21T20:36:48.459499",
-      "last_seen": "2025-10-22T00:34:25.245527",
+      "last_seen": "2025-10-22T00:44:59.239382",
       "last_seen_online": "2025-10-22T00:14:28.929646",
-      "total_detections": 6,
+      "total_detections": 8,
       "notes": null,
       "is_managed": false
     },
@@ -55,9 +55,9 @@
         }
       ],
       "first_seen": "2025-10-21T20:36:48.459499",
-      "last_seen": "2025-10-22T00:34:25.245527",
+      "last_seen": "2025-10-22T00:44:59.239382",
       "last_seen_online": "2025-10-21T20:36:48.459499",
-      "total_detections": 6,
+      "total_detections": 8,
       "notes": null,
       "is_managed": false
     },
@@ -81,9 +81,9 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-21T20:36:48.459499",
-      "last_seen": "2025-10-22T00:34:25.245527",
+      "last_seen": "2025-10-22T00:44:59.239382",
       "last_seen_online": "2025-10-22T00:14:28.929646",
-      "total_detections": 6,
+      "total_detections": 8,
       "notes": null,
       "is_managed": false
     },
@@ -107,9 +107,9 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-21T20:36:48.459499",
-      "last_seen": "2025-10-22T00:34:25.245527",
+      "last_seen": "2025-10-22T00:44:59.239382",
       "last_seen_online": "2025-10-22T00:14:28.929646",
-      "total_detections": 6,
+      "total_detections": 8,
       "notes": null,
       "is_managed": false
     },
@@ -117,7 +117,7 @@
       "mac": "34:5A:60:7F:12:C1",
       "current_ip": "192.168.1.174",
       "current_hostname": "TITO",
-      "vendor": null,
+      "vendor": "Micro-Star INTL CO., LTD.",
       "os_detected": null,
       "device_type": null,
       "is_online": true,
@@ -139,9 +139,9 @@
         }
       ],
       "first_seen": "2025-10-21T20:36:48.459499",
-      "last_seen": "2025-10-22T00:34:25.245527",
+      "last_seen": "2025-10-22T00:44:59.239382",
       "last_seen_online": "2025-10-21T20:36:48.459499",
-      "total_detections": 6,
+      "total_detections": 8,
       "notes": null,
       "is_managed": false
     },
@@ -165,9 +165,9 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-21T20:36:48.459499",
-      "last_seen": "2025-10-22T00:34:25.245527",
+      "last_seen": "2025-10-22T00:44:59.239382",
       "last_seen_online": "2025-10-22T00:14:28.929646",
-      "total_detections": 6,
+      "total_detections": 8,
       "notes": null,
       "is_managed": false
     },
@@ -175,7 +175,7 @@
       "mac": "10:7C:61:78:72:8B",
       "current_ip": "192.168.1.24",
       "current_hostname": "CLACLA",
-      "vendor": null,
+      "vendor": "ASUSTek COMPUTER INC.",
       "os_detected": null,
       "device_type": null,
       "is_online": true,
@@ -197,9 +197,9 @@
         }
       ],
       "first_seen": "2025-10-21T20:36:48.459499",
-      "last_seen": "2025-10-22T00:34:25.245527",
+      "last_seen": "2025-10-22T00:44:59.239382",
       "last_seen_online": "2025-10-22T00:07:05.376769",
-      "total_detections": 6,
+      "total_detections": 8,
       "notes": null,
       "is_managed": false
     },
@@ -223,9 +223,9 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-21T20:36:48.459499",
-      "last_seen": "2025-10-22T00:34:25.245527",
+      "last_seen": "2025-10-22T00:44:59.239382",
       "last_seen_online": "2025-10-22T00:14:28.929646",
-      "total_detections": 6,
+      "total_detections": 8,
       "notes": null,
       "is_managed": false
     },
@@ -249,9 +249,9 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-21T20:36:48.459499",
-      "last_seen": "2025-10-22T00:34:25.245527",
+      "last_seen": "2025-10-22T00:44:59.239382",
       "last_seen_online": "2025-10-22T00:14:28.929646",
-      "total_detections": 6,
+      "total_detections": 8,
       "notes": null,
       "is_managed": false
     }

@@ -7,7 +7,7 @@ Endpoints pour les scans réseau
 """
 
 import logging
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 
@@ -25,6 +25,110 @@ router = APIRouter(prefix="/scan", tags=["network-scan"])
 # Scan en cours (éviter doublons)
 _current_scan: Optional[ScanResult] = None
 _scan_in_progress = False
+
+
+async def enrich_vendors_from_api(devices: List[dict], registry):
+    """
+    Enrichir vendors manquants via API MacVendors (background task)
+    
+    Args:
+        devices: Liste des devices du scan
+        registry: Instance NetworkRegistry
+    """
+    try:
+        from ..vendor_lookup import get_vendor_lookup_service
+        vendor_service = get_vendor_lookup_service()
+        
+        # Trouver devices sans vendor
+        devices_without_vendor = [
+            d for d in devices 
+            if not d.get('vendor') or d.get('vendor') == 'Unknown'
+        ]
+        
+        if not devices_without_vendor:
+            logger.debug("✅ Tous les devices ont déjà un vendor")
+            return
+        
+        logger.info(f"🌐 Enrichissement vendor API: {len(devices_without_vendor)} devices")
+        
+        # Lookup vendors (avec rate limiting automatique)
+        for device in devices_without_vendor:
+            mac = device.get('mac')
+            if not mac:
+                continue
+            
+            vendor = await vendor_service.lookup(mac)
+            
+            if vendor:
+                # Mettre à jour dans le registry
+                registry_device = registry.devices.get(mac.upper())
+                if registry_device and not registry_device.vendor:
+                    registry_device.vendor = vendor
+                    logger.info(f"✅ Vendor enrichi: {mac[:17]} → {vendor}")
+        
+        # Sauvegarder registry avec nouveaux vendors
+        registry._save()
+        logger.info(f"💾 Registry sauvegardé avec vendors enrichis")
+        
+    except Exception as e:
+        logger.error(f"❌ Erreur enrichissement vendors: {e}")
+
+
+async def enrich_vpn_status(registry):
+    """
+    Enrichir statut VPN Tailscale depuis API (background task)
+    
+    Args:
+        registry: Instance NetworkRegistry
+    """
+    try:
+        from ..scanners.tailscale_scanner import TailscaleScanner
+        
+        logger.info("🔒 Enrichissement VPN Tailscale...")
+        
+        ts_scanner = TailscaleScanner("192.168.1.0/24")
+        ts_devices = ts_scanner.scan()
+        
+        # Créer map MAC -> VPN info
+        vpn_map = {}
+        for ts_device in ts_devices:
+            # Trouver MAC correspondant dans registry via hostname ou IP
+            hostname = ts_device.get('hostname', '').upper()
+            vpn_ip = ts_device.get('ip')
+            is_online = ts_device.get('is_online', False)
+            
+            if not hostname:
+                continue
+            
+            # Chercher device par hostname dans registry
+            for mac, reg_device in registry.devices.items():
+                reg_hostname = (reg_device.current_hostname or '').upper()
+                if reg_hostname == hostname:
+                    vpn_map[mac] = {
+                        'vpn_ip': vpn_ip,
+                        'is_vpn_connected': is_online
+                    }
+                    break
+        
+        # Mettre à jour tous les devices du registry
+        updated_count = 0
+        for mac, reg_device in registry.devices.items():
+            if mac in vpn_map:
+                # Device a un VPN
+                reg_device.vpn_ip = vpn_map[mac]['vpn_ip']
+                reg_device.is_vpn_connected = vpn_map[mac]['is_vpn_connected']
+                updated_count += 1
+            else:
+                # Device n'a pas de VPN ou VPN offline
+                reg_device.is_vpn_connected = False
+                # Garder vpn_ip si existant (peut être temporairement offline)
+        
+        # Sauvegarder
+        registry._save()
+        logger.info(f"✅ VPN enrichi: {updated_count} devices avec VPN, {len(registry.devices)-updated_count} sans VPN")
+        
+    except Exception as e:
+        logger.error(f"❌ Erreur enrichissement VPN: {e}")
 
 
 def _load_last_scan_from_history():
@@ -176,6 +280,14 @@ async def scan_network(
         # Enrichir le registry et récupérer les stats
         registry_stats = registry.update_from_scan(devices_for_registry)
         scan_result.new_devices = registry_stats['new']
+        
+        # 🌐 ENRICHISSEMENT: Vendor lookup API pour devices sans vendor
+        # (en background pour ne pas ralentir la réponse)
+        background_tasks.add_task(enrich_vendors_from_api, devices_for_registry, registry)
+        
+        # 🔒 ENRICHISSEMENT: VPN Tailscale status (sync temps réel)
+        # (en background pour ne pas ralentir la réponse)
+        background_tasks.add_task(enrich_vpn_status, registry)
         
         logger.info(
             f"📊 Registry enrichi: {registry_stats['new']} nouveaux, "

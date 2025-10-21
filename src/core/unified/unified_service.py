@@ -16,6 +16,7 @@ import json
 
 from src.features.devices.manager import DeviceManager
 from src.features.network.storage import get_all_devices as get_network_devices, get_device_by_mac
+from src.features.network.registry import get_network_registry  # ✅ Import registry
 from src.core.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -98,6 +99,8 @@ class UnifiedDevice:
             'os_detected': self.os_detected,
             
             'online': self.online,
+            'currently_online': self.online,  # ✅ Frontend legacy compat (line 234/330 web/index.html)
+            'status': 'online' if self.online else 'offline',  # ✅ Frontend compat
             'last_seen': self.last_seen,
             'first_seen': self.first_seen,
             
@@ -167,6 +170,10 @@ def get_unified_devices() -> List[UnifiedDevice]:
         for net_device in network_devices:
             mac = net_device.mac.upper()
             
+            # ✅ Filtrer les MACs invalides (legacy VPN:xxx)
+            if mac.startswith('VPN:') or not mac or len(mac) < 12:
+                continue
+            
             if mac in unified:
                 # Enrichir device existant
                 device = unified[mac]
@@ -201,13 +208,30 @@ def get_unified_devices() -> List[UnifiedDevice]:
                     'in_network': True,
                     'online': net_device.currently_online,
                     'wake_on_lan': False,
-                    'vpn_ip': None,
+                    'vpn_ip': None,  # ✅ Sera enrichi par registry
                     'first_seen': net_device.first_seen.isoformat() if net_device.first_seen else None,
                     'last_seen': net_device.last_seen.isoformat() if net_device.last_seen else None,
                     'total_scans': net_device.total_appearances,
                 }
     except Exception as e:
         logger.error(f"❌ Error loading network devices: {e}")
+    
+    # 2.5 ✅ Enrichir VPN depuis NetworkRegistry (source unique VPN)
+    try:
+        registry = get_network_registry()
+        for mac, device_data in unified.items():
+            registry_device = registry.get_device(mac)
+            if registry_device:
+                # Enrichir VPN depuis registry (vérité terrain)
+                device_data['vpn_ip'] = registry_device.get('vpn_ip')
+                device_data['online'] = registry_device.get('is_online', device_data.get('online', False))
+                # Enrichir vendor/OS si manquants
+                if not device_data.get('vendor'):
+                    device_data['vendor'] = registry_device.get('vendor')
+                if not device_data.get('os_detected'):
+                    device_data['os_detected'] = registry_device.get('os_detected')
+    except Exception as e:
+        logger.error(f"❌ Error enriching from registry: {e}")
     
     # 3. Vérifier le statut online des devices managés sans données réseau
     # via ping rapide (pour sync temps réel)

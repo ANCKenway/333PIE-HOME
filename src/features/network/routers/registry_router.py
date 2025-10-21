@@ -207,3 +207,122 @@ async def mark_device_as_managed(mac: str, managed: bool = True):
             status_code=500,
             detail=f"Erreur marquage device: {str(e)}"
         )
+
+
+@router.post(
+    "/refresh",
+    summary="🔄 Refresh Registry Status",
+    description="""
+    Refresh léger du registry : ARP + Tailscale status (pas de scan nmap).
+    
+    Ultra-rapide (<1s) : vérifie uniquement online/offline + VPN status.
+    Parfait pour monitoring temps réel toutes les 30s.
+    """
+)
+async def refresh_registry_status():
+    """
+    Refresh rapide du registry : ARP cache + Tailscale status.
+    
+    Met à jour :
+    - is_online (via ARP cache)
+    - is_vpn_connected (via Tailscale API)
+    - last_seen (timestamp)
+    
+    Returns:
+        Statistiques du refresh
+    """
+    try:
+        from ..scanners.arp_scanner import ArpScanner
+        from ..scanners.tailscale_scanner import TailscaleScanner
+        
+        registry = get_network_registry()
+        
+        logger.info("🔄 Registry refresh START (ARP + Tailscale)")
+        
+        # 1. ARP scan rapide (cache système)
+        arp_scanner = ArpScanner("192.168.1.0/24")
+        arp_devices = arp_scanner.scan()
+        
+        # 2. Tailscale status
+        ts_scanner = TailscaleScanner("192.168.1.0/24")
+        ts_devices = ts_scanner.scan()
+        
+        # 3. Créer map VPN par hostname
+        vpn_map = {}
+        for ts_device in ts_devices:
+            hostname = ts_device.get('hostname', '').upper()
+            if hostname:
+                vpn_map[hostname] = {
+                    'vpn_ip': ts_device.get('ip'),
+                    'is_vpn_connected': ts_device.get('is_online', False)
+                }
+        
+        # 4. Mettre à jour registry
+        online_count = 0
+        vpn_count = 0
+        updated_count = 0
+        
+        for mac, device in registry.devices.items():
+            changed = False
+            
+            # Check ARP online status
+            arp_device = next((d for d in arp_devices if d.get('mac', '').upper() == mac), None)
+            new_online = arp_device is not None
+            
+            if device.is_online != new_online:
+                device.is_online = new_online
+                changed = True
+            
+            if new_online:
+                online_count += 1
+                if arp_device:
+                    # Update IP/hostname si changé
+                    new_ip = arp_device.get('ip')
+                    new_hostname = arp_device.get('hostname')
+                    if new_ip and new_ip != device.current_ip:
+                        device.current_ip = new_ip
+                        changed = True
+                    if new_hostname and new_hostname != device.current_hostname:
+                        device.current_hostname = new_hostname
+                        changed = True
+            
+            # Check VPN status
+            hostname_upper = (device.current_hostname or '').upper()
+            if hostname_upper in vpn_map:
+                vpn_info = vpn_map[hostname_upper]
+                device.vpn_ip = vpn_info['vpn_ip']
+                device.is_vpn_connected = vpn_info['is_vpn_connected']
+                if device.is_vpn_connected:
+                    vpn_count += 1
+                changed = True
+            else:
+                if device.is_vpn_connected:
+                    device.is_vpn_connected = False
+                    changed = True
+            
+            if changed:
+                updated_count += 1
+        
+        # 5. Sauvegarder
+        registry._save()
+        
+        logger.info(
+            f"✅ Registry refresh DONE: {online_count} online, {vpn_count} VPN, "
+            f"{updated_count} updated"
+        )
+        
+        return {
+            'success': True,
+            'total_devices': len(registry.devices),
+            'online_count': online_count,
+            'vpn_count': vpn_count,
+            'updated_count': updated_count,
+            'duration_ms': 0  # Calculer si besoin
+        }
+    
+    except Exception as e:
+        logger.error(f"❌ Error refreshing registry: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Erreur refresh registry: {str(e)}"
+        )

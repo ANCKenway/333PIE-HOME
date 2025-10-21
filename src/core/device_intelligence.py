@@ -228,16 +228,17 @@ class DeviceIntelligenceEngine:
                 unified['os_inference_method'] = 'heuristic'
                 self.logger.debug(f"🖥️  Inferred OS for {mac[:17]}: {inferred_os}")
         
-        # 🔧 ENRICHISSEMENT: Si pas de vendor, lookup via MAC OUI local
+        # 🔧 ENRICHISSEMENT: Si pas de vendor, lookup via MAC OUI
         if not unified['vendor'] or unified['vendor'] == 'Unknown':
             try:
+                # 1. Essayer OUI database locale (rapide, pas de réseau)
                 oui_info = self.oui_db.lookup(mac)
                 if oui_info and oui_info.get('vendor'):
                     unified['vendor'] = oui_info['vendor']
                     unified['detection_method'] = 'local_oui'
                     if oui_info.get('device_type'):
                         unified['device_type'] = oui_info['device_type']
-                    self.logger.debug(f"📍 Enriched vendor for {mac[:17]}: {unified['vendor']}")
+                    self.logger.debug(f"📍 Enriched vendor for {mac[:17]}: {unified['vendor']} (local OUI)")
             except Exception as e:
                 self.logger.warning(f"Failed to enrich vendor for {mac}: {e}")
         

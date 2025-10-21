@@ -1,0 +1,16 @@
+{
+  "last_updated": "2025-10-22T00:40:44.972949",
+  "total_entries": 2,
+  "vendors": {
+    "34:5A:60": {
+      "vendor": "Micro-Star INTL CO., LTD.",
+      "cached_at": "2025-10-22T00:40:43.774242",
+      "source": "api"
+    },
+    "10:7C:61": {
+      "vendor": "ASUSTek COMPUTER INC.",
+      "cached_at": "2025-10-22T00:40:44.972935",
+      "source": "api"
+    }
+  }
+}

@@ -457,23 +457,24 @@
         managedDevices(){return this.devices.filter(d=>d.managed===true||d.in_devices===true)},
         
         async init(){
-            console.log('🚀 333HOME v7.0 PRO');
+            console.log('🚀 333HOME v7.0 PRO - Unified');
             await this.refreshAll();
-            await this.loadLastScan(); // Charger dernier scan au démarrage
+            await this.loadRegistryDevices(); // ✅ Charger registry (source unifiée)
             
-            // Interval 30s pour stats/devices
-            setInterval(()=>{
-                if(this.tab==='dashboard')this.loadStats();
-                if(this.tab==='managed')this.loadDevices();
-                if(this.tab==='network' && this.scanResults.length===0)this.loadLastScan();
-            },30000);
-            
-            // Interval 10s pour ping temps réel (onglet Réseau seulement)
-            setInterval(()=>{
-                if(this.tab==='network' && this.scanResults.length>0){
-                    this.updateNetworkStatus();
+            // ✅ Interval 30s : Refresh registry (ARP + VPN status)
+            setInterval(async ()=>{
+                if(this.tab==='dashboard'){
+                    await this.loadStats();
                 }
-            },10000);
+                if(this.tab==='managed'){
+                    await this.loadDevices();
+                }
+                if(this.tab==='network'){
+                    // ✅ Refresh registry status puis recharger
+                    await this.refreshRegistryStatus();
+                    await this.loadRegistryDevices();
+                }
+            },30000);
         },
         
         async refreshAll(){
@@ -481,20 +482,73 @@
             this.lastUpdate=new Date().toLocaleTimeString('fr-FR');
         },
         
-        async loadLastScan(){
-            // Charger le dernier scan réseau (sans doublons VPN)
+        async loadRegistryDevices(){
+            // ✅ Charger devices depuis NetworkRegistry (source unifiée + enrichie)
             try{
-                const r=await fetch('/api/network/scan/status');
+                const r=await fetch('/api/network/registry/');
                 if(!r.ok)return;
                 const d=await r.json();
-                // last_scan contient devices avec enrichissement VPN (pas de doublons)
-                if(d.last_scan && d.last_scan.devices && this.scanResults.length===0){
-                    this.scanResults=d.last_scan.devices;
-                    this.scanType=d.last_scan.scan_type||'UNKNOWN';
-                    this.lastScanTime=new Date(d.last_scan.scan_time).toLocaleTimeString('fr-FR');
-                    console.log('📡 Dernier scan chargé:',this.scanResults.length,'devices (scan:'+this.scanType+')');
+                
+                if(d.devices && Array.isArray(d.devices)){
+                    // Mapper les devices du registry vers le format UI
+                    this.scanResults = d.devices.map(device => ({
+                        // IDs
+                        mac: device.mac,
+                        current_ip: device.current_ip || device.ip,  // ✅ API retourne current_ip
+                        ip: device.current_ip || device.ip,
+                        
+                        // Noms
+                        current_hostname: device.current_hostname || device.hostname,
+                        hostname: device.current_hostname || device.hostname,
+                        name: device.current_hostname || device.hostname,
+                        
+                        // Infos enrichies
+                        vendor: device.vendor || 'Unknown',
+                        os_detected: device.os_detected || null,
+                        device_type: device.device_type || null,
+                        
+                        // Status online
+                        currently_online: device.is_online,
+                        is_online: device.is_online,
+                        
+                        // VPN (depuis enrichissement Tailscale) - ✅ Utiliser is_vpn_connected de l'API
+                        vpn_ip: device.vpn_ip || null,
+                        is_vpn_connected: device.is_vpn_connected || false,  // ✅ Pas juste !!vpn_ip
+                        
+                        // Metadata
+                        in_devices: device.is_managed || false,  // ✅ API retourne is_managed
+                        services: device.services || [],
+                        last_seen: device.last_seen,
+                        first_seen: device.first_seen,
+                    }));
+                    
+                    this.scanType = 'REGISTRY';
+                    this.lastScanTime = new Date().toLocaleTimeString('fr-FR');
+                    console.log(`📡 Registry chargé: ${this.scanResults.length} devices (vendor enrichi)`);
                 }
-            }catch(e){console.error('LastScan:',e)}
+            }catch(e){
+                console.error('LoadRegistry:',e);
+            }
+        },
+        
+        async refreshRegistryStatus(){
+            // ✅ Refresh léger registry (ARP + VPN status uniquement)
+            try{
+                const r=await fetch('/api/network/registry/refresh',{method:'POST'});
+                if(!r.ok){
+                    console.warn('Registry refresh failed:',r.status);
+                    return;
+                }
+                const d=await r.json();
+                console.log(`🔄 Registry refreshed: ${d.online_count} online, ${d.vpn_count} VPN, ${d.updated_count} changes`);
+            }catch(e){
+                console.error('RefreshRegistry:',e);
+            }
+        },
+        
+        async loadLastScan(){
+            // Legacy: garder pour compatibilité mais utiliser loadRegistryDevices() à la place
+            await this.loadRegistryDevices();
         },
         
         async loadStats(){
@@ -516,62 +570,6 @@
                 console.log('📱 Devices loaded:',this.devices.length,'(managed:'+this.managedDevices().length+')');
             }catch(e){console.error('Devices:',e);this.devices=[]}
             finally{this.loading=false}
-        },
-        
-        async updateNetworkStatus(){
-            // Mettre à jour statuts depuis /api/network/scan/ping (ARP + Tailscale temps réel)
-            try{
-                const r=await fetch('/api/network/scan/ping');
-                if(!r.ok)return;
-                const d=await r.json();
-                
-                // Créer map des statuts par MAC
-                const statusMap = new Map();
-                (d.devices||[]).forEach(dev => {
-                    if(dev.mac) {
-                        statusMap.set(dev.mac.toUpperCase(), {
-                            is_online: dev.is_online||false,
-                            is_vpn_connected: dev.is_vpn_connected||false,
-                            vpn_ip: dev.vpn_ip||null,
-                            hostname: dev.hostname||null
-                        });
-                    }
-                });
-                
-                // Mettre à jour scanResults (Réseau tab)
-                this.scanResults.forEach(device=>{
-                    const status = statusMap.get(device.mac?.toUpperCase());
-                    if(status){
-                        const wasOnline = device.currently_online;
-                        const wasVPN = device.is_vpn_connected;
-                        
-                        device.currently_online = status.is_online;
-                        device.is_online = status.is_online;
-                        device.is_vpn_connected = status.is_vpn_connected;
-                        device.vpn_ip = status.vpn_ip;
-                        
-                        // Log changements
-                        if(wasOnline !== status.is_online) {
-                            console.log(`🔄 ${device.hostname||device.ip}: ${wasOnline?'ONLINE':'OFFLINE'} → ${status.is_online?'ONLINE':'OFFLINE'}`);
-                        }
-                        if(wasVPN !== status.is_vpn_connected) {
-                            console.log(`🔒 ${device.hostname||device.ip}: VPN ${status.is_vpn_connected?'CONNECTED':'DISCONNECTED'}`);
-                        }
-                    }
-                });
-                
-                // Mettre à jour devices (Appareils tab)
-                this.devices.forEach(device=>{
-                    const status = statusMap.get(device.mac?.toUpperCase());
-                    if(status){
-                        device.is_online = status.is_online;
-                        device.is_vpn_connected = status.is_vpn_connected;
-                        device.vpn_ip = status.vpn_ip;
-                    }
-                });
-                
-                console.log(`✅ Status updated: ${d.online_count||0} online, ${d.vpn_count||0} VPN`);
-            }catch(e){console.error('UpdateNetworkStatus:',e)}
         },
         
         async startScan(type){
@@ -598,9 +596,12 @@
                 }
                 const result=await r.json();
                 console.log('✅ Scan result:',result);
-                this.scanResults=result.devices||[];
+                
+                // ✅ Recharger depuis registry (avec vendor enrichi)
+                await this.loadRegistryDevices();
                 await this.loadDevices();
                 await this.loadStats();
+                
                 this.showToast(`Scan ${type} terminé: ${this.scanResults.length} appareil(s) détecté(s)`,'success');
             }catch(e){
                 console.error('Scan error:',e);
