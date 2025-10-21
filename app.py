@@ -16,7 +16,7 @@ from src.core import settings, setup_logging, get_logger
 from src.features.devices import router as devices_router
 from src.features.network import network_router
 from src.core.unified import router as hub_router  # ✅ Renommé: hub → unified
-from src.api.unified_router import router as unified_router
+# ❌ unified_router supprimé (Phase 4 - redondant avec network_router modulaire)
 
 setup_logging()
 logger = get_logger(__name__)
@@ -67,10 +67,9 @@ def create_app() -> FastAPI:
     logger.info("✅ Router devices monté")
     
     app.include_router(network_router)
-    logger.info("✅ Router network monté (legacy)")
+    logger.info("✅ Router network monté (modulaire: scan, device, latency, bandwidth, dhcp)")
     
-    app.include_router(unified_router)
-    logger.info("✅ Router network unified monté")
+    # ❌ unified_router retiré (Phase 4 - redondant)
     
     app.include_router(hub_router, prefix="/api")
     logger.info("✅ Router hub monté")
