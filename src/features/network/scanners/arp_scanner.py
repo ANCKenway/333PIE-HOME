@@ -71,8 +71,9 @@ class ARPScanner:
                 except (ValueError, IndexError):
                     continue
                 
-                # Check if reachable
-                is_online = 'REACHABLE' in line or 'DELAY' in line
+                # Check if reachable/stale/delay (exclude only FAILED/INCOMPLETE)
+                # STALE = entry not recently verified, but device was online
+                is_online = 'REACHABLE' in line or 'DELAY' in line or 'STALE' in line
                 
                 device = DeviceData(
                     mac=mac,
