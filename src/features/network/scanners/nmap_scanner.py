@@ -123,7 +123,7 @@ class NmapScanner:
                     ip=ip,
                     hostname=hostname,
                     vendor=vendor,
-                    os=os_name,  # 🆕 OS detection
+                    os_detected=os_name,  # ✅ Fix: os_detected (pas 'os')
                     source='nmap',
                     is_online=True,
                     response_time_ms=latency,
