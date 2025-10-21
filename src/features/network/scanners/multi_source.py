@@ -24,13 +24,11 @@ from pathlib import Path
 
 from src.core.device_intelligence import DeviceData, DeviceIntelligenceEngine
 from src.core.models.unified_device import UnifiedDevice, DeviceStatus
-from .scanners import (
-    ARPScanner,
-    NmapScanner,
-    MDNSScanner,
-    NetBIOSScanner,
-    TailscaleScanner,
-)
+from .arp_scanner import ARPScanner  # ✅ Import direct (même dossier)
+from .nmap_scanner import NmapScanner
+from .mdns_scanner import MDNSScanner
+from .netbios_scanner import NetBIOSScanner
+from .tailscale_scanner import TailscaleScanner
 
 logger = logging.getLogger(__name__)
 

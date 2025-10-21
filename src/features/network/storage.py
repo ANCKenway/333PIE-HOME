@@ -22,7 +22,7 @@ from .schemas import (
     IPHistoryEntry,
     NetworkEvent,
 )
-from .dhcp_tracker import get_dhcp_tracker
+from .monitoring.dhcp_tracker import get_dhcp_tracker  # ✅ Déplacé dans monitoring/
 from src.core.config import get_settings
 from src.shared.exceptions import StorageError
 

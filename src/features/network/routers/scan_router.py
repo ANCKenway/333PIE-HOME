@@ -12,7 +12,7 @@ from datetime import datetime
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 
 from ..schemas import ScanRequest, ScanResult, NetworkDeviceCreate
-from ..multi_source_scanner import MultiSourceScanner
+from ..scanners.multi_source import MultiSourceScanner  # ✅ Déplacé dans scanners/
 from ..storage import save_scan_result, get_all_devices, get_device_by_mac
 from ..history import NetworkHistory
 from ..registry import NetworkRegistry

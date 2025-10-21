@@ -49,11 +49,11 @@ from .schemas import (
     PromoteToDevicesResponse,
 )
 
-from .multi_source_scanner import MultiSourceScanner
+from .scanners.multi_source import MultiSourceScanner  # ✅ Déplacé dans scanners/
 from .detector import DeviceDetector
 from .port_scanner import PortScanner, get_scan_preset
-from .latency_monitor import get_latency_monitor, LatencyStats
-from .bandwidth_monitor import (
+from .monitoring.latency_monitor import get_latency_monitor, LatencyStats  # ✅ Déplacé dans monitoring/
+from .monitoring.bandwidth_monitor import (  # ✅ Déplacé dans monitoring/
     get_bandwidth_monitor,
     BandwidthMonitor,
     BandwidthStats,
