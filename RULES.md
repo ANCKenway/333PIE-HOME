@@ -8,9 +8,10 @@
 - 🔧 **En cas de problème** : Debug d'abord, recréation avec le même nom en dernier recours + suppression de l'original
 
 ### 2. ARCHITECTURE MODULAIRE
-- 📁 **Structure claire** : Chaque partie du site doit être modulée au maximum
-- ❌ **Éviter** : Les gros "pâtés" de code sur un seul fichier
-- 🎯 **Objectif** : Code maintenable et évolutif
+- 📁 **Découpage intelligent** : Séparer ce qui est logiquement séparable (classes, fonctionnalités distinctes)
+- ❌ **Éviter** : Les gros "pâtés" de code mélangeant plusieurs responsabilités
+- ✅ **Pragmatisme** : Si un fichier a une raison d'être long (600L+), c'est OK tant qu'il reste cohérent
+- 🎯 **Objectif** : Code maintenable, évolutif, et facile à débugger
 
 ### 3. DÉVELOPPEMENT MÉTHODIQUE
 - 🚫 **Pas d'improvisation** : Chemin strict et réfléchi

@@ -1,0 +1,650 @@
+<!DOCTYPE html><!DOCTYPE html>
+
+<html lang="fr"><html lang="fr">
+
+<head><head>
+
+    <meta charset="UTF-8">    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>333HOME - Gestion Domotique</title>    <title>333HOME - Gestion de Parc Informatique</title>
+
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+    <!-- Tailwind CSS -->    <link rel="stylesheet" href="/static/css/main.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>    <script src="/app-simple.js" defer></script>
+
+    </head>
+
+    <!-- Alpine.js --><body>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>    <div class="app-layout">
+
+            <!-- Menu mobile hamburger -->
+
+    <style>        <button class="mobile-menu-btn" id="mobile-menu-btn">
+
+        [x-cloak] { display: none !important; }            <span class="hamburger-line"></span>
+
+    </style>            <span class="hamburger-line"></span>
+
+</head>            <span class="hamburger-line"></span>
+
+<body class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 min-h-screen" x-data="app()" x-init="init()">        </button>
+
+    
+
+    <!-- Layout Principal -->        <!-- Overlay mobile -->
+
+    <div class="flex min-h-screen">        <div class="mobile-overlay" id="mobile-overlay"></div>
+
+        
+
+        <!-- Sidebar -->        <!-- Sidebar -->
+
+        <aside class="w-72 bg-gray-900/95 backdrop-blur-xl text-white shadow-2xl border-r border-white/10">        <aside class="sidebar" id="sidebar">
+
+            <div class="p-6 border-b border-white/10">            <div class="sidebar-header">
+
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent">                <h1>🏠 333HOME</h1>
+
+                    🏠 333HOME                <div class="status-indicator" id="status-indicator">⚡ En ligne</div>
+
+                </h1>            </div>
+
+                <p class="text-sm text-gray-400 mt-1">v6.0 - Alpine + Tailwind</p>            
+
+            </div>            <nav class="sidebar-nav">
+
+                            <button class="nav-btn active" data-tab="status">
+
+            <nav class="p-4 space-y-2">                    <span class="nav-icon">📊</span>
+
+                <template x-for="tab in tabs" :key="tab.id">                    <span class="nav-text">Statut</span>
+
+                    <button                 </button>
+
+                        @click="switchTab(tab.id)"                <button class="nav-btn" data-tab="devices">
+
+                        :class="currentTab === tab.id ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-white/5'"                    <span class="nav-icon">📱</span>
+
+                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium"                    <span class="nav-text">Appareils</span>
+
+                    >                </button>
+
+                        <span x-text="tab.icon" class="text-2xl"></span>                <button class="nav-btn" data-tab="network">
+
+                        <span x-text="tab.name"></span>                    <span class="nav-icon">🌐</span>
+
+                    </button>                    <span class="nav-text">Scan Réseau</span>
+
+                </template>                </button>
+
+            </nav>                <button class="nav-btn" data-tab="vpn">
+
+        </aside>                    <span class="nav-icon">🔒</span>
+
+                            <span class="nav-text">VPN Tailscale</span>
+
+        <!-- Main Content -->                </button>
+
+        <main class="flex-1 p-8 overflow-y-auto">                <button class="nav-btn" data-tab="test">
+
+            <div class="max-w-7xl mx-auto">                    <span class="nav-icon">🔧</span>
+
+                                    <span class="nav-text">Test API</span>
+
+                <!-- TAB: Status -->                </button>
+
+                <div x-show="currentTab === 'status'" x-cloak class="space-y-6">            </nav>
+
+                    <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20">        </aside>
+
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">📊 Statut du Système</h2>
+
+                        <p class="text-gray-600">Monitoring en temps réel de votre infrastructure</p>        <!-- Contenu principal -->
+
+                    </div>        <main class="main-content">
+
+                                <!-- Tab Statut -->
+
+                    <!-- Stats Cards -->            <div id="tab-status" class="tab-content active">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">                <div class="page-header">
+
+                        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-xl transform hover:scale-105 transition-transform duration-300">                    <h2>📊 Statut du Système</h2>
+
+                            <div class="text-5xl mb-2">📱</div>                    <p>Monitoring temps réel de votre infrastructure</p>
+
+                            <div class="text-4xl font-bold" x-text="stats.total || 0"></div>                </div>
+
+                            <div class="text-indigo-100 text-sm uppercase tracking-wider mt-1">Total Appareils</div>                
+
+                        </div>                <!-- Stats principales -->
+
+                                        <div class="stats-grid">
+
+                        <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white shadow-xl transform hover:scale-105 transition-transform duration-300">                    <div class="stat-card stat-card--primary">
+
+                            <div class="text-5xl mb-2">✅</div>                        <div class="stat-icon">📱</div>
+
+                            <div class="text-4xl font-bold" x-text="stats.online || 0"></div>                        <div class="stat-content">
+
+                            <div class="text-green-100 text-sm uppercase tracking-wider mt-1">En Ligne</div>                            <div class="stat-value" id="stat-total-devices">-</div>
+
+                        </div>                            <div class="stat-label">Appareils Total</div>
+
+                                                </div>
+
+                        <div class="bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl p-6 text-white shadow-xl transform hover:scale-105 transition-transform duration-300">                    </div>
+
+                            <div class="text-5xl mb-2">❌</div>                    
+
+                            <div class="text-4xl font-bold" x-text="stats.offline || 0"></div>                    <div class="stat-card stat-card--success">
+
+                            <div class="text-red-100 text-sm uppercase tracking-wider mt-1">Hors Ligne</div>                        <div class="stat-icon">✅</div>
+
+                        </div>                        <div class="stat-content">
+
+                                                    <div class="stat-value" id="stat-online-devices">-</div>
+
+                        <div class="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl p-6 text-white shadow-xl transform hover:scale-105 transition-transform duration-300">                            <div class="stat-label">En ligne</div>
+
+                            <div class="text-5xl mb-2">🎯</div>                        </div>
+
+                            <div class="text-4xl font-bold" x-text="stats.managed || 0"></div>                    </div>
+
+                            <div class="text-blue-100 text-sm uppercase tracking-wider mt-1">Gérés</div>                    
+
+                        </div>                    <div class="stat-card stat-card--warning">
+
+                    </div>                        <div class="stat-icon">❌</div>
+
+                                            <div class="stat-content">
+
+                    <!-- System Health -->                            <div class="stat-value" id="stat-offline-devices">-</div>
+
+                    <div class="bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl p-6 border border-white/20">                            <div class="stat-label">Hors ligne</div>
+
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">🏠 État du Système</h3>                        </div>
+
+                        <div class="space-y-3">                    </div>
+
+                            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl">                    
+
+                                <span class="text-gray-700 font-medium">Serveur 333HOME</span>                    <div class="stat-card stat-card--info">
+
+                                <span class="px-4 py-2 bg-green-100 text-green-700 rounded-full font-semibold" x-text="health.status || 'Chargement...'"></span>                        <div class="stat-icon">🎯</div>
+
+                            </div>                        <div class="stat-content">
+
+                            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl">                            <div class="stat-value" id="stat-managed-devices">-</div>
+
+                                <span class="text-gray-700 font-medium">Base de Données</span>                            <div class="stat-label">Gérés</div>
+
+                                <span class="px-4 py-2 bg-green-100 text-green-700 rounded-full font-semibold">Opérationnel</span>                        </div>
+
+                            </div>                    </div>
+
+                        </div>                </div>
+
+                    </div>                
+
+                </div>                <!-- Informations système -->
+
+                                <div class="status-cards">
+
+                <!-- TAB: Devices -->                    <div class="card">
+
+                <div x-show="currentTab === 'devices'" x-cloak class="space-y-6">                        <h3>🏠 Serveur 333HOME</h3>
+
+                    <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20">                        <div id="app-status">
+
+                        <div class="flex justify-between items-center">                            <div class="status-item">
+
+                            <div>                                <span class="status-label">État:</span>
+
+                                <h2 class="text-3xl font-bold text-gray-800 mb-2">📱 Appareils Gérés</h2>                                <span class="status-value" id="app-health-status">Chargement...</span>
+
+                                <p class="text-gray-600">Gérez vos appareils connectés</p>                            </div>
+
+                            </div>                        </div>
+
+                            <button                     </div>
+
+                                @click="loadDevices()"                    
+
+                                class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"                    <div class="card">
+
+                            >                        <h3>📡 Base de Données</h3>
+
+                                🔄 Actualiser                        <div id="db-status">
+
+                            </button>                            <div class="status-item">
+
+                        </div>                                <span class="status-label">Fichier:</span>
+
+                    </div>                                <span class="status-value">devices_unified.json</span>
+
+                                                </div>
+
+                    <!-- Devices Grid -->                            <div class="status-item">
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">                                <span class="status-label">État:</span>
+
+                        <template x-for="device in devices" :key="device.ip">                                <span class="status-value" id="db-health-status">Chargement...</span>
+
+                            <div class="bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl p-6 border border-white/20 transform hover:scale-102 transition-all duration-300">                            </div>
+
+                                <div class="flex justify-between items-start mb-4">                        </div>
+
+                                    <div>                    </div>
+
+                                        <h3 class="text-xl font-bold text-gray-800" x-text="device.name || device.hostname || device.ip"></h3>                </div>
+
+                                        <p class="text-gray-500 text-sm" x-text="device.ip"></p>            </div>
+
+                                    </div>
+
+                                    <span             <!-- Tab Appareils -->
+
+                                        :class="device.status === 'online' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"            <div id="tab-devices" class="tab-content">
+
+                                        class="px-3 py-1 rounded-full text-sm font-semibold"                <div class="page-header">
+
+                                        x-text="device.status === 'online' ? '✅ En ligne' : '❌ Hors ligne'"                    <h2>📱 Appareils Gérés</h2>
+
+                                    ></span>                    <p>Appareils ajoutés à votre parc informatique avec fonctionnalités avancées</p>
+
+                                </div>                </div>
+
+                                                
+
+                                <div class="space-y-2 mb-4">                <div class="devices-actions">
+
+                                    <div class="flex justify-between text-sm" x-show="device.mac">                    <button class="btn btn-primary" id="refresh-devices">🔄 Actualiser</button>
+
+                                        <span class="text-gray-600">MAC:</span>                    <button class="btn btn-success" id="add-device">➕ Ajouter Appareil</button>
+
+                                        <span class="text-gray-800 font-mono" x-text="device.mac"></span>                    <!-- Bouton Sync VPN supprimé - sync automatique maintenant -->
+
+                                    </div>                </div>
+
+                                    <div class="flex justify-between text-sm" x-show="device.manufacturer">                
+
+                                        <span class="text-gray-600">Fabricant:</span>                <div class="devices-container">
+
+                                        <span class="text-gray-800" x-text="device.manufacturer"></span>                    <div id="devices-list">
+
+                                    </div>                        <div class="card">
+
+                                </div>                            <p class="empty-state">🔍 Aucun appareil géré. Utilisez le scan réseau pour découvrir et ajouter des appareils.</p>
+
+                                                        </div>
+
+                                <div class="flex gap-2">                    </div>
+
+                                    <button                 </div>
+
+                                        x-show="device.managed"            </div>
+
+                                        @click="removeDevice(device.ip)"
+
+                                        class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200"            <!-- Tab Scan Réseau -->
+
+                                    >            <div id="tab-network" class="tab-content">
+
+                                        🗑️ Retirer                <div class="page-header">
+
+                                    </button>                    <h2>🌐 Scan Réseau</h2>
+
+                                    <button                     <p>Découverte automatique des appareils sur votre réseau local</p>
+
+                                        x-show="!device.managed"                </div>
+
+                                        @click="addDevice(device.ip)"                
+
+                                        class="flex-1 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors duration-200"                <!-- Informations dernier scan -->
+
+                                    >                <div class="scan-info-section">
+
+                                        ➕ Gérer                    <div class="card">
+
+                                    </button>                        <h3>📊 Informations de Scan</h3>
+
+                                </div>                        <div id="scan-info-content">
+
+                            </div>                            <div class="loading">🔄 Chargement des informations...</div>
+
+                        </template>                        </div>
+
+                    </div>                    </div>
+
+                                    </div>
+
+                    <div x-show="devices.length === 0" class="bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl p-12 text-center border border-white/20">                
+
+                        <div class="text-6xl mb-4">🔍</div>                <div class="network-controls">
+
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Aucun appareil</h3>                    <button class="btn btn-primary" id="start-scan">🔍 Lancer Scan</button>
+
+                        <p class="text-gray-600 mb-6">Lancez un scan réseau pour découvrir des appareils</p>                    <button class="btn btn-secondary" id="stop-scan" disabled>⏹️ Arrêter</button>
+
+                        <button                     <button class="btn btn-outline" id="show-history" onclick="app.toggleNetworkHistory()">📋 Historique Réseau</button>
+
+                            @click="switchTab('network')"                    <div class="scan-progress" id="scan-progress" style="display: none;">
+
+                            class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"                        <div class="progress-bar">
+
+                        >                            <div class="progress-fill" id="progress-fill"></div>
+
+                            🌐 Scanner le Réseau                        </div>
+
+                        </button>                        <span id="scan-status">Scan en cours...</span>
+
+                    </div>                    </div>
+
+                </div>                </div>
+
+                                
+
+                <!-- TAB: Network -->                <!-- Section Historique Réseau -->
+
+                <div x-show="currentTab === 'network'" x-cloak class="space-y-6">                <div class="network-history-section" id="network-history-section" style="display: none;">
+
+                    <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20">                    <div class="card">
+
+                        <div class="flex justify-between items-center">                        <h3>📋 Historique des Appareils Réseau</h3>
+
+                            <div>                        <div class="history-tabs">
+
+                                <h2 class="text-3xl font-bold text-gray-800 mb-2">🌐 Scan Réseau</h2>                            <button class="tab-btn active" onclick="app.showHistoryTab('devices')">🖥️ Appareils</button>
+
+                                <p class="text-gray-600">Découverte automatique des appareils</p>                            <button class="tab-btn" onclick="app.showHistoryTab('events')">📅 Événements</button>
+
+                            </div>                        </div>
+
+                            <button                         
+
+                                @click="startScan()"                        <div id="history-devices" class="history-tab-content active">
+
+                                :disabled="scanning"                            <div class="loading">🔄 Chargement de l'historique...</div>
+
+                                :class="scanning ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'"                        </div>
+
+                                class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform transition-all duration-300"                        
+
+                            >                        <div id="history-events" class="history-tab-content" style="display: none;">
+
+                                <span x-show="!scanning">🔍 Lancer Scan</span>                            <div class="loading">🔄 Chargement des événements...</div>
+
+                                <span x-show="scanning">⏳ Scan en cours...</span>                        </div>
+
+                            </button>                    </div>
+
+                        </div>                </div>
+
+                    </div>                
+
+                                    <!-- Appareils récemment déconnectés -->
+
+                    <div x-show="scanning" class="bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl p-8 text-center border border-white/20">                <div class="disconnected-section" id="disconnected-section" style="display: none;">
+
+                        <div class="animate-spin text-6xl mb-4">🔄</div>                    <div class="card">
+
+                        <p class="text-xl font-semibold text-gray-800">Scan du réseau en cours...</p>                        <h3>📵 Appareils Récemment Déconnectés</h3>
+
+                        <p class="text-gray-600 mt-2">Cela peut prendre quelques instants</p>                        <div id="disconnected-devices">
+
+                    </div>                            <div class="loading">🔄 Chargement...</div>
+
+                </div>                        </div>
+
+                                    </div>
+
+                <!-- TAB: VPN -->                </div>
+
+                <div x-show="currentTab === 'vpn'" x-cloak class="space-y-6">                
+
+                    <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20">                <div class="network-results">
+
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">🔒 VPN Tailscale</h2>                    <div id="network-devices">
+
+                        <p class="text-gray-600">Gestion de votre réseau VPN</p>                        <div class="card">
+
+                    </div>                            <p class="empty-state">🎯 Cliquez sur "Lancer Scan" pour découvrir les appareils réseau</p>
+
+                </div>                        </div>
+
+                                    </div>
+
+                <!-- TAB: Test -->                </div>
+
+                <div x-show="currentTab === 'test'" x-cloak class="space-y-6">            </div>
+
+                    <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20">
+
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">🔧 Test API</h2>            <!-- Tab VPN Tailscale -->
+
+                        <p class="text-gray-600">Testez les endpoints de l'API</p>            <!-- Tab VPN Unified - Interface cohérente avec les autres onglets -->
+
+                    </div>            <div id="tab-vpn" class="tab-content">
+
+                </div>                <div class="page-header">
+
+                                    <h2>🔒 VPN Tailscale</h2>
+
+            </div>                    <p>Gestion et monitoring de votre réseau Tailscale</p>
+
+        </main>                </div>
+
+    </div>                
+
+                    <div class="devices-actions">
+
+    <script>                    <button class="btn btn-primary" id="refresh-tailscale">🔄 Actualiser</button>
+
+        function app() {                    <button class="btn btn-secondary" id="tailscale-settings">⚙️ Configuration</button>
+
+            return {                </div>
+
+                currentTab: 'status',
+
+                tabs: [                <!-- Configuration API (masquée par défaut) -->
+
+                    { id: 'status', name: 'Statut', icon: '📊' },                <div class="card" id="vpn-config-section" style="display: none;">
+
+                    { id: 'devices', name: 'Appareils', icon: '📱' },                    <h3>⚙️ Configuration API</h3>
+
+                    { id: 'network', name: 'Scan Réseau', icon: '🌐' },                    <form id="tailscale-config-form">
+
+                    { id: 'vpn', name: 'VPN', icon: '🔒' },                        <div class="form-group">
+
+                    { id: 'test', name: 'Test API', icon: '🔧' }                            <label>� Clé API Tailscale</label>
+
+                ],                            <input type="password" id="tailscale-api-key" class="form-control" 
+
+                stats: {},                                   placeholder="tskey-api-...">
+
+                health: {},                            <small>Obtenez votre clé sur https://login.tailscale.com/admin/settings/keys</small>
+
+                devices: [],                        </div>
+
+                scanning: false,                        <div class="form-group">
+
+                                            <label>🏢 Tailnet (Organisation)</label>
+
+                async init() {                            <input type="text" id="tailscale-tailnet" class="form-control" 
+
+                    console.log('🚀 333HOME v6.0 - Alpine + Tailwind');                                   placeholder="tail12345.ts.net ou votre@email.com">
+
+                    await this.loadStats();                            <small>Format: tail&lt;hash&gt;.ts.net (visible dans Admin → Settings) ou votre email pour compte personnel</small>
+
+                    await this.loadHealth();                        </div>
+
+                    await this.loadDevices();                        <button type="submit" class="btn btn-primary">💾 Sauvegarder</button>
+
+                },                    </form>
+
+                                </div>
+
+                switchTab(tab) {
+
+                    this.currentTab = tab;                <!-- Statistiques - utilise les mêmes classes que l'onglet Status -->
+
+                    console.log('🔄 Tab:', tab);                <div class="status-grid">
+
+                                        <div class="card">
+
+                    // Load content on tab switch                        <h3 id="total-devices">-</h3>
+
+                    if (tab === 'devices') this.loadDevices();                        <p>Appareils Total</p>
+
+                },                    </div>
+
+                                    <div class="card online">
+
+                async loadStats() {                        <h3 id="online-devices">-</h3>
+
+                    try {                        <p>En Ligne</p>
+
+                        const res = await fetch('/api/hub/stats');                    </div>
+
+                        const data = await res.json();                    <div class="card offline">
+
+                        this.stats = data.devices || {};                        <h3 id="offline-devices">-</h3>
+
+                    } catch (err) {                        <p>Hors Ligne</p>
+
+                        console.error('❌ Stats:', err);                    </div>
+
+                    }                    <div class="card">
+
+                },                        <h3 id="last-sync">-</h3>
+
+                                        <p>Dernière Synch</p>
+
+                async loadHealth() {                    </div>
+
+                    try {                </div>
+
+                        const res = await fetch('/api/hub/health');                
+
+                        const data = await res.json();                <!-- Liste des appareils - utilise les mêmes classes que l'onglet Devices -->
+
+                        this.health = data;                <div class="devices-container">
+
+                    } catch (err) {                    <div class="card">
+
+                        console.error('❌ Health:', err);                        <h3>🌐 Appareils Tailscale</h3>
+
+                    }                        <div id="tailscale-devices">
+
+                },                            <div class="loading">🔄 Chargement des appareils Tailscale...</div>
+
+                                        </div>
+
+                async loadDevices() {                    </div>
+
+                    try {                </div>
+
+                        const res = await fetch('/api/hub/devices');
+
+                        const data = await res.json();                <!-- Routes - section repliable/dépliable -->
+
+                        this.devices = data.devices || [];                <div class="devices-container">
+
+                        console.log('📱 Devices loaded:', this.devices.length);                    <div class="card">
+
+                    } catch (err) {                        <h3>🛣️ Routes Subnet <button class="btn btn-small" onclick="app.toggleSection('routes-section')">👁️</button></h3>
+
+                        console.error('❌ Devices:', err);                        <div id="routes-section" style="display: none;">
+
+                    }                            <p>Configuration des routes pour accéder aux réseaux locaux via Tailscale.</p>
+
+                },                            <div id="tailscale-routes">
+
+                                                <div class="loading">🔄 Chargement des routes...</div>
+
+                async addDevice(ip) {                            </div>
+
+                    try {                        </div>
+
+                        await fetch('/api/devices', {                    </div>
+
+                            method: 'POST',                </div>
+
+                            headers: {'Content-Type': 'application/json'},
+
+                            body: JSON.stringify({ip, managed: true})                <!-- ACL - section repliable/dépliable -->
+
+                        });                <div class="devices-container">
+
+                        await this.loadDevices();                    <div class="card">
+
+                    } catch (err) {                        <h3>🛡️ Contrôle d'Accès (ACL) <button class="btn btn-small" onclick="app.toggleSection('acl-section')">👁️</button></h3>
+
+                        alert('Erreur: ' + err.message);                        <div id="acl-section" style="display: none;">
+
+                    }                            <p>Règles de sécurité et politique d'accès du réseau Tailscale.</p>
+
+                },                            <div id="tailscale-acl">
+
+                                                <div class="loading">🔄 Chargement des règles...</div>
+
+                async removeDevice(ip) {                            </div>
+
+                    if (!confirm(`Retirer ${ip} ?`)) return;                        </div>
+
+                    try {                    </div>
+
+                        await fetch(`/api/devices/${ip}`, {method: 'DELETE'});                </div>
+
+                        await this.loadDevices();            </div>
+
+                    } catch (err) {
+
+                        alert('Erreur: ' + err.message);            <!-- Tab Test -->
+
+                    }            <div id="tab-test" class="tab-content">
+
+                },                <h2>🔧 Test API</h2>
+
+                                <div class="test-container">
+
+                async startScan() {                    <button id="test-get" class="btn">Test GET</button>
+
+                    this.scanning = true;                    <button id="test-post" class="btn">Test POST</button>
+
+                    try {                    <div id="test-results"></div>
+
+                        await fetch('/api/hub/scan', {method: 'POST'});                </div>
+
+                        await new Promise(r => setTimeout(r, 3000)); // Wait 3s            </div>
+
+                        await this.loadDevices();        </main>
+
+                        await this.loadStats();
+
+                    } catch (err) {        <!-- Pied de page -->
+
+                        alert('Erreur scan: ' + err.message);        <footer class="footer">
+
+                    } finally {            <div class="footer-content">
+
+                        this.scanning = false;                <span>333HOME v4.0.0 - Architecture Modulaire</span>
+
+                    }                <span id="connection-status">🟢 Connecté</span>
+
+                }            </div>
+
+            }        </footer>
+
+        }    </div>
+
+    </script></body>
+
+</body></html>
+</html>

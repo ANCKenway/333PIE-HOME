@@ -54,7 +54,15 @@ structlog==23.2.0
 # 🌐 HTTP CLIENT ASYNC 🌐
 httpx==0.25.2
 
-# 🔧 ADVANCED TOOLS 🔧
+# 🔧 CLI & Utils
 rich==13.7.0
 click==8.1.7
 typer==0.9.0
+
+# 🧪 Testing & Development
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+httpx==0.25.2  # For TestClient async
+faker==20.1.0  # For test data generation

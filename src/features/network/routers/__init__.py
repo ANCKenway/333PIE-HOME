@@ -1,0 +1,16 @@
+"""
+🌐 333HOME - Network Routers
+Routers modulaires pour l'API Network
+"""
+
+from .scan_router import router as scan_router
+from .device_router import router as device_router
+from .latency_router import router as latency_router
+from .bandwidth_router import router as bandwidth_router
+
+__all__ = [
+    "scan_router",
+    "device_router",
+    "latency_router",
+    "bandwidth_router",
+]
