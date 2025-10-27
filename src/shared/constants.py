@@ -6,12 +6,19 @@ Valeurs constantes utilisées à travers l'application
 from enum import Enum
 
 
-# Statuts d'appareils
+# Statuts d'appareils (SOURCE UNIQUE - RÈGLE #1)
 class DeviceStatus(str, Enum):
+    """
+    Statut d'un appareil - SOURCE UNIQUE pour toute l'app
+    
+    ⚠️ NE PAS dupliquer cette enum ailleurs (RÈGLE #1)
+    Import: from src.shared.constants import DeviceStatus
+    """
     ONLINE = "online"
     OFFLINE = "offline"
     UNKNOWN = "unknown"
-    ERROR = "error"
+    PENDING = "pending"  # Appareil en cours de détection
+    ERROR = "error"      # Erreur lors de la détection
 
 
 # Types d'appareils

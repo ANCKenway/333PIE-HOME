@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "last_updated": "2025-10-22T01:25:55.269046",
+  "last_updated": "2025-10-27T14:26:02.808922",
   "total_devices": 9,
   "devices": {
     "C8:FF:77:59:DE:E1": {
@@ -121,7 +121,7 @@
       "os_detected": null,
       "device_type": null,
       "is_online": true,
-      "is_vpn_connected": false,
+      "is_vpn_connected": true,
       "vpn_ip": "100.93.236.71",
       "ip_history": [
         {
@@ -179,7 +179,7 @@
       "os_detected": null,
       "device_type": null,
       "is_online": true,
-      "is_vpn_connected": true,
+      "is_vpn_connected": false,
       "vpn_ip": "100.114.4.46",
       "ip_history": [
         {

@@ -1,12 +1,24 @@
 """
-🏠 333HOME - Unified Device Model
+🏠 333HOME - Scanner Models (@dataclass)
 
-Modèle unifié pour représenter un device réseau avec toutes ses données.
-Source unique de vérité fusionnant multiples sources (nmap, ARP, Freebox, mDNS).
+⚠️ USAGE LIMITÉ (RÈGLE #1 - Pas de doublons) :
+   - Modèles internes pour MultiSourceScanner UNIQUEMENT
+   - Architecture enrichie : historique IP, uptime, capabilities, confidence
+   
+Utilisé UNIQUEMENT par:
+- src/features/network/scanners/multi_source.py (scan multi-sources enrichi)
+- src/features/network/routers/scan_router.py (endpoints /api/network/scan)
+
+❌ NE PAS utiliser pour API Hub ou Storage :
+   - API /api/hub/devices → utiliser src/core/unified/unified_service.UnifiedDevice (simple dict)
+   - Registry/Storage → utiliser dicts natifs
+   
+Séparation claire:
+- scanner_models.py = Modèles SCAN (complexes, temporaires)
+- unified_service.py = Modèles API (simples, persistants)
 
 Références:
 - docs/NETWORK_PRO_ARCHITECTURE.md
-- TODO_NETWORK_PRO.md Phase 1.3
 """
 
 from dataclasses import dataclass, field
@@ -14,15 +26,11 @@ from datetime import datetime
 from typing import List, Dict, Any, Optional
 from enum import Enum
 
+# Import depuis source unique (RÈGLE #1)
+from src.shared.constants import DeviceStatus
 
-# === ENUMS ===
 
-class DeviceStatus(Enum):
-    """Statut d'un device"""
-    ONLINE = "online"
-    OFFLINE = "offline"
-    UNKNOWN = "unknown"
-
+# === ENUMS SCANNER-SPECIFIC ===
 
 class InterfaceType(Enum):
     """Type d'interface réseau"""

@@ -127,16 +127,20 @@
                             <span class="text-sm font-medium text-gray-700">Serveur 333HOME</span>
                             <span class="px-3 py-1 bg-green-600 text-white rounded-full text-xs font-semibold">✅ Online</span>
                         </div>
+                        <div class="flex justify-between items-center p-3 bg-blue-50 rounded-lg border border-blue-200">
+                            <span class="text-sm font-medium text-gray-700">🔄 Monitoring temps réel</span>
+                            <span class="px-3 py-1 bg-blue-600 text-white rounded-full text-xs font-semibold" x-text="'Cycle: 5s'"></span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span class="text-sm font-medium text-gray-700">Dernière mise à jour</span>
+                            <span class="px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-xs font-mono" x-text="lastUpdate || 'Chargement...'"></span>
+                        </div>
                         <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                             <span class="text-sm font-medium text-gray-700">Version</span>
-                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">v3.0.0</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">v7.0 Pro</span>
                         </div>
                         <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                             <span class="text-sm font-medium text-gray-700">Backend API</span>
-                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">✅ OK</span>
-                        </div>
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span class="text-sm font-medium text-gray-700">Base de données</span>
                             <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">✅ OK</span>
                         </div>
                     </div>
@@ -460,11 +464,12 @@
             console.log('🚀 333HOME v7.0 PRO - Unified');
             await this.loadUnifiedDevices(); // ✅ Source unique
             
-            // ✅ Interval 30s : Refresh registry puis reload
+            // ✅ Monitoring temps réel unifié: Refresh registry PUIS reload devices
+            // Cycle complet toutes les 5s pour garantir cohérence
             setInterval(async ()=>{
-                await this.refreshRegistryStatus();
-                await this.loadUnifiedDevices();
-            },30000);
+                await this.refreshRegistryStatus(); // 1. Refresh ARP + VPN (< 100ms)
+                await this.loadUnifiedDevices();    // 2. Reload devices enrichis (< 200ms)
+            }, 5000); // Cycle complet: 5s
         },
         
         async refreshAll(){
@@ -514,8 +519,9 @@
                 
                 this.scanType = 'UNIFIED';
                 this.lastScanTime = new Date().toLocaleTimeString('fr-FR');
+                this.lastUpdate = new Date().toLocaleTimeString('fr-FR'); // ✅ Timestamp visible dashboard
                 
-                console.log(`� Unified devices: ${allDevices.length} total, ${this.stats.online} online, ${this.stats.managed} managed`);
+                console.log(`✅ Unified devices: ${allDevices.length} total, ${this.stats.online} online, ${this.stats.managed} managed`);
             }catch(e){
                 console.error('LoadUnifiedDevices:',e);
                 this.devices=[];

@@ -23,7 +23,8 @@ from typing import List, Dict, Any
 from pathlib import Path
 
 from src.core.device_intelligence import DeviceData, DeviceIntelligenceEngine
-from src.core.models.unified_device import UnifiedDevice, DeviceStatus
+from src.shared.constants import DeviceStatus  # ✅ Source unique RÈGLE #1
+from .scanner_models import UnifiedDevice, DeviceCapabilities  # ✅ Modèles scanner
 from .arp_scanner import ARPScanner  # ✅ Import direct (même dossier)
 from .nmap_scanner import NmapScanner
 from .mdns_scanner import MDNSScanner

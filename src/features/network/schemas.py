@@ -10,6 +10,9 @@ from datetime import datetime
 from pydantic import BaseModel, Field, validator
 from enum import Enum
 
+# Import depuis source unique (RÈGLE #1)
+from src.shared.constants import DeviceStatus
+
 
 # === ENUMS ===
 
@@ -31,13 +34,6 @@ class NetworkEventType(str, Enum):
     MAC_CHANGED = "mac_changed"
     HOSTNAME_CHANGED = "hostname_changed"
     DEVICE_PROMOTED = "device_promoted"
-
-
-class DeviceStatus(str, Enum):
-    """Statut d'un appareil réseau"""
-    ONLINE = "online"
-    OFFLINE = "offline"
-    UNKNOWN = "unknown"
 
 
 # === NETWORK DEVICE ===

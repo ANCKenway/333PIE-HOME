@@ -16,7 +16,7 @@ from ..scanners.multi_source import MultiSourceScanner  # ✅ Déplacé dans sca
 from ..storage import save_scan_result, get_all_devices, get_device_by_mac
 from ..history import NetworkHistory
 from ..registry import NetworkRegistry
-from src.core.models.unified_device import DeviceStatus
+from src.shared.constants import DeviceStatus  # ✅ Source unique RÈGLE #1
 
 
 logger = logging.getLogger(__name__)

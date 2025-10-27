@@ -252,7 +252,7 @@ async def refresh_registry_status():
         for hostname, ts_info in ts_devices_map.items():
             vpn_map[hostname.upper()] = {
                 'vpn_ip': ts_info.get('vpn_ip'),
-                'is_vpn_connected': ts_info.get('is_online', True)  # Si dans tailscale status, assumé online
+                'is_vpn_connected': ts_info.get('is_online', False)  # ✅ Défaut FALSE (pas online si pas spécifié)
             }
         
         # 4. Mettre à jour registry
