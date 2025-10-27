@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "updated_at": "2025-10-19T17:47:54.158585",
+  "updated_at": "2025-10-22T01:25:59.813028",
   "devices": [
     {
       "id": "dev_d83add123456",
@@ -121,6 +121,17 @@
       },
       "created_at": "2025-10-19T17:47:54.158574",
       "updated_at": "2025-10-19T17:47:54.158574"
+    },
+    {
+      "id": "7a4bc26f42a0",
+      "created_at": "2025-10-22T01:25:59.812908",
+      "updated_at": "2025-10-22T01:25:59.812919",
+      "name": "iPad-de-Miren.local",
+      "ip": "192.168.1.117",
+      "mac": "A4:E9:75:73:1F:CB",
+      "hostname": null,
+      "type": "❓ Apple, Inc.",
+      "description": null
     }
   ]
 }
