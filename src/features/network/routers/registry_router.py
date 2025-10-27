@@ -7,6 +7,7 @@ jamais détectés avec leur historique complet (IP, hostname, présence).
 """
 
 import logging
+import subprocess
 from typing import Optional, List
 from fastapi import APIRouter, HTTPException, Query
 
@@ -15,6 +16,49 @@ from ..schemas import DeviceRegistryResponse, RegistryStatistics
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/registry", tags=["network-registry"])
+
+
+def get_local_mac_address() -> Optional[str]:
+    """
+    Détecter automatiquement la MAC address de l'interface réseau principale
+    
+    Returns:
+        MAC address en majuscules (ex: "88:A2:9E:3B:20:31") ou None si erreur
+    """
+    try:
+        # Méthode 1: Via ip link (Linux)
+        result = subprocess.run(
+            ['ip', 'link', 'show'],
+            capture_output=True,
+            text=True,
+            timeout=2
+        )
+        if result.returncode == 0:
+            for line in result.stdout.split('\n'):
+                # Chercher ligne avec "link/ether" et état UP
+                if 'link/ether' in line.lower() and 'state up' in result.stdout.lower():
+                    parts = line.strip().split()
+                    if len(parts) >= 2:
+                        mac = parts[1].upper()
+                        logger.info(f"🔍 MAC locale détectée: {mac}")
+                        return mac
+        
+        # Méthode 2: Fallback via /sys/class/net
+        import os
+        for iface in os.listdir('/sys/class/net'):
+            if iface.startswith(('eth', 'wlan', 'en')):
+                try:
+                    with open(f'/sys/class/net/{iface}/address', 'r') as f:
+                        mac = f.read().strip().upper()
+                        logger.info(f"🔍 MAC locale détectée ({iface}): {mac}")
+                        return mac
+                except:
+                    continue
+                    
+    except Exception as e:
+        logger.warning(f"⚠️  Impossible de détecter MAC locale: {e}")
+    
+    return None
 
 
 @router.get(
@@ -135,7 +179,7 @@ async def get_registry_statistics():
         registry = get_network_registry()
         stats = registry.get_statistics()
         
-        logger.debug(f"📊 Registry stats: {stats['total_devices']} devices, {stats['online']} online")
+        logger.info(f"📊 Registry stats: {stats['total_devices']} devices, {stats['online']} online")
         
         return RegistryStatistics(**stats)
     
@@ -252,7 +296,8 @@ async def refresh_registry_status():
         for hostname, ts_info in ts_devices_map.items():
             vpn_map[hostname.upper()] = {
                 'vpn_ip': ts_info.get('vpn_ip'),
-                'is_vpn_connected': ts_info.get('is_online', False)  # ✅ Défaut FALSE (pas online si pas spécifié)
+                'is_vpn_connected': ts_info.get('is_online', False),  # ✅ Défaut FALSE (pas online si pas spécifié)
+                'is_self': ts_info.get('is_self', False)  # ✅ Conserver flag is_self
             }
         
         # 4. Mettre à jour registry
@@ -260,32 +305,47 @@ async def refresh_registry_status():
         vpn_count = 0
         updated_count = 0
         
+        # ✅ Détecter notre propre MAC dynamiquement (pas de hardcode)
+        local_mac = get_local_mac_address()
+        
         for mac, device in registry.devices.items():
             changed = False
             
-            # Check ARP online status
-            arp_device = next((d for d in arp_devices if d.mac.upper() == mac), None)
-            new_online = arp_device is not None
+            # ✅ Exception pour Self (nous-mêmes) : toujours online
+            is_self = (local_mac and mac.upper() == local_mac.upper())
             
-            if device.is_online != new_online:
-                device.is_online = new_online
-                changed = True
-            
-            if new_online:
+            if is_self:
+                # Nous-mêmes : toujours online
+                if not device.is_online:
+                    device.is_online = True
+                    changed = True
                 online_count += 1
-                if arp_device:
-                    # Update IP/hostname si changé
-                    new_ip = arp_device.ip
-                    new_hostname = arp_device.hostname
-                    if new_ip and new_ip != device.current_ip:
-                        device.current_ip = new_ip
-                        changed = True
-                    if new_hostname and new_hostname != device.current_hostname:
-                        device.current_hostname = new_hostname
-                        changed = True
+                # Note: IP/hostname seront enrichis par le VPN matching ci-dessous
+            else:
+                # Autres devices : check ARP
+                arp_device = next((d for d in arp_devices if d.mac.upper() == mac), None)
+                new_online = arp_device is not None
+                
+                if device.is_online != new_online:
+                    device.is_online = new_online
+                    changed = True
+                
+                if new_online:
+                    online_count += 1
+                    if arp_device:
+                        # Update IP/hostname si changé
+                        new_ip = arp_device.ip
+                        new_hostname = arp_device.hostname
+                        if new_ip and new_ip != device.current_ip:
+                            device.current_ip = new_ip
+                            changed = True
+                        if new_hostname and new_hostname != device.current_hostname:
+                            device.current_hostname = new_hostname
+                            changed = True
             
             # Check VPN status
             hostname_upper = (device.current_hostname or '').upper()
+            
             if hostname_upper in vpn_map:
                 vpn_info = vpn_map[hostname_upper]
                 device.vpn_ip = vpn_info['vpn_ip']

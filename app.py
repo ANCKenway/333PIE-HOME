@@ -35,9 +35,41 @@ async def lifespan(app: FastAPI):
     
     # 🔧 Charger le NetworkRegistry au démarrage (singleton - Phase 6)
     try:
-        from src.features.network.registry import get_network_registry
+        from src.features.network.registry import get_network_registry, DeviceRegistryEntry
+        from src.features.network.routers.registry_router import get_local_mac_address
+        from datetime import datetime, UTC
+        
         registry = get_network_registry()
         logger.info(f"✅ NetworkRegistry chargé: {len(registry.devices)} devices")
+        
+        # ✅ Auto-détection du device local (robuste aux changements réseau)
+        local_mac = get_local_mac_address()
+        if local_mac:
+            if local_mac not in registry.devices:
+                logger.info(f"🔧 Auto-ajout du device local ({local_mac})")
+                now_str = datetime.now(UTC).isoformat()
+                registry.devices[local_mac] = DeviceRegistryEntry(
+                    mac=local_mac,
+                    current_ip="192.168.1.150",  # Sera mis à jour au premier scan
+                    current_hostname="333PIE",
+                    vendor="Raspberry Pi",
+                    os_detected="Linux",
+                    device_type="Server",
+                    is_online=True,
+                    first_seen=now_str,
+                    last_seen=now_str,
+                    last_seen_online=now_str,
+                    total_detections=1,
+                    notes="Self-device (auto-detected)",
+                    is_managed=True
+                )
+                registry._save()
+                logger.info(f"✅ Device local ajouté au registry (VPN sera enrichi au premier refresh)")
+            else:
+                logger.info(f"ℹ️  Device local présent ({local_mac})")
+        else:
+            logger.warning("⚠️  Impossible de détecter MAC locale")
+            
     except Exception as e:
         logger.error(f"❌ Erreur chargement NetworkRegistry: {e}")
     

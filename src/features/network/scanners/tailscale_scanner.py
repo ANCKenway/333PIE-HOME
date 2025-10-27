@@ -70,7 +70,27 @@ class TailscaleScanner:
             # Parse JSON
             data = json.loads(stdout.decode())
             
-            # Iterate over peers
+            # 1. Ajouter Self (notre propre device)
+            self_data = data.get('Self', {})
+            if self_data:
+                hostname = self_data.get('HostName', '').strip()
+                tailscale_ips = self_data.get('TailscaleIPs', [])
+                is_online = self_data.get('Online', False)
+                
+                if hostname and tailscale_ips:
+                    vpn_ip = tailscale_ips[0]
+                    hostname_short = hostname.split('.')[0].upper()
+                    
+                    enrichment_map[hostname_short] = {
+                        'vpn_ip': vpn_ip,
+                        'local_ip': '192.168.1.150',  # Notre IP locale (connue)
+                        'full_hostname': hostname,
+                        'is_online': is_online,
+                        'is_self': True  # Marqueur pour nous-mêmes
+                    }
+                    self.logger.info(f"📡 Tailscale: Added Self ({hostname} - {vpn_ip})")
+            
+            # 2. Itérer sur les peers (autres devices)
             for peer_id, peer_data in data.get('Peer', {}).items():
                 hostname = peer_data.get('HostName', '').strip()
                 tailscale_ips = peer_data.get('TailscaleIPs', [])

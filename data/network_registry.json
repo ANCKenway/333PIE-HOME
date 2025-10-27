@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "last_updated": "2025-10-27T14:26:02.808922",
-  "total_devices": 9,
+  "last_updated": "2025-10-27T19:19:12.822056",
+  "total_devices": 10,
   "devices": {
     "C8:FF:77:59:DE:E1": {
       "mac": "C8:FF:77:59:DE:E1",
@@ -179,7 +179,7 @@
       "os_detected": null,
       "device_type": null,
       "is_online": true,
-      "is_vpn_connected": false,
+      "is_vpn_connected": true,
       "vpn_ip": "100.114.4.46",
       "ip_history": [
         {
@@ -254,6 +254,25 @@
       "total_detections": 8,
       "notes": null,
       "is_managed": false
+    },
+    "88:A2:9E:3B:20:31": {
+      "mac": "88:A2:9E:3B:20:31",
+      "current_ip": "192.168.1.150",
+      "current_hostname": "333PIE",
+      "vendor": "Raspberry Pi",
+      "os_detected": "Linux",
+      "device_type": "Server",
+      "is_online": true,
+      "is_vpn_connected": true,
+      "vpn_ip": "100.115.207.11",
+      "ip_history": [],
+      "hostname_history": [],
+      "first_seen": "2025-10-27T18:13:59.540743+00:00",
+      "last_seen": "2025-10-27T18:13:59.540743+00:00",
+      "last_seen_online": "2025-10-27T18:13:59.540743+00:00",
+      "total_detections": 1,
+      "notes": "Self-device (auto-detected)",
+      "is_managed": true
     }
   }
 }
