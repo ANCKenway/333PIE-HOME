@@ -461,8 +461,15 @@
                             <p class="text-xs text-gray-600">Première vue</p>
                         </div>
                         <div class="bg-purple-50 rounded-lg p-4 text-center">
-                            <p class="text-xs font-semibold text-purple-600" x-text="selectedDevice?.deviceHistory?.last_seen?new Date(selectedDevice.deviceHistory.last_seen).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'N/A'"></p>
-                            <p class="text-xs text-gray-600">Dernière vue</p>
+                            <div x-show="selectedDevice?.online || selectedDevice?.currently_online">
+                                <p class="text-xs font-semibold text-green-600">✅ En ligne maintenant</p>
+                                <p class="text-xs text-gray-500 mt-1" x-show="selectedDevice?.deviceHistory?.last_seen" x-text="'Vu: '+new Date(selectedDevice.deviceHistory.last_seen).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})"></p>
+                            </div>
+                            <div x-show="!(selectedDevice?.online || selectedDevice?.currently_online)">
+                                <p class="text-xs font-semibold text-red-600">❌ Hors ligne</p>
+                                <p class="text-xs text-gray-500 mt-1" x-show="selectedDevice?.deviceHistory?.last_seen" x-text="'Vu: '+new Date(selectedDevice.deviceHistory.last_seen).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})"></p>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">Statut actuel</p>
                         </div>
                     </div>
                     
