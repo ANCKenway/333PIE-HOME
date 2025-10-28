@@ -320,6 +320,13 @@ async def refresh_registry_status():
                     device.is_online = True
                     changed = True
                 online_count += 1
+                
+                # ✅ Mettre à jour last_seen pour le device local (temps réel)
+                from datetime import datetime, timezone
+                now_iso = datetime.now(timezone.utc).isoformat()
+                device.last_seen = now_iso
+                device.last_seen_online = now_iso
+                changed = True
                 # Note: IP/hostname seront enrichis par le VPN matching ci-dessous
             else:
                 # Autres devices : check ARP
@@ -342,6 +349,13 @@ async def refresh_registry_status():
                         if new_hostname and new_hostname != device.current_hostname:
                             device.current_hostname = new_hostname
                             changed = True
+                        
+                        # ✅ Mettre à jour last_seen pour devices online (temps réel)
+                        from datetime import datetime, timezone
+                        now_iso = datetime.now(timezone.utc).isoformat()
+                        device.last_seen = now_iso
+                        device.last_seen_online = now_iso
+                        changed = True
             
             # Check VPN status
             hostname_upper = (device.current_hostname or '').upper()
