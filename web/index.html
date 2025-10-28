@@ -422,7 +422,79 @@
                 </button>
             </div>
             <div class="p-6">
-                <p class="text-gray-600 text-center py-8">Historique détaillé en développement<br>(API: <code>/api/network/v2/devices/{mac}/history</code>)</p>
+                <div x-show="!selectedDevice?.deviceHistory" class="text-center py-8">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent mb-3"></div>
+                    <p class="text-gray-600">Chargement de l'historique...</p>
+                </div>
+                
+                <div x-show="selectedDevice?.deviceHistory" class="space-y-6">
+                    <!-- Statistiques Globales -->
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="bg-blue-50 rounded-lg p-4 text-center">
+                            <p class="text-2xl font-bold text-blue-600" x-text="selectedDevice?.deviceHistory?.total_detections||0"></p>
+                            <p class="text-xs text-gray-600">Détections</p>
+                        </div>
+                        <div class="bg-green-50 rounded-lg p-4 text-center">
+                            <p class="text-sm font-semibold text-green-600" x-text="selectedDevice?.deviceHistory?.first_seen?new Date(selectedDevice.deviceHistory.first_seen).toLocaleDateString('fr-FR'):'N/A'"></p>
+                            <p class="text-xs text-gray-600">Première vue</p>
+                        </div>
+                        <div class="bg-purple-50 rounded-lg p-4 text-center">
+                            <p class="text-sm font-semibold text-purple-600" x-text="selectedDevice?.deviceHistory?.last_seen?new Date(selectedDevice.deviceHistory.last_seen).toLocaleDateString('fr-FR'):'N/A'"></p>
+                            <p class="text-xs text-gray-600">Dernière vue</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Historique IP -->
+                    <div x-show="selectedDevice?.deviceHistory?.ip_history?.length>0">
+                        <h4 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🌐 Historique IP</span>
+                            <span class="text-xs bg-gray-200 px-2 py-1 rounded-full" x-text="selectedDevice?.deviceHistory?.ip_history?.length||0"></span>
+                        </h4>
+                        <div class="space-y-2">
+                            <template x-for="(entry,i) in selectedDevice?.deviceHistory?.ip_history||[]" :key="i">
+                                <div class="bg-gray-50 rounded-lg p-3 flex justify-between items-center">
+                                    <div>
+                                        <p class="font-mono text-sm text-gray-900" x-text="entry.ip"></p>
+                                        <p class="text-xs text-gray-600">
+                                            <span x-text="new Date(entry.first_seen).toLocaleString('fr-FR')"></span>
+                                            <span x-show="entry.last_seen && entry.first_seen !== entry.last_seen">
+                                                → <span x-text="new Date(entry.last_seen).toLocaleString('fr-FR')"></span>
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full" x-text="entry.occurrences+' fois'"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Historique Hostname -->
+                    <div x-show="selectedDevice?.deviceHistory?.hostname_history?.length>0">
+                        <h4 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>💻 Historique Hostname</span>
+                            <span class="text-xs bg-gray-200 px-2 py-1 rounded-full" x-text="selectedDevice?.deviceHistory?.hostname_history?.length||0"></span>
+                        </h4>
+                        <div class="space-y-2">
+                            <template x-for="(entry,i) in selectedDevice?.deviceHistory?.hostname_history||[]" :key="i">
+                                <div class="bg-gray-50 rounded-lg p-3">
+                                    <p class="font-semibold text-sm text-gray-900" x-text="entry.hostname"></p>
+                                    <p class="text-xs text-gray-600">
+                                        <span x-text="new Date(entry.first_seen).toLocaleString('fr-FR')"></span>
+                                        <span x-show="entry.last_seen && entry.first_seen !== entry.last_seen">
+                                            → <span x-text="new Date(entry.last_seen).toLocaleString('fr-FR')"></span>
+                                        </span>
+                                    </p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Aucun historique -->
+                    <div x-show="(!selectedDevice?.deviceHistory?.ip_history||selectedDevice.deviceHistory.ip_history.length===0) && (!selectedDevice?.deviceHistory?.hostname_history||selectedDevice.deviceHistory.hostname_history.length===0)" class="text-center py-8">
+                        <p class="text-gray-600">Aucun historique de changement enregistré</p>
+                        <p class="text-xs text-gray-500 mt-2">L'historique se construit au fil des scans réseau</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -644,7 +716,7 @@
         async removeDevice(device){
             if(!confirm(`Retirer ${device.name||device.ip} de la gestion?`))return;
             try{
-                const r=await fetch(`/api/devices/${device.ip}`,{method:'DELETE'});
+                const r=await fetch(`/api/devices/${device.id}`,{method:'DELETE'});
                 if(!r.ok)throw new Error('Failed to remove device');
                 await this.loadUnifiedDevices();
                 
@@ -661,7 +733,7 @@
                 return;
             }
             try{
-                const r=await fetch(`/api/devices/wake/${device.ip}`,{method:'POST'});
+                const r=await fetch(`/api/devices/${device.id}/wake`,{method:'POST'});
                 if(!r.ok)throw new Error('Wake-on-LAN failed');
                 this.showToast(`Wake-on-LAN envoyé à ${device.name||device.ip}`,'success');
                 setTimeout(()=>this.loadUnifiedDevices(),5000);
@@ -671,9 +743,27 @@
             }
         },
         
-        viewHistory(device){
+        async viewHistory(device){
             this.selectedDevice=device;
             this.showHistoryModal=true;
+            
+            // Charger historique depuis registry
+            if(!device.mac){
+                console.warn('Device sans MAC, historique indisponible');
+                return;
+            }
+            
+            try{
+                const r = await fetch(`/api/network/registry/device/${device.mac}`);
+                if(!r.ok) throw new Error('Failed to load history');
+                
+                const historyData = await r.json();
+                this.selectedDevice.deviceHistory = historyData;
+                console.log('✅ Device history loaded:', historyData);
+            }catch(e){
+                console.error('History load error:', e);
+                this.showToast('Erreur chargement historique', 'error');
+            }
         },
         
         async exportAllData(){
