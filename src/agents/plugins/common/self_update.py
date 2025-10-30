@@ -158,17 +158,20 @@ class SelfUpdatePlugin(BasePlugin):
             self.logger.info("Replacing files...")
             await self._replace_files()
             
-            # Step 7: Restart agent
-            self.logger.info("[Update] Restarting agent with new version...")
-            await self._restart_agent()
+            # Step 7: SUCCESS - Pas de redémarrage automatique pour v1
+            # L'utilisateur doit relancer manuellement l'agent
+            self.logger.info("[Update] Update completed successfully!")
+            self.logger.info("[Update] Please restart the agent manually to use the new version")
             
             return PluginResult(
                 status="success",
-                message=f"Successfully updated to version {params.version}",
+                message=f"Update to version {params.version} completed. Please restart agent manually.",
                 data={
                     "old_version": self.CURRENT_VERSION,
                     "new_version": params.version,
-                    "backup_path": str(backup_path)
+                    "backup_path": str(backup_path),
+                    "restart_required": True,
+                    "restart_command": f"python agent.py --agent-id {self.config.agent_id} --hub-url {self.config.hub_url}" if hasattr(self, 'config') else "python agent.py"
                 }
             )
         
