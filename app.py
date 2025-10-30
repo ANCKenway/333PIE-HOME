@@ -16,6 +16,7 @@ from src.core import settings, setup_logging, get_logger
 from src.features.devices import router as devices_router
 from src.features.network import network_router
 from src.core.unified import router as hub_router  # ✅ Renommé: hub → unified
+from src.features.agents import router as agents_router  # 🤖 Agents management
 # ❌ unified_router supprimé (Phase 4 - redondant avec network_router modulaire)
 
 setup_logging()
@@ -113,6 +114,9 @@ def create_app() -> FastAPI:
     
     app.include_router(hub_router, prefix="/api")
     logger.info("✅ Router hub monté")
+    
+    app.include_router(agents_router, prefix="/api")
+    logger.info("✅ Router agents monté (WebSocket + REST)")
     
     # Routes spécifiques AVANT StaticFiles
     @app.get("/")
