@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "updated_at": "2025-10-21T17:21:46.340595",
+  "updated_at": "2025-10-30T11:33:11.604956",
   "devices": {
     "A4:E9:75:73:1F:CB": {
       "mac": "A4:E9:75:73:1F:CB",
@@ -126,6 +126,15 @@
       "ip_history": [],
       "first_seen": "2025-10-21T17:21:46.340587",
       "last_seen": "2025-10-21T17:21:46.340592",
+      "total_ip_changes": 0
+    },
+    "C8:7F:54:53:1D:40": {
+      "mac": "C8:7F:54:53:1D:40",
+      "hostname": null,
+      "current_ip": "192.168.1.175",
+      "ip_history": [],
+      "first_seen": "2025-10-30T11:33:11.604939",
+      "last_seen": "2025-10-30T11:33:11.604951",
       "total_ip_changes": 0
     }
   }

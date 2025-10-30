@@ -357,6 +357,17 @@ async def refresh_registry_status():
                         device.last_seen_online = now_iso
                         changed = True
             
+            # ✅ Enrichir hostname depuis devices managés si manquant
+            if not device.current_hostname and device.is_managed:
+                # Récupérer le nom depuis devices.json
+                from ...devices.manager import DeviceManager
+                device_manager = DeviceManager()
+                managed_device = device_manager.get_device_by_mac(mac)
+                if managed_device and managed_device.get('name'):
+                    device.current_hostname = managed_device['name']
+                    changed = True
+                    logger.debug(f"✅ Hostname enrichi depuis device managé: {mac} → {device.current_hostname}")
+            
             # Check VPN status
             hostname_upper = (device.current_hostname or '').upper()
             

@@ -116,6 +116,16 @@ async def create_device(device: DeviceCreate):
         device_dict = device.model_dump()
         new_device = device_manager.create_device(device_dict)
         
+        # Marquer le device comme géré dans le registry
+        if new_device.get('mac'):
+            try:
+                from ..network.registry import get_network_registry
+                registry = get_network_registry()
+                registry.mark_as_managed(new_device['mac'], managed=True)
+                logger.info(f"✅ Device marqué comme géré dans le registry: {new_device['mac']}")
+            except Exception as e:
+                logger.warning(f"⚠️ Erreur marquage registry: {e}")
+        
         logger.info(f"✅ Appareil créé: {new_device['name']}")
         return new_device
         

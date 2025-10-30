@@ -1,12 +1,12 @@
 {
   "version": "3.0",
   "created_at": "2025-10-21T10:21:40.780602",
-  "last_updated": "2025-10-22T00:44:59.254939",
+  "last_updated": "2025-10-30T11:33:11.605592",
   "metadata": {
-    "total_scans": 66,
-    "total_devices_seen": 25,
+    "total_scans": 67,
+    "total_devices_seen": 26,
     "first_scan": "2025-10-21T10:21:31.863245",
-    "last_scan": "2025-10-22T00:44:59.239347"
+    "last_scan": "2025-10-30T11:33:11.573373"
   },
   "devices": {
     "ca:08:c5:bf:00:13": {
@@ -210,8 +210,8 @@
       "device_type": null,
       "os_detected": null,
       "first_seen": "2025-10-21T17:01:24.367318",
-      "last_seen": "2025-10-22T00:44:59.237666",
-      "total_appearances": 25,
+      "last_seen": "2025-10-30T11:33:11.571502",
+      "total_appearances": 26,
       "currently_online": true,
       "in_devices": false,
       "tags": [],
@@ -221,13 +221,13 @@
       "id": "dev_8c97ea31c0a2",
       "mac": "8C:97:EA:31:C0:A2",
       "current_ip": "192.168.1.254",
-      "current_hostname": null,
+      "current_hostname": "Freebox-Server.local",
       "vendor": "Freebox SAS",
       "device_type": null,
       "os_detected": null,
       "first_seen": "2025-10-21T17:01:24.367447",
-      "last_seen": "2025-10-22T00:44:59.237832",
-      "total_appearances": 28,
+      "last_seen": "2025-10-30T11:33:11.571747",
+      "total_appearances": 29,
       "currently_online": true,
       "in_devices": false,
       "tags": [],
@@ -242,8 +242,8 @@
       "device_type": null,
       "os_detected": null,
       "first_seen": "2025-10-21T17:01:24.367527",
-      "last_seen": "2025-10-22T00:44:59.237966",
-      "total_appearances": 24,
+      "last_seen": "2025-10-30T11:33:11.572043",
+      "total_appearances": 25,
       "currently_online": true,
       "in_devices": false,
       "tags": [],
@@ -258,8 +258,8 @@
       "device_type": null,
       "os_detected": null,
       "first_seen": "2025-10-21T17:01:24.367589",
-      "last_seen": "2025-10-22T00:44:59.238096",
-      "total_appearances": 26,
+      "last_seen": "2025-10-30T11:33:11.572178",
+      "total_appearances": 27,
       "currently_online": true,
       "in_devices": false,
       "tags": [],
@@ -274,8 +274,8 @@
       "device_type": null,
       "os_detected": null,
       "first_seen": "2025-10-21T17:01:24.367684",
-      "last_seen": "2025-10-22T00:44:59.238254",
-      "total_appearances": 28,
+      "last_seen": "2025-10-30T11:33:11.572328",
+      "total_appearances": 29,
       "currently_online": true,
       "in_devices": false,
       "tags": [],
@@ -290,8 +290,8 @@
       "device_type": null,
       "os_detected": null,
       "first_seen": "2025-10-21T17:01:24.367745",
-      "last_seen": "2025-10-22T00:44:59.238391",
-      "total_appearances": 27,
+      "last_seen": "2025-10-30T11:33:11.572466",
+      "total_appearances": 28,
       "currently_online": true,
       "in_devices": false,
       "tags": [],
@@ -306,8 +306,8 @@
       "device_type": null,
       "os_detected": null,
       "first_seen": "2025-10-21T17:01:24.367806",
-      "last_seen": "2025-10-22T00:44:59.238562",
-      "total_appearances": 24,
+      "last_seen": "2025-10-30T11:33:11.572622",
+      "total_appearances": 25,
       "currently_online": true,
       "in_devices": false,
       "tags": [],
@@ -322,8 +322,8 @@
       "device_type": null,
       "os_detected": null,
       "first_seen": "2025-10-21T17:01:24.367866",
-      "last_seen": "2025-10-22T00:44:59.238702",
-      "total_appearances": 28,
+      "last_seen": "2025-10-30T11:33:11.572761",
+      "total_appearances": 29,
       "currently_online": true,
       "in_devices": false,
       "tags": [],
@@ -338,8 +338,8 @@
       "device_type": null,
       "os_detected": null,
       "first_seen": "2025-10-21T17:01:24.367920",
-      "last_seen": "2025-10-22T00:44:59.238825",
-      "total_appearances": 25,
+      "last_seen": "2025-10-30T11:33:11.572881",
+      "total_appearances": 26,
       "currently_online": true,
       "in_devices": false,
       "tags": [],
@@ -405,6 +405,22 @@
       "last_seen": "2025-10-21T17:31:20.403411",
       "total_appearances": 3,
       "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "C8:7F:54:53:1D:40": {
+      "id": "dev_c87f54531d40",
+      "mac": "C8:7F:54:53:1D:40",
+      "current_ip": "192.168.1.175",
+      "current_hostname": null,
+      "vendor": "Asustek Computer",
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-30T11:33:11.571900",
+      "last_seen": "2025-10-30T11:33:11.571899",
+      "total_appearances": 0,
+      "currently_online": true,
       "in_devices": false,
       "tags": [],
       "ip_history": []
@@ -1587,6 +1603,27 @@
         "CA:08:C5:BF:00:13",
         "F4:FE:FB:77:5C:26"
       ]
+    },
+    {
+      "scan_id": "scan_4225d96e",
+      "timestamp": "2025-10-30T11:33:11.573373",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 10,
+      "new_devices": 10,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "C8:7F:54:53:1D:40",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
     }
   ],
   "events": [
@@ -2749,6 +2786,29 @@
       "details": {
         "old_hostname": null,
         "new_hostname": "CLACLA"
+      }
+    },
+    {
+      "event_id": "event_1761820391",
+      "timestamp": "2025-10-30T11:33:11.578551",
+      "event_type": "hostname_changed",
+      "device_mac": "8C:97:EA:31:C0:A2",
+      "device_name": "Freebox-Server.local",
+      "details": {
+        "old_hostname": null,
+        "new_hostname": "Freebox-Server.local"
+      }
+    },
+    {
+      "event_id": "event_1761820391",
+      "timestamp": "2025-10-30T11:33:11.584320",
+      "event_type": "device_appeared",
+      "device_mac": "C8:7F:54:53:1D:40",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.175",
+        "vendor": "Asustek Computer",
+        "device_type": null
       }
     }
   ]
