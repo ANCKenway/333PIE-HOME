@@ -15,7 +15,7 @@ import logging
 import json
 import asyncio
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from collections import deque
 
 
@@ -75,7 +75,7 @@ class RemoteLogHandler(logging.Handler):
             Log formaté en dict
         """
         return {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "level": record.levelname,
             "logger": record.name,
             "message": self.format(record),

@@ -19,7 +19,7 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException, Qu
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, List, Any, Literal
-from datetime import datetime
+from datetime import datetime, timezone
 import logging
 import json
 import asyncio
@@ -84,8 +84,8 @@ class AgentConnection:
         self.agent_id = agent_id
         self.websocket = websocket
         self.metadata = metadata
-        self.connected_at = datetime.utcnow()
-        self.last_heartbeat = datetime.utcnow()
+        self.connected_at = datetime.now(timezone.utc)
+        self.last_heartbeat = datetime.now(timezone.utc)
         self.plugins: List[str] = metadata.get("plugins", [])
         self.pending_tasks: Dict[str, Dict] = {}
         self.logs: List[Dict] = []  # Buffer logs (max 100 derniers)
@@ -156,7 +156,7 @@ class AgentManager:
         """Met à jour le heartbeat d'un agent."""
         conn = self.get_connection(agent_id)
         if conn:
-            conn.last_heartbeat = datetime.utcnow()
+            conn.last_heartbeat = datetime.now(timezone.utc)
     
     async def send_task(
         self,
@@ -184,7 +184,7 @@ class AgentManager:
             "params": params,
             "timeout": timeout,
             "status": "pending",
-            "created_at": datetime.utcnow().isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
             "result": None
         }
         
@@ -213,7 +213,7 @@ class AgentManager:
             self.tasks[task_id]["status"] = status
             if result:
                 self.tasks[task_id]["result"] = result
-            self.tasks[task_id]["updated_at"] = datetime.utcnow().isoformat()
+            self.tasks[task_id]["updated_at"] = datetime.now(timezone.utc).isoformat()
     
     def get_task(self, task_id: str) -> Optional[Dict]:
         """Récupère une tâche."""
@@ -470,7 +470,7 @@ async def get_agent_status(agent_id: str):
         }
     
     # Calculer délai depuis dernier heartbeat
-    last_heartbeat_delta = (datetime.utcnow() - conn.last_heartbeat).total_seconds()
+    last_heartbeat_delta = (datetime.now(timezone.utc) - conn.last_heartbeat).total_seconds()
     
     return {
         "agent_id": agent_id,

@@ -27,7 +27,7 @@ import sys
 import argparse
 import json
 from typing import Optional, Dict, Any
-from datetime import datetime
+from datetime import datetime, timezone
 import websockets
 
 # Ajouter le répertoire courant au sys.path pour import version.py
@@ -177,7 +177,7 @@ class UniversalAgent:
             "os_platform": self.config.os_platform,
             "version": __version__,
             "plugins": [p["name"] for p in self.plugin_manager.list_plugins()],
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
         await self._send_message(handshake)
@@ -192,7 +192,7 @@ class UniversalAgent:
                 if self.connected:
                     heartbeat = {
                         "type": "heartbeat",
-                        "timestamp": datetime.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                         "plugins_loaded": [p["name"] for p in self.plugin_manager.list_plugins()]
                     }
                     await self._send_message(heartbeat)
