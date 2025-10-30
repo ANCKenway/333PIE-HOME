@@ -191,7 +191,15 @@ class DeviceManager:
         
         for i, device in enumerate(devices):
             if device.get('id') == device_id:
-                # Mettre à jour les champs fournis
+                # ✅ Fusionner metadata au lieu de l'écraser
+                if 'metadata' in update_data:
+                    existing_metadata = device.get('metadata', {})
+                    new_metadata = update_data.pop('metadata')
+                    # Merge: nouvelles clés ajoutées, anciennes préservées
+                    existing_metadata.update(new_metadata)
+                    device['metadata'] = existing_metadata
+                
+                # Mettre à jour les autres champs fournis
                 device.update(update_data)
                 device['updated_at'] = datetime.now().isoformat()
                 devices[i] = device
