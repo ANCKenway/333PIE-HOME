@@ -79,7 +79,7 @@
             </div>
             
             <!-- Stats Cards -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
                 <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-200">
                     <div class="flex items-center justify-between">
                         <div>
@@ -114,6 +114,15 @@
                             <p class="text-3xl font-bold text-blue-600" x-text="stats.managed||0"></p>
                         </div>
                         <div class="text-4xl">🎯</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-5 border border-purple-200 cursor-pointer hover:shadow-lg transition-all" @click="tab='agents'">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Agents</p>
+                            <p class="text-3xl font-bold text-purple-600" x-text="agents.length||0"></p>
+                        </div>
+                        <div class="text-4xl">🤖</div>
                     </div>
                 </div>
             </div>
@@ -374,6 +383,127 @@
             </div>
         </div>
         
+        <!-- TAB: Agents -->
+        <div x-show="tab==='agents'" x-cloak class="space-y-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">🤖 Agents de Contrôle</h2>
+                    <p class="text-sm text-gray-600">Gestion des agents connectés • <span x-text="agents.length+' agent(s)'"></span></p>
+                </div>
+                <button @click="refreshAgents()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-all font-medium flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span>Actualiser</span>
+                </button>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white rounded-xl shadow-sm p-5 border border-green-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Agents Connectés</p>
+                            <p class="text-3xl font-bold text-green-600" x-text="agents.length||0"></p>
+                        </div>
+                        <div class="text-4xl">✅</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-5 border border-blue-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Windows</p>
+                            <p class="text-3xl font-bold text-blue-600" x-text="agents.filter(a=>a.os_platform==='windows').length||0"></p>
+                        </div>
+                        <div class="text-4xl">🪟</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-5 border border-purple-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Linux</p>
+                            <p class="text-3xl font-bold text-purple-600" x-text="agents.filter(a=>a.os_platform==='linux').length||0"></p>
+                        </div>
+                        <div class="text-4xl">🐧</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Agents Table -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Agent</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Version</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">OS</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plugins</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Seen</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <template x-if="agents.length===0">
+                                <tr>
+                                    <td colspan="7" class="px-6 py-12 text-center">
+                                        <div class="text-5xl mb-3">🤖</div>
+                                        <p class="text-gray-600 font-medium">Aucun agent connecté</p>
+                                        <p class="text-sm text-gray-500 mt-2">Installez et lancez un agent sur vos machines distantes</p>
+                                    </td>
+                                </tr>
+                            </template>
+                            <template x-for="agent in agents" :key="agent.agent_id">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="text-2xl" x-text="agent.os_platform==='windows'?'🪟':'🐧'"></div>
+                                            <div>
+                                                <div class="font-medium text-gray-900" x-text="agent.agent_id"></div>
+                                                <div class="text-xs text-gray-500" x-text="agent.hostname||'N/A'"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <span class="w-2 h-2 bg-green-400 rounded-full mr-1.5 animate-pulse"></span>
+                                            Connected
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="agent.version||'N/A'"></td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800" x-text="agent.os_platform||'N/A'"></span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <div class="flex items-center space-x-1">
+                                            <span x-text="agent.plugins?.length||0"></span>
+                                            <span class="text-gray-400">plugins</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" x-text="formatLastSeen(agent.last_heartbeat)"></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <div class="flex items-center space-x-2">
+                                            <button @click="viewAgentLogs(agent.agent_id)" title="View Logs" class="p-1.5 hover:bg-blue-100 text-blue-600 rounded transition-all">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                            </button>
+                                            <button @click="restartAgent(agent.agent_id)" title="Restart" class="p-1.5 hover:bg-yellow-100 text-yellow-600 rounded transition-all">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                            </button>
+                                            <button @click="updateAgent(agent.agent_id)" title="Update" class="p-1.5 hover:bg-green-100 text-green-600 rounded transition-all">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                            </button>
+                                            <button @click="openLogMeIn(agent.logmein_id)" :disabled="!agent.logmein_id" title="LogMeIn Rescue" :class="agent.logmein_id?'p-1.5 hover:bg-purple-100 text-purple-600 rounded transition-all':'p-1.5 text-gray-300 cursor-not-allowed rounded'">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
     </main>
     
     <!-- Modal: Add Device -->
@@ -567,6 +697,42 @@
         </div>
     </div>
     
+    <!-- Modal: Agent Logs -->
+    <div x-show="showLogsModal" x-cloak @click.self="showLogsModal=false" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[80vh] flex flex-col" @click.stop>
+            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900" x-text="'📋 Logs: '+currentAgentId"></h3>
+                    <p class="text-sm text-gray-600">Logs temps réel de l'agent</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button @click="refreshAgentLogs()" class="p-2 hover:bg-gray-100 rounded-lg transition-all" title="Actualiser">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    </button>
+                    <button @click="showLogsModal=false" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6 flex-1 overflow-y-auto bg-gray-900 text-gray-100 font-mono text-sm">
+                <div x-show="agentLogs.length===0" class="text-center py-12 text-gray-500">
+                    <div class="text-4xl mb-3">📋</div>
+                    <p>Aucun log disponible</p>
+                </div>
+                <template x-for="log in agentLogs" :key="log.timestamp">
+                    <div class="py-1 hover:bg-gray-800 px-2 rounded">
+                        <span class="text-gray-500 text-xs" x-text="new Date(log.timestamp).toLocaleTimeString()"></span>
+                        <span :class="log.level==='ERROR'?'text-red-400':log.level==='WARNING'?'text-yellow-400':log.level==='INFO'?'text-green-400':'text-blue-400'" class="font-bold ml-2" x-text="'['+log.level+']'"></span>
+                        <span class="ml-2" x-text="log.message"></span>
+                    </div>
+                </template>
+            </div>
+            <div class="p-4 border-t border-gray-200 bg-gray-50 text-xs text-gray-600 text-center">
+                <span x-text="agentLogs.length+' logs affichés'"></span> • Auto-refresh toutes les 5s
+            </div>
+        </div>
+    </div>
+    
     <!-- Toast Notifications -->
     <div x-show="toast.show" x-cloak class="fixed bottom-4 right-4 z-50 animate-fade-in">
         <div :class="toast.type==='success'?'bg-green-600':toast.type==='error'?'bg-red-600':'bg-blue-600'" class="rounded-lg shadow-lg p-4 text-white max-w-sm">
@@ -591,7 +757,8 @@
             {id:'dashboard',name:'Dashboard',icon:'📊'},
             {id:'managed',name:'Appareils',icon:'📱'},
             {id:'network',name:'Réseau',icon:'🌐'},
-            {id:'vpn',name:'VPN',icon:'🔒'}
+            {id:'vpn',name:'VPN',icon:'🔒'},
+            {id:'agents',name:'Agents',icon:'🤖'}
         ],
         stats:{total:0,online:0,offline:0,managed:0},
         devices:[],
@@ -599,18 +766,25 @@
         lastScanTime:null,
         showScanPanel:false,
         newDevice:{ip:'',name:'',mac:''},
+        agents:[],
+        showLogsModal:false,
+        currentAgentId:'',
+        agentLogs:[],
         
         managedDevices(){return this.devices.filter(d=>d.managed===true||d.in_devices===true)},
         
         async init(){
             console.log('🚀 333HOME v7.0 PRO - Unified');
             await this.loadUnifiedDevices(); // ✅ Source unique
+            await this.refreshAgents(); // ✅ Charger agents
             
             // ✅ Monitoring temps réel unifié: Refresh registry PUIS reload devices
             // Cycle complet toutes les 5s pour garantir cohérence
             setInterval(async ()=>{
                 await this.refreshRegistryStatus(); // 1. Refresh ARP + VPN (< 100ms)
                 await this.loadUnifiedDevices();    // 2. Reload devices enrichis (< 200ms)
+                await this.refreshAgents();         // 3. Refresh agents
+                if(this.showLogsModal) await this.refreshAgentLogs(); // 4. Auto-refresh logs si modal ouvert
             }, 5000); // Cycle complet: 5s
         },
         
@@ -944,6 +1118,102 @@
         showToast(msg,type='success'){
             this.toast={show:true,message:msg,type};
             setTimeout(()=>this.toast.show=false,4000);
+        },
+        
+        // ============================================
+        // 🤖 AGENTS MANAGEMENT
+        // ============================================
+        
+        async refreshAgents(){
+            try{
+                const r=await fetch('/api/agents');
+                if(!r.ok)throw new Error(`HTTP ${r.status}`);
+                const data=await r.json();
+                // API retourne directement un array
+                this.agents=Array.isArray(data)?data:[];
+                console.log(`✅ Agents loaded: ${this.agents.length}`);
+            }catch(e){
+                console.error('Failed to load agents:',e);
+                this.agents=[];
+            }
+        },
+        
+        async viewAgentLogs(agentId){
+            this.currentAgentId=agentId;
+            this.agentLogs=[];
+            this.showLogsModal=true;
+            await this.refreshAgentLogs();
+        },
+        
+        async refreshAgentLogs(){
+            if(!this.currentAgentId)return;
+            try{
+                const r=await fetch(`/api/agents/${this.currentAgentId}/logs?limit=100`);
+                if(!r.ok)throw new Error(`HTTP ${r.status}`);
+                const data=await r.json();
+                this.agentLogs=(data.logs||[]).reverse(); // Plus récents en bas
+                console.log(`✅ Logs loaded: ${this.agentLogs.length}`);
+            }catch(e){
+                console.error('Failed to load logs:',e);
+                this.agentLogs=[];
+            }
+        },
+        
+        async restartAgent(agentId){
+            if(!confirm(`Redémarrer l'agent ${agentId} ?`))return;
+            try{
+                const r=await fetch(`/api/agents/${agentId}/tasks`,{
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify({plugin:'system',action:'restart'})
+                });
+                if(!r.ok)throw new Error(`HTTP ${r.status}`);
+                this.showToast(`Agent ${agentId} redémarrage demandé`,'success');
+            }catch(e){
+                console.error('Restart agent error:',e);
+                this.showToast('Erreur restart: '+e.message,'error');
+            }
+        },
+        
+        async updateAgent(agentId){
+            if(!confirm(`Mettre à jour l'agent ${agentId} vers la dernière version ?`))return;
+            try{
+                const r=await fetch(`/api/agents/${agentId}/tasks`,{
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify({plugin:'self_update',params:{}})
+                });
+                if(!r.ok)throw new Error(`HTTP ${r.status}`);
+                this.showToast(`Update lancée pour ${agentId}`,'success');
+            }catch(e){
+                console.error('Update agent error:',e);
+                this.showToast('Erreur update: '+e.message,'error');
+            }
+        },
+        
+        openLogMeIn(logmeinId){
+            if(!logmeinId){
+                this.showToast('LogMeIn ID non configuré','error');
+                return;
+            }
+            const url=`https://secure.logmeinrescue.com/Customer/Code.aspx?Code=${logmeinId}`;
+            window.open(url,'_blank');
+            this.showToast('LogMeIn ouvert','success');
+        },
+        
+        formatLastSeen(timestamp){
+            if(!timestamp)return'N/A';
+            try{
+                const now=new Date();
+                const date=new Date(timestamp);
+                const seconds=Math.floor((now-date)/1000);
+                if(seconds<60)return`${seconds}s ago`;
+                const minutes=Math.floor(seconds/60);
+                if(minutes<60)return`${minutes}m ago`;
+                const hours=Math.floor(minutes/60);
+                if(hours<24)return`${hours}h ago`;
+                return`${Math.floor(hours/24)}j ago`;
+            }catch{return'N/A'}
         }
     }}
     </script>
