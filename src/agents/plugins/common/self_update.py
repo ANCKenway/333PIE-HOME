@@ -82,13 +82,20 @@ class SelfUpdatePlugin(BasePlugin):
     version = "1.0.0"
     os_platform = "all"
     
-    CURRENT_VERSION = "1.0.0"  # Version actuelle de l'agent
-    
     def __init__(self):
         super().__init__()
         self._agent_dir = Path(__file__).parent.parent.parent  # src/agents/
         self._backup_dir = self._agent_dir / ".backup"
         self._temp_dir = self._agent_dir / ".update_temp"
+        
+        # Import version dynamique depuis version.py
+        try:
+            import sys
+            sys.path.insert(0, str(self._agent_dir))
+            from version import __version__
+            self.CURRENT_VERSION = __version__
+        except ImportError:
+            self.CURRENT_VERSION = "1.0.0"  # Fallback
     
     async def setup(self) -> bool:
         """Setup du plugin."""

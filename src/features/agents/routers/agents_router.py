@@ -28,7 +28,11 @@ import uuid
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/agents", tags=["agents"])
+# Router principal (REST endpoints avec /api/agents)
+router = APIRouter(prefix="/api/agents", tags=["agents"])
+
+# Router WebSocket séparé (SANS prefix pour compatibilité FastAPI)
+ws_router = APIRouter(tags=["agents-websocket"])
 
 
 # ============================================================================
@@ -224,7 +228,7 @@ agent_manager = AgentManager()
 # WEBSOCKET ENDPOINT
 # ============================================================================
 
-@router.websocket("/ws/agents")
+@ws_router.websocket("/api/ws/agents")
 async def websocket_agent_endpoint(websocket: WebSocket):
     """
     Endpoint WebSocket pour connexion agents.

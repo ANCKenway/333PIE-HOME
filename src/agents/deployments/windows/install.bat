@@ -18,7 +18,7 @@ REM Configuration
 REM ================================================================
 
 set "INSTALL_DIR=%ProgramFiles%\333HOME Agent"
-set "HUB_URL=ws://100.115.207.11:8000/api/agents/ws/agents"
+set "HUB_URL=ws://100.115.207.11:8000/api/ws/agents"
 set "AGENT_ID=%COMPUTERNAME%"
 set "PACKAGE_URL=http://100.115.207.11:8000/static/agents/agent_latest.zip"
 

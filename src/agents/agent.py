@@ -29,6 +29,21 @@ import json
 from typing import Optional, Dict, Any
 from datetime import datetime
 import websockets
+
+# Ajouter le répertoire courant au sys.path pour import version.py
+from pathlib import Path
+_agent_dir = Path(__file__).parent
+if str(_agent_dir) not in sys.path:
+    sys.path.insert(0, str(_agent_dir))
+
+# Import version from version.py (standalone file)
+try:
+    from version import __version__
+except ImportError as e:
+    # Fallback si version.py absent
+    print(f"Warning: Failed to import version.py: {e}")
+    __version__ = "1.0.0"
+
 from websockets.exceptions import ConnectionClosed
 
 from config import AgentConfig, get_default_config
@@ -75,7 +90,7 @@ class UniversalAgent:
     async def start(self):
         """Démarre l'agent."""
         logger.info("=" * 70)
-        logger.info(f"[Agent] 333HOME Universal Agent v1.0.0")
+        logger.info(f"[Agent] 333HOME Universal Agent v{__version__}")
         logger.info(f"Agent ID: {self.config.agent_id}")
         logger.info(f"Hostname: {self.config.hostname}")
         logger.info(f"OS Platform: {self.config.os_platform}")
@@ -160,7 +175,7 @@ class UniversalAgent:
             "agent_id": self.config.agent_id,
             "hostname": self.config.hostname,
             "os_platform": self.config.os_platform,
-            "version": "1.0.0",
+            "version": __version__,
             "plugins": [p["name"] for p in self.plugin_manager.list_plugins()],
             "timestamp": datetime.utcnow().isoformat()
         }

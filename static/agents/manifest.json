@@ -1,0 +1,15 @@
+{
+  "latest_version": "1.0.17",
+  "release_date": "2025-10-30",
+  "download_url": "http://100.115.207.11:8000/static/agents/agent_latest.zip",
+  "checksum_sha256": "ec4ee33b2b7378c2f22222e05a93b85e12612385bf8be90e802dce792f352874",
+  "changelog": [
+    "🔍 Auto-découverte Hub intelligente (mDNS + Tailscale)",
+    "🌐 Priorité réseau local > VPN automatique",
+    "📊 Versionning unifié (version.py + sys.path fix)",
+    "✅ Version affichée correctement partout",
+    "🔄 Système auto-update validé production"
+  ],
+  "breaking_changes": false,
+  "min_hub_version": "3.0.0"
+}

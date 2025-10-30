@@ -32,6 +32,14 @@ from PIL import Image, ImageDraw
 import pystray
 from pystray import MenuItem, Menu
 
+# Import découverte Hub
+try:
+    from hub_discovery import discover_hub
+    HUB_DISCOVERY_AVAILABLE = True
+except ImportError:
+    HUB_DISCOVERY_AVAILABLE = False
+    print("Warning: hub_discovery module not found, using static config")
+
 # Configuration
 AGENT_SCRIPT = Path(__file__).parent / "agent.py"
 CONFIG_FILE = Path(__file__).parent / "tray_config.json"
@@ -64,16 +72,32 @@ class AgentTray:
         """Charge la configuration."""
         if CONFIG_FILE.exists():
             try:
-                with open(CONFIG_FILE, 'r') as f:
+                # utf-8-sig pour gérer le BOM UTF-8 de PowerShell
+                with open(CONFIG_FILE, 'r', encoding='utf-8-sig') as f:
                     config = json.load(f)
                     self.agent_id = config.get('agent_id', os.environ.get('COMPUTERNAME', 'Unknown'))
-                    self.hub_url = config.get('hub_url', 'ws://100.115.207.11:8000/api/agents/ws/agents')
+                    
+                    # Hub URL: auto-découverte OU config manuelle
+                    if config.get('auto_discover_hub', True) and HUB_DISCOVERY_AVAILABLE:
+                        print("🔍 Auto-découverte du Hub activée...")
+                        self.hub_url = discover_hub()
+                    else:
+                        self.hub_url = config.get('hub_url', 'ws://100.115.207.11:8000/api/ws/agents')
             except Exception as e:
                 print(f"Error loading config: {e}")
+                # Fallback sur valeurs par défaut avec auto-découverte
+                self.agent_id = os.environ.get('COMPUTERNAME', 'Unknown')
+                if HUB_DISCOVERY_AVAILABLE:
+                    self.hub_url = discover_hub()
+                else:
+                    self.hub_url = 'ws://100.115.207.11:8000/api/ws/agents'
         else:
-            # Config par défaut
+            # Config par défaut avec auto-découverte
             self.agent_id = os.environ.get('COMPUTERNAME', 'Unknown')
-            self.hub_url = 'ws://100.115.207.11:8000/api/agents/ws/agents'
+            if HUB_DISCOVERY_AVAILABLE:
+                self.hub_url = discover_hub()
+            else:
+                self.hub_url = 'ws://100.115.207.11:8000/api/ws/agents'
             self.save_config()
     
     def save_config(self):
@@ -138,6 +162,16 @@ class AgentTray:
         ]
         
         try:
+            # Créer fichiers logs
+            log_dir = Path(__file__).parent / "logs"
+            log_dir.mkdir(exist_ok=True)
+            stdout_log = log_dir / "agent_stdout.log"
+            stderr_log = log_dir / "agent_stderr.log"
+            
+            # Ouvrir fichiers logs en mode append
+            stdout_file = open(stdout_log, 'a', encoding='utf-8')
+            stderr_file = open(stderr_log, 'a', encoding='utf-8')
+            
             # Lancer agent en subprocess (sans console)
             if sys.platform == 'win32':
                 # Windows: utiliser pythonw pour cacher console
@@ -148,15 +182,15 @@ class AgentTray:
                 # CREATE_NO_WINDOW flag
                 self.agent_process = subprocess.Popen(
                     args,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
+                    stdout=stdout_file,
+                    stderr=stderr_file,
                     creationflags=subprocess.CREATE_NO_WINDOW
                 )
             else:
                 self.agent_process = subprocess.Popen(
                     args,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE
+                    stdout=stdout_file,
+                    stderr=stderr_file
                 )
             
             print(f"Agent started (PID: {self.agent_process.pid})")
@@ -289,8 +323,8 @@ class AgentTray:
         """Crée le menu contextuel."""
         return Menu(
             MenuItem(
-                lambda: f"{'🟢' if self.connected else '🔴'} {self.agent_id}",
-                lambda: None,
+                lambda item: f"{'🟢' if self.connected else '🔴'} {self.agent_id}",
+                lambda icon, item: None,
                 enabled=False
             ),
             Menu.SEPARATOR,

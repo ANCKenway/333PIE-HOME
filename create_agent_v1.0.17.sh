@@ -1,7 +1,7 @@
 #!/bin/bash
-# Package agent v1.0.16 avec tray icon
+# Package agent v1.0.17 avec auto-découverte Hub
 
-VERSION="1.0.16"
+VERSION="1.0.17"
 PACKAGE_NAME="agent_v${VERSION}"
 BUILD_DIR="/tmp/${PACKAGE_NAME}"
 OUTPUT_DIR="./static/agents"
@@ -23,7 +23,9 @@ cp src/agents/agent.py "$BUILD_DIR/"
 cp src/agents/agent_tray.pyw "$BUILD_DIR/"
 cp src/agents/config.py "$BUILD_DIR/"
 cp src/agents/remote_logging.py "$BUILD_DIR/"
+cp src/agents/hub_discovery.py "$BUILD_DIR/"
 cp src/agents/__init__.py "$BUILD_DIR/"
+cp src/agents/version.py "$BUILD_DIR/"
 cp src/agents/requirements.txt "$BUILD_DIR/"
 
 # Copier plugins
@@ -42,12 +44,13 @@ cd "$BUILD_DIR"
 find . -type f | sort
 echo ""
 
-# Créer archive ZIP
+# Créer archive ZIP (sans le dossier parent, fichiers à plat)
 echo "[+] Creating ZIP archive..."
-cd /tmp
-zip -r "${PACKAGE_NAME}.zip" "${PACKAGE_NAME}" -q
+cd "$BUILD_DIR"
+zip -r "/tmp/${PACKAGE_NAME}.zip" . -q
 
 # Calculer checksum
+cd /tmp
 CHECKSUM=$(sha256sum "${PACKAGE_NAME}.zip" | awk '{print $1}')
 SIZE=$(du -h "${PACKAGE_NAME}.zip" | awk '{print $1}')
 

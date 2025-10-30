@@ -16,5 +16,6 @@ Structure:
 Priorité Windows (TITO) pour Phase 1, architecture extensible Linux (333srv).
 """
 
-__version__ = "1.0.0"
+from .version import __version__
+
 __author__ = "333HOME Team"
