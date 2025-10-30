@@ -214,6 +214,9 @@ class UniversalAgent:
             await self._handle_task(data)
         elif msg_type == "ping":
             await self._send_message({"type": "pong"})
+        elif msg_type == "handshake_ack":
+            logger.info("✓ Handshake acknowledged by Hub")
+            # Pas d'action requise, juste confirmation
         elif msg_type == "shutdown":
             logger.info("Shutdown requested by Hub")
             self.running = False
@@ -269,7 +272,7 @@ class UniversalAgent:
         # Exécuter le plugin
         try:
             logger.info(f"🚀 Executing plugin: {plugin_name}")
-            result = await plugin.execute(plugin.get_schema()["properties"].__class__(**params))
+            result = await plugin.execute(params)
             logger.info(f"✓ Plugin execution completed: {result.status}")
             await self._send_task_result(task_id, result)
         except Exception as e:

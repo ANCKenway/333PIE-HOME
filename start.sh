@@ -1,8 +1,14 @@
 #!/bin/bash
 # ===== 333HOME v4.0.0 - SCRIPT DE DÉMARRAGE FASTAPI =====
 
+# Parse options
+MODE="dev"
+if [ "$1" == "--prod" ] || [ "$1" == "-p" ]; then
+    MODE="prod"
+fi
+
 echo "🏠 ===== 333HOME v4.0.0 FastAPI ====="
-echo "🚀 Démarrage de l'application..."
+echo "🚀 Démarrage de l'application (mode: $MODE)..."
 
 # Vérifier si un serveur tourne déjà
 EXISTING_PID=$(ps aux | grep "uvicorn.*app:app" | grep -v grep | awk '{print $2}')
@@ -69,10 +75,23 @@ echo "   • Monitoring système Raspberry Pi"
 echo "   • Interface web moderne responsive"
 echo "   • API REST complète avec FastAPI"
 echo ""
+
+if [ "$MODE" == "prod" ]; then
+    echo "⚙️  MODE PRODUCTION:"
+    echo "   • Hot-reload DÉSACTIVÉ (stabilité maximale)"
+    echo "   • Recommandé pour tests API et déploiement"
+    echo ""
+fi
+
 echo "🛑 Arrêt: Ctrl+C ou ./stop.sh"
 echo "================================"
 echo ""
 
 # Démarrage du serveur FastAPI
-echo "🚀 Lancement du serveur FastAPI..."
-exec python3 -m uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+if [ "$MODE" == "prod" ]; then
+    echo "🚀 Lancement du serveur FastAPI (production - sans auto-reload)..."
+    exec python3 -m uvicorn app:app --host 0.0.0.0 --port 8000
+else
+    echo "🚀 Lancement du serveur FastAPI (dev - avec auto-reload)..."
+    exec python3 -m uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+fi

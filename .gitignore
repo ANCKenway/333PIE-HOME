@@ -46,6 +46,13 @@ logs/
 *.temp
 .cache/
 
+# Test scripts temporaires (ne pas commiter)
+test_api*.py
+simple_test*.py
+run_tests.sh
+api_test_result.json
+*_test_*.json
+
 # Config secrets (keep templates)
 config/*.secret
 config/auth.json

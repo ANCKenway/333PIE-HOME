@@ -49,13 +49,13 @@ class PluginManager:
         logger.info(f"Loading plugins for {self.os_platform}...")
         
         # Charger plugins common (cross-platform)
-        await self._load_from_module("src.agents.plugins.common")
+        await self._load_from_module(".common")
         
         # Charger plugins OS-specific
         if self.os_platform == "windows":
-            await self._load_from_module("src.agents.plugins.windows")
+            await self._load_from_module(".windows")
         elif self.os_platform == "linux":
-            await self._load_from_module("src.agents.plugins.linux")
+            await self._load_from_module(".linux")
         
         self._loaded = True
         logger.info(f"✓ Loaded {len(self.plugins)} plugins: {list(self.plugins.keys())}")
@@ -64,7 +64,11 @@ class PluginManager:
     async def _load_from_module(self, module_name: str):
         """Charge les plugins depuis un module."""
         try:
-            module = importlib.import_module(module_name)
+            # Support imports relatifs
+            if module_name.startswith("."):
+                module = importlib.import_module(module_name, package=__package__)
+            else:
+                module = importlib.import_module(module_name)
             
             # Parcourir les attributs du module
             for attr_name in dir(module):

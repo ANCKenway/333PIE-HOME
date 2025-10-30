@@ -95,6 +95,7 @@ def create_app() -> FastAPI:
         docs_url="/api/docs"
     )
     
+    # CORS - Permet WebSocket cross-origin
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
@@ -149,7 +150,13 @@ def create_app() -> FastAPI:
             "features": ["devices", "network"]
         }
     
-    # StaticFiles pour assets uniquement (pas html=True)
+    # StaticFiles pour packages agents (AVANT /static pour priorité)
+    agents_dir = Path(__file__).parent / "static" / "agents"
+    if agents_dir.exists():
+        app.mount("/static/agents", StaticFiles(directory=str(agents_dir)), name="agents")
+        logger.info(f"✅ Packages agents: {agents_dir}")
+    
+    # StaticFiles pour assets web uniquement (pas html=True)
     web_dir = Path(__file__).parent / "web"
     if web_dir.exists():
         app.mount("/static", StaticFiles(directory=str(web_dir)), name="static")

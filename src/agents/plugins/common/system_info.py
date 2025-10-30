@@ -53,16 +53,20 @@ class SystemInfoPlugin(BasePlugin):
             self.logger.error("psutil not installed. Install: pip install psutil")
             return False
     
-    async def execute(self, params: SystemInfoParams) -> PluginResult:
+    async def execute(self, params: dict) -> PluginResult:
         """
         Collecte les informations système.
         
         Args:
-            params: Options de collecte
+            params: Options de collecte (dict ou SystemInfoParams)
         
         Returns:
             Résultat avec données système
         """
+        # Convertir dict en objet Pydantic si nécessaire
+        if isinstance(params, dict):
+            params = SystemInfoParams(**params)
+        
         try:
             data = {}
             

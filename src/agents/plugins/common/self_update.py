@@ -103,7 +103,7 @@ class SelfUpdatePlugin(BasePlugin):
             self.logger.error(f"Setup failed: {e}")
             return False
     
-    async def execute(self, params: SelfUpdateParams) -> PluginResult:
+    async def execute(self, params: dict) -> PluginResult:
         """
         Exécute l'auto-update.
         
@@ -117,11 +117,15 @@ class SelfUpdatePlugin(BasePlugin):
         7. Restart agent
         
         Args:
-            params: Paramètres update
+            params: Paramètres update (dict ou SelfUpdateParams)
         
         Returns:
             Résultat update
         """
+        # Convertir dict en objet Pydantic si nécessaire
+        if isinstance(params, dict):
+            params = SelfUpdateParams(**params)
+        
         try:
             self.logger.info(f"🔄 Starting self-update to version {params.version}")
             

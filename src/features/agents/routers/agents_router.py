@@ -28,7 +28,7 @@ import uuid
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/agents", tags=["agents"])
+router = APIRouter(prefix="/agents", tags=["agents"])
 
 
 # ============================================================================
@@ -225,10 +225,7 @@ agent_manager = AgentManager()
 # ============================================================================
 
 @router.websocket("/ws/agents")
-async def websocket_agent_endpoint(
-    websocket: WebSocket,
-    agent_id: str = Query(..., description="ID unique de l'agent")
-):
+async def websocket_agent_endpoint(websocket: WebSocket):
     """
     Endpoint WebSocket pour connexion agents.
     
@@ -238,8 +235,20 @@ async def websocket_agent_endpoint(
         3. Tasks: Hub envoie {"type": "task", "task_id": "...", "plugin": "...", ...}
         4. Results: Agent envoie {"type": "task_result", "task_id": "...", "status": "...", ...}
     """
+    # IMPORTANT: Accept FIRST, then validate
     await websocket.accept()
-    logger.info(f"WebSocket connection from agent: {agent_id}")
+    logger.info(f"🔌 WebSocket connection accepted from {websocket.client}")
+    
+    # Extract agent_id from query params AFTER accept
+    agent_id = websocket.query_params.get("agent_id")
+    logger.info(f"🔍 Query params: {dict(websocket.query_params)}")
+    
+    if not agent_id:
+        logger.error("❌ Missing agent_id in query params")
+        await websocket.close(code=1008, reason="Missing agent_id query parameter")
+        return
+    
+    logger.info(f"✅ Agent ID validated: {agent_id}")
     
     connection: Optional[AgentConnection] = None
     
