@@ -433,3 +433,91 @@ async def refresh_registry_status():
             status_code=500,
             detail=f"Erreur refresh registry: {str(e)}"
         )
+
+
+@router.post("/reset")
+async def reset_registry():
+    """
+    🗑️ Reset complet du registry avec backup automatique
+    
+    Actions:
+    1. Backup registry + scan history dans data/backups/
+    2. Reset registry (vide)
+    3. Reset scan history
+    
+    Returns:
+        Confirmation avec path du backup
+    """
+    try:
+        from pathlib import Path
+        import json
+        import shutil
+        from datetime import datetime
+        
+        # 1. Créer dossier backups
+        backup_dir = Path("data/backups")
+        backup_dir.mkdir(parents=True, exist_ok=True)
+        
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_subdir = backup_dir / f"reset_{timestamp}"
+        backup_subdir.mkdir(parents=True, exist_ok=True)
+        
+        # 2. Backup fichiers existants
+        files_to_backup = [
+            "data/network_registry.json",
+            "data/network_scan_history.json",
+            "data/network_history.json",
+            "data/dhcp_history.json"
+        ]
+        
+        backed_up = []
+        for file_path in files_to_backup:
+            source = Path(file_path)
+            if source.exists():
+                dest = backup_subdir / source.name
+                shutil.copy2(source, dest)
+                backed_up.append(source.name)
+                logger.info(f"📦 Backup: {source.name} → {dest}")
+        
+        # 3. Reset registry (vide mais structure valide)
+        registry_path = Path("data/network_registry.json")
+        empty_registry = {
+            "version": "2.0",
+            "last_updated": datetime.now().isoformat(),
+            "total_devices": 0,
+            "devices": {},
+            "metadata": {
+                "reset_at": datetime.now().isoformat(),
+                "reset_reason": "Manual reset via API"
+            }
+        }
+        
+        with open(registry_path, 'w') as f:
+            json.dump(empty_registry, f, indent=2)
+        
+        # 4. Reset scan history
+        scan_history_path = Path("data/network_scan_history.json")
+        empty_history = {
+            "version": "1.0",
+            "scans": [],
+            "metadata": {
+                "reset_at": datetime.now().isoformat()
+            }
+        }
+        
+        with open(scan_history_path, 'w') as f:
+            json.dump(empty_history, f, indent=2)
+        
+        logger.info(f"✅ Registry reset DONE - Backup: {backup_subdir}")
+        
+        return {
+            'success': True,
+            'message': 'Registry reset avec succès',
+            'backup_path': str(backup_subdir),
+            'backed_up_files': backed_up,
+            'timestamp': timestamp
+        }
+    
+    except Exception as e:
+        logger.error(f"❌ Registry reset error: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))

@@ -341,8 +341,8 @@
                         <h3 class="text-lg font-semibold text-gray-900">Résultats du scan</h3>
                         <p class="text-sm text-gray-600"><span x-text="scanResults.length"></span> appareil(s) détecté(s) • Type: <span x-text="scanType"></span></p>
                     </div>
-                    <button @click="scanResults=[]" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all text-sm font-medium">
-                        🗑️ Effacer
+                    <button @click="confirmResetRegistry()" class="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-all text-sm font-medium">
+                        🗑️ Reset Registry
                     </button>
                 </div>
                 <div class="divide-y divide-gray-200 max-h-[600px] overflow-y-auto">
@@ -557,8 +557,9 @@
     </div>
     
     <!-- Modal: Edit Device -->
-    <div x-show="showEditModal" x-cloak @click.self="showEditModal=false" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <div x-show="editingDevice" class="bg-white rounded-2xl max-w-md w-full" @click.stop>
+    <template x-if="showEditModal && editingDevice">
+    <div @click.self="showEditModal=false" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full" @click.stop>
             <div class="p-6 border-b border-gray-200 flex justify-between items-center">
                 <h3 class="text-xl font-bold text-gray-900" x-text="'✏️ Modifier: '+(editingDevice?.name||'Device')"></h3>
                 <button @click="showEditModal=false" class="text-gray-400 hover:text-gray-600">
@@ -618,10 +619,12 @@
             </div>
         </div>
     </div>
+    </template>
     
     <!-- Modal: History -->
-    <div x-show="showHistoryModal" x-cloak @click.self="showHistoryModal=false" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <div x-show="selectedDevice" class="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto" @click.stop>
+    <template x-if="showHistoryModal && selectedDevice">
+    <div @click.self="showHistoryModal=false" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto" @click.stop>
             <div class="p-6 border-b border-gray-200 flex justify-between items-start">
                 <div>
                     <h3 class="text-xl font-bold text-gray-900" x-text="'Historique: '+(selectedDevice?.name||selectedDevice?.ip)"></h3>
@@ -737,6 +740,7 @@
             </div>
         </div>
     </div>
+    </template>
     
     <!-- Modal: Agent Logs -->
     <div x-show="showLogsModal" x-cloak @click.self="showLogsModal=false" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -774,6 +778,38 @@
         </div>
     </div>
     
+    <!-- Modal: Reset Registry Confirmation -->
+    <template x-if="showResetModal">
+    <div @click.self="showResetModal=false" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full" @click.stop>
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-xl font-bold text-red-600">⚠️ Confirmation Reset Registry</h3>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <p class="text-sm text-yellow-800 font-medium mb-2">🗑️ Cette action va :</p>
+                    <ul class="text-sm text-yellow-700 list-disc list-inside space-y-1">
+                        <li>Créer un backup dans <code class="text-xs bg-yellow-100 px-1 rounded">data/backups/</code></li>
+                        <li>Vider complètement le registry réseau</li>
+                        <li>Effacer l'historique des scans</li>
+                        <li>Supprimer tous les doublons et données anciennes</li>
+                    </ul>
+                </div>
+                <p class="text-sm text-gray-600">💡 <strong>Recommandé</strong> pour repartir sur une base propre après accumulation de doublons.</p>
+                <p class="text-sm text-gray-600">✅ Le backup sera automatiquement créé avant le reset.</p>
+            </div>
+            <div class="p-6 border-t border-gray-200 flex gap-3">
+                <button @click="showResetModal=false" class="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all font-medium">
+                    Annuler
+                </button>
+                <button @click="resetRegistry()" class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all font-medium">
+                    🗑️ Reset Registry
+                </button>
+            </div>
+        </div>
+    </div>
+    </template>
+    
     <!-- Toast Notifications -->
     <div x-show="toast.show" x-cloak class="fixed bottom-4 right-4 z-50 animate-fade-in">
         <div :class="toast.type==='success'?'bg-green-600':toast.type==='error'?'bg-red-600':'bg-blue-600'" class="rounded-lg shadow-lg p-4 text-white max-w-sm">
@@ -791,6 +827,7 @@
         showEditModal:false,
         editingDevice:null,
         showHistoryModal:false,
+        showResetModal:false,
         selectedDevice:null,
         lastUpdate:'',
         toast:{show:false,message:'',type:'success'},
@@ -1188,6 +1225,34 @@
             }catch(e){
                 console.error('Failed to load agents:',e);
                 this.agents=[];
+            }
+        },
+        
+        // ============================================
+        // 🗑️ REGISTRY RESET
+        // ============================================
+        
+        confirmResetRegistry(){
+            this.showResetModal=true;
+        },
+        
+        async resetRegistry(){
+            try{
+                const r=await fetch('/api/network/registry/reset',{method:'POST'});
+                if(!r.ok)throw new Error(`HTTP ${r.status}`);
+                const data=await r.json();
+                
+                this.showToast(`✅ Registry reset - Backup: ${data.timestamp}`,'success');
+                this.showResetModal=false;
+                
+                // Reload tout
+                this.scanResults=[];
+                await this.loadUnifiedDevices();
+                
+                console.log(`🗑️ Registry reset - Backup: ${data.backup_path}`);
+            }catch(e){
+                console.error('Reset registry error:',e);
+                this.showToast('❌ Erreur reset registry','error');
             }
         },
         

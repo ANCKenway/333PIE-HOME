@@ -3,7 +3,7 @@
 Modèles Pydantic pour validation des données appareils
 """
 
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, Field, validator
 from datetime import datetime
 
@@ -31,6 +31,7 @@ class DeviceUpdate(BaseModel):
     hostname: Optional[str] = None
     type: Optional[str] = None
     description: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = Field(None, description="Métadonnées (expect_vpn, expect_agent, etc.)")
 
 
 class DeviceResponse(DeviceBase):
@@ -40,6 +41,7 @@ class DeviceResponse(DeviceBase):
     online: bool = False
     last_seen: Optional[datetime] = None
     vendor: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Métadonnées additionnelles")
     
     class Config:
         from_attributes = True

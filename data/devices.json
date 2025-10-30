@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "updated_at": "2025-10-30T19:16:36.292799",
+  "updated_at": "2025-10-30T19:50:09.572555",
   "devices": [
     {
       "id": "dev_d83add123456",
@@ -9,7 +9,7 @@
       "mac": "88:A2:9E:3B:20:31",
       "hostname": "333PIE",
       "type": "serveur",
-      "description": "Raspberry Pi 5",
+      "description": "TEST PATCH",
       "tags": [
         "serveur"
       ],
@@ -23,10 +23,12 @@
           "connected": true,
           "tailscale_ip": "100.115.207.11",
           "online": true
-        }
+        },
+        "expect_vpn": true,
+        "expect_agent": false
       },
       "created_at": "2025-10-19T17:47:54.158517",
-      "updated_at": "2025-10-30T19:16:36.292706"
+      "updated_at": "2025-10-30T19:49:41.084637"
     },
     {
       "id": "dev_107c6178728b",
@@ -51,7 +53,7 @@
         "added_from_scan": true
       },
       "created_at": "2025-10-19T17:47:54.158554",
-      "updated_at": "2025-10-19T17:47:54.158554"
+      "updated_at": "2025-10-30T19:41:23.871071"
     },
     {
       "id": "dev_345a607f12c1",
@@ -85,15 +87,17 @@
           "online": false,
           "exit_node": false,
           "authorized": true
-        }
+        },
+        "expect_agent": true,
+        "expect_vpn": true
       },
       "created_at": "2025-10-19T17:47:54.158565",
-      "updated_at": "2025-10-19T17:47:54.158565"
+      "updated_at": "2025-10-30T19:50:09.572365"
     },
     {
       "id": "47c27ad024a0",
       "created_at": "2025-10-30T11:33:33.029522",
-      "updated_at": "2025-10-30T11:36:22.132434",
+      "updated_at": "2025-10-30T19:42:54.252923",
       "name": "333srv",
       "ip": "192.168.1.175",
       "mac": "C8:7F:54:53:1D:40",
