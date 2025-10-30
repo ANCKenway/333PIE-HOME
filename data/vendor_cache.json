@@ -1,6 +1,6 @@
 {
-  "last_updated": "2025-10-22T00:40:44.972949",
-  "total_entries": 2,
+  "last_updated": "2025-10-30T19:19:29.106889",
+  "total_entries": 3,
   "vendors": {
     "34:5A:60": {
       "vendor": "Micro-Star INTL CO., LTD.",
@@ -10,6 +10,11 @@
     "10:7C:61": {
       "vendor": "ASUSTek COMPUTER INC.",
       "cached_at": "2025-10-22T00:40:44.972935",
+      "source": "api"
+    },
+    "00:00:00": {
+      "vendor": "XEROX CORPORATION",
+      "cached_at": "2025-10-30T19:19:29.106869",
       "source": "api"
     }
   }

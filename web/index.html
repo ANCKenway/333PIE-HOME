@@ -239,12 +239,24 @@
                             <div class="flex-1">
                                 <div class="flex items-center gap-2 mb-1 flex-wrap">
                                     <h3 class="font-semibold text-gray-900" x-text="getDeviceTitle(d)"></h3>
+                                    <!-- VPN Badge: Vert si connecté, Gris si attendu mais déconnecté -->
                                     <span x-show="d.is_vpn_connected" class="px-2 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">🔒 VPN</span>
+                                    <span x-show="!d.is_vpn_connected && d.in_devices && (d.metadata?.is_vpn || d.tags?.includes('vpn'))" 
+                                          class="px-2 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-500 opacity-75" 
+                                          title="VPN déconnecté">🔓 VPN</span>
+                                    <!-- Agent Badge: Violet si connecté, Gris si attendu mais déconnecté -->
                                     <span x-show="d.is_agent_connected" class="px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800" :title="'Agent: '+(d.agent_id||'N/A')+' v'+(d.agent_version||'?')">🤖 Agent</span>
+                                    <span x-show="!d.is_agent_connected && d.in_devices && (d.tags?.includes('agent') || d.tags?.includes('windows') || d.tags?.includes('pc'))" 
+                                          class="px-2 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-500 opacity-75" 
+                                          title="Agent déconnecté">🤖 Agent</span>
                                 </div>
                                 <p class="text-sm text-gray-600 font-mono" x-text="d.ip||d.current_ip"></p>
                                 <p x-show="d.is_vpn_connected && d.vpn_ip" class="text-xs text-emerald-600 font-mono" x-text="'VPN: '+d.vpn_ip"></p>
                                 <p x-show="d.is_agent_connected && d.agent_id" class="text-xs text-purple-600" x-text="'Agent: '+d.agent_id+' v'+(d.agent_version||'?')"></p>
+                                <p x-show="!d.is_vpn_connected && d.in_devices && (d.metadata?.is_vpn || d.tags?.includes('vpn'))" 
+                                   class="text-xs text-gray-500">⚠️ VPN déconnecté</p>
+                                <p x-show="!d.is_agent_connected && d.in_devices && (d.tags?.includes('agent') || d.tags?.includes('windows') || d.tags?.includes('pc'))" 
+                                   class="text-xs text-gray-500">⚠️ Agent déconnecté</p>
                             </div>
                             <span :class="(d.status==='online'||d.currently_online)?'bg-green-100 text-green-800':'bg-red-100 text-red-800'" class="px-2 py-1 rounded-full text-xs font-semibold" x-text="(d.status==='online'||d.currently_online)?'✅':'❌'"></span>
                         </div>
@@ -545,8 +557,8 @@
     </div>
     
     <!-- Modal: Edit Device -->
-    <div x-show="showEditModal&&editingDevice" x-cloak @click.self="showEditModal=false" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full" @click.stop>
+    <div x-show="showEditModal" x-cloak @click.self="showEditModal=false" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div x-show="editingDevice" class="bg-white rounded-2xl max-w-md w-full" @click.stop>
             <div class="p-6 border-b border-gray-200 flex justify-between items-center">
                 <h3 class="text-xl font-bold text-gray-900" x-text="'✏️ Modifier: '+(editingDevice?.name||'Device')"></h3>
                 <button @click="showEditModal=false" class="text-gray-400 hover:text-gray-600">
@@ -583,8 +595,8 @@
     </div>
     
     <!-- Modal: History -->
-    <div x-show="showHistoryModal&&selectedDevice" x-cloak @click.self="showHistoryModal=false" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto" @click.stop>
+    <div x-show="showHistoryModal" x-cloak @click.self="showHistoryModal=false" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div x-show="selectedDevice" class="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto" @click.stop>
             <div class="p-6 border-b border-gray-200 flex justify-between items-start">
                 <div>
                     <h3 class="text-xl font-bold text-gray-900" x-text="'Historique: '+(selectedDevice?.name||selectedDevice?.ip)"></h3>

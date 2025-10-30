@@ -303,6 +303,11 @@ async def refresh_registry_status():
         for mac, device in registry.devices.items():
             changed = False
             
+            # ✅ Initialiser champs agent si null (fix pour devices existants)
+            if device.is_agent_connected is None:
+                device.is_agent_connected = False
+                changed = True
+            
             # ✅ Exception pour Self (nous-mêmes) : toujours online
             is_self = (local_mac and mac.upper() == local_mac.upper())
             
