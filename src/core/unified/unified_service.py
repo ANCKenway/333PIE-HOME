@@ -63,6 +63,11 @@ class UnifiedDevice:
         self.vpn_ip = data.get('vpn_ip')
         self.is_vpn_connected = data.get('is_vpn_connected', False)  # ✅ Statut VPN connexion
         
+        # Agent
+        self.is_agent_connected = data.get('is_agent_connected', False)
+        self.agent_id = data.get('agent_id')
+        self.agent_version = data.get('agent_version')
+        
         # Metadata
         self.tags = data.get('tags', [])
         self.metadata = data.get('metadata', {})
@@ -112,6 +117,11 @@ class UnifiedDevice:
             
             'vpn_ip': self.vpn_ip,
             'is_vpn_connected': self.is_vpn_connected,  # ✅ VPN connection status
+            
+            'is_agent_connected': self.is_agent_connected,  # ✅ Agent connection status
+            'agent_id': self.agent_id,
+            'agent_version': self.agent_version,
+            
             'tags': self.tags,
             'metadata': self.metadata,
             'total_scans': self.total_scans,
@@ -211,6 +221,9 @@ def get_unified_devices() -> List[UnifiedDevice]:
                     'online': net_device.currently_online,
                     'wake_on_lan': False,
                     'vpn_ip': None,  # ✅ Sera enrichi par registry
+                    'is_agent_connected': False,  # ✅ Sera enrichi par registry
+                    'agent_id': None,
+                    'agent_version': None,
                     'first_seen': net_device.first_seen.isoformat() if net_device.first_seen else None,
                     'last_seen': net_device.last_seen.isoformat() if net_device.last_seen else None,
                     'total_scans': net_device.total_appearances,
@@ -218,7 +231,7 @@ def get_unified_devices() -> List[UnifiedDevice]:
     except Exception as e:
         logger.error(f"❌ Error loading network devices: {e}")
     
-    # 2.5 ✅ Enrichir VPN depuis NetworkRegistry (source unique VPN)
+    # 2.5 ✅ Enrichir VPN + Agent depuis NetworkRegistry (source unique VPN)
     try:
         registry = get_network_registry()
         for mac, device_data in unified.items():
@@ -228,6 +241,10 @@ def get_unified_devices() -> List[UnifiedDevice]:
                 device_data['vpn_ip'] = registry_device.get('vpn_ip')
                 device_data['is_vpn_connected'] = registry_device.get('is_vpn_connected', False)  # ✅ Statut connexion
                 device_data['online'] = registry_device.get('is_online', device_data.get('online', False))
+                # ✅ Enrichir Agent depuis registry
+                device_data['is_agent_connected'] = registry_device.get('is_agent_connected', False)
+                device_data['agent_id'] = registry_device.get('agent_id')
+                device_data['agent_version'] = registry_device.get('agent_version')
                 # Enrichir vendor/OS si manquants
                 if not device_data.get('vendor'):
                     device_data['vendor'] = registry_device.get('vendor')

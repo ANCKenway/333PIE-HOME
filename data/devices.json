@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "updated_at": "2025-10-30T11:55:28.263278",
+  "updated_at": "2025-10-30T19:16:36.292799",
   "devices": [
     {
       "id": "dev_d83add123456",
@@ -9,7 +9,7 @@
       "mac": "88:A2:9E:3B:20:31",
       "hostname": "333PIE",
       "type": "serveur",
-      "description": "Raspberry Pi 5 - Test modif",
+      "description": "Raspberry Pi 5",
       "tags": [
         "serveur"
       ],
@@ -26,7 +26,7 @@
         }
       },
       "created_at": "2025-10-19T17:47:54.158517",
-      "updated_at": "2025-10-30T11:33:43.499407"
+      "updated_at": "2025-10-30T19:16:36.292706"
     },
     {
       "id": "dev_107c6178728b",

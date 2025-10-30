@@ -242,7 +242,11 @@ async def scan_network(
                 # ✅ VPN (Tailscale)
                 is_vpn_connected=ud.is_vpn_connected,
                 vpn_ip=ud.vpn_ip,
-                vpn_hostname=ud.vpn_hostname
+                vpn_hostname=ud.vpn_hostname,
+                # ✅ Agent (depuis registry)
+                is_agent_connected=False,  # Sera enrichi par registry
+                agent_id=None,
+                agent_version=None
             )
             devices.append(nd)
         

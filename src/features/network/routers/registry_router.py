@@ -287,22 +287,14 @@ async def refresh_registry_status():
         arp_scanner = ARPScanner("192.168.1.0/24")
         arp_devices = await arp_scanner.scan()
         
-        # 2. Tailscale status
+        # 2. Récupérer VPN data (Tailscale)
         ts_scanner = TailscaleScanner("192.168.1.0/24")
-        ts_devices_map = await ts_scanner.scan()  # Returns dict {hostname: {...}}
+        vpn_map = await ts_scanner.scan()
         
-        # 3. Créer map VPN par hostname (déjà un dict)
-        vpn_map = {}
-        for hostname, ts_info in ts_devices_map.items():
-            vpn_map[hostname.upper()] = {
-                'vpn_ip': ts_info.get('vpn_ip'),
-                'is_vpn_connected': ts_info.get('is_online', False),  # ✅ Défaut FALSE (pas online si pas spécifié)
-                'is_self': ts_info.get('is_self', False)  # ✅ Conserver flag is_self
-            }
-        
-        # 4. Mettre à jour registry
+        # 3. Compter devices
         online_count = 0
         vpn_count = 0
+        agent_count = 0
         updated_count = 0
         
         # ✅ Détecter notre propre MAC dynamiquement (pas de hardcode)
@@ -373,8 +365,8 @@ async def refresh_registry_status():
             
             if hostname_upper in vpn_map:
                 vpn_info = vpn_map[hostname_upper]
-                device.vpn_ip = vpn_info['vpn_ip']
-                device.is_vpn_connected = vpn_info['is_vpn_connected']
+                device.vpn_ip = vpn_info.get('vpn_ip')
+                device.is_vpn_connected = vpn_info.get('is_online', False)
                 if device.is_vpn_connected:
                     vpn_count += 1
                 changed = True
@@ -382,6 +374,32 @@ async def refresh_registry_status():
                 if device.is_vpn_connected:
                     device.is_vpn_connected = False
                     changed = True
+            
+            # ✅ Check Agent status (croisement par IP ou hostname)
+            from ...agents.routers.agents_router import agent_manager
+            agent_found = False
+            
+            for agent in agent_manager.connections.values():
+                agent_hostname = agent.metadata.get('hostname', '').upper()
+                agent_ip = agent.metadata.get('ip')
+                
+                # Match par hostname OU IP
+                if (device.current_hostname and agent_hostname == device.current_hostname.upper()) or \
+                   (device.current_ip and agent_ip == device.current_ip):
+                    device.is_agent_connected = True
+                    device.agent_id = agent.agent_id
+                    device.agent_version = agent.metadata.get('version')
+                    agent_found = True
+                    agent_count += 1
+                    changed = True
+                    break
+            
+            # Reset si agent non trouvé
+            if not agent_found and device.is_agent_connected:
+                device.is_agent_connected = False
+                device.agent_id = None
+                device.agent_version = None
+                changed = True
             
             if changed:
                 updated_count += 1
@@ -391,7 +409,7 @@ async def refresh_registry_status():
         
         logger.info(
             f"✅ Registry refresh DONE: {online_count} online, {vpn_count} VPN, "
-            f"{updated_count} updated"
+            f"{agent_count} agents, {updated_count} updated"
         )
         
         return {
@@ -399,6 +417,7 @@ async def refresh_registry_status():
             'total_devices': len(registry.devices),
             'online_count': online_count,
             'vpn_count': vpn_count,
+            'agent_count': agent_count,
             'updated_count': updated_count,
             'duration_ms': 0  # Calculer si besoin
         }

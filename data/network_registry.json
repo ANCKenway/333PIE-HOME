@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "last_updated": "2025-10-30T19:07:05.444022",
+  "last_updated": "2025-10-30T19:17:54.267072",
   "total_devices": 11,
   "devices": {
     "88:A2:9E:3B:20:31": {
@@ -16,8 +16,8 @@
       "ip_history": [],
       "hostname_history": [],
       "first_seen": "2025-10-28T15:54:26.674754+00:00",
-      "last_seen": "2025-10-30T18:07:05.443921+00:00",
-      "last_seen_online": "2025-10-30T18:07:05.443921+00:00",
+      "last_seen": "2025-10-30T18:17:54.266970+00:00",
+      "last_seen_online": "2025-10-30T18:17:54.266970+00:00",
       "total_detections": 1,
       "notes": "Self-device (auto-detected)",
       "is_managed": true
@@ -42,8 +42,8 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:07:05.443950+00:00",
-      "last_seen_online": "2025-10-30T18:07:05.443950+00:00",
+      "last_seen": "2025-10-30T18:17:54.266998+00:00",
+      "last_seen_online": "2025-10-30T18:17:54.266998+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false
@@ -74,8 +74,8 @@
         }
       ],
       "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:07:05.443959+00:00",
-      "last_seen_online": "2025-10-30T18:07:05.443959+00:00",
+      "last_seen": "2025-10-30T18:17:54.267007+00:00",
+      "last_seen_online": "2025-10-30T18:17:54.267007+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false
@@ -100,8 +100,8 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:07:05.443966+00:00",
-      "last_seen_online": "2025-10-30T18:07:05.443966+00:00",
+      "last_seen": "2025-10-30T18:17:54.267015+00:00",
+      "last_seen_online": "2025-10-30T18:17:54.267015+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": true
@@ -126,8 +126,8 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:07:05.443974+00:00",
-      "last_seen_online": "2025-10-30T18:07:05.443974+00:00",
+      "last_seen": "2025-10-30T18:17:54.267023+00:00",
+      "last_seen_online": "2025-10-30T18:17:54.267023+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false
@@ -152,8 +152,8 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:07:05.443981+00:00",
-      "last_seen_online": "2025-10-30T18:07:05.443981+00:00",
+      "last_seen": "2025-10-30T18:17:54.267030+00:00",
+      "last_seen_online": "2025-10-30T18:17:54.267030+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false
@@ -184,8 +184,8 @@
         }
       ],
       "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:07:05.443988+00:00",
-      "last_seen_online": "2025-10-30T18:07:05.443988+00:00",
+      "last_seen": "2025-10-30T18:17:54.267037+00:00",
+      "last_seen_online": "2025-10-30T18:17:54.267037+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false
@@ -210,8 +210,8 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:07:05.443996+00:00",
-      "last_seen_online": "2025-10-30T18:07:05.443996+00:00",
+      "last_seen": "2025-10-30T18:17:54.267045+00:00",
+      "last_seen_online": "2025-10-30T18:17:54.267045+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false
@@ -242,8 +242,8 @@
         }
       ],
       "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:07:05.444002+00:00",
-      "last_seen_online": "2025-10-30T18:07:05.444002+00:00",
+      "last_seen": "2025-10-30T18:17:54.267053+00:00",
+      "last_seen_online": "2025-10-30T18:17:54.267053+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false
@@ -268,8 +268,8 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:07:05.444010+00:00",
-      "last_seen_online": "2025-10-30T18:07:05.444010+00:00",
+      "last_seen": "2025-10-30T18:17:54.267060+00:00",
+      "last_seen_online": "2025-10-30T18:17:54.267060+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false
@@ -294,8 +294,8 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:07:05.444017+00:00",
-      "last_seen_online": "2025-10-30T18:07:05.444017+00:00",
+      "last_seen": "2025-10-30T18:17:54.267068+00:00",
+      "last_seen_online": "2025-10-30T18:17:54.267068+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false

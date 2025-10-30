@@ -80,6 +80,11 @@ class DeviceRegistryEntry:
     is_vpn_connected: bool = False
     vpn_ip: Optional[str] = None
     
+    # Statut Agent
+    is_agent_connected: bool = False
+    agent_id: Optional[str] = None
+    agent_version: Optional[str] = None
+    
     # Historique
     ip_history: List[Dict[str, Any]] = field(default_factory=list)
     hostname_history: List[Dict[str, Any]] = field(default_factory=list)
@@ -225,6 +230,9 @@ class NetworkRegistry:
             is_online=device_dict.get('is_online', True),
             is_vpn_connected=device_dict.get('is_vpn_connected', False),
             vpn_ip=device_dict.get('vpn_ip'),
+            is_agent_connected=device_dict.get('is_agent_connected', False),
+            agent_id=device_dict.get('agent_id'),
+            agent_version=device_dict.get('agent_version'),
             first_seen=timestamp,
             last_seen=timestamp,
             last_seen_online=timestamp if device_dict.get('is_online') else None,

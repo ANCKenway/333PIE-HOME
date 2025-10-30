@@ -64,6 +64,11 @@ class NetworkDeviceBase(BaseModel):
     is_vpn_connected: bool = Field(False, description="Connecté au VPN Tailscale")
     vpn_ip: Optional[str] = Field(None, description="Adresse IP VPN (100.x.x.x)")
     vpn_hostname: Optional[str] = Field(None, description="Hostname VPN complet")
+    
+    # Agent Control
+    is_agent_connected: bool = Field(False, description="Agent de contrôle connecté")
+    agent_id: Optional[str] = Field(None, description="ID de l'agent connecté")
+    agent_version: Optional[str] = Field(None, description="Version de l'agent")
 
 
 class NetworkDeviceCreate(NetworkDeviceBase):
