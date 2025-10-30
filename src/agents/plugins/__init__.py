@@ -58,7 +58,7 @@ class PluginManager:
             await self._load_from_module(".linux")
         
         self._loaded = True
-        logger.info(f"✓ Loaded {len(self.plugins)} plugins: {list(self.plugins.keys())}")
+        logger.info(f"[OK] Loaded {len(self.plugins)} plugins: {list(self.plugins.keys())}")
         return len(self.plugins)
     
     async def _load_from_module(self, module_name: str):
@@ -87,11 +87,11 @@ class PluginManager:
                         # Setup plugin
                         if await plugin.setup():
                             self.plugins[plugin.name] = plugin
-                            logger.info(f"  ✓ Loaded plugin: {plugin.name} v{plugin.version}")
+                            logger.info(f"  [OK] Loaded plugin: {plugin.name} v{plugin.version}")
                         else:
-                            logger.warning(f"  ✗ Failed to setup plugin: {plugin.name}")
+                            logger.warning(f"  [X] Failed to setup plugin: {plugin.name}")
                     else:
-                        logger.debug(f"  ⊘ Skipped incompatible plugin: {plugin.name} ({plugin.os_platform})")
+                        logger.debug(f"  [Skip] Skipped incompatible plugin: {plugin.name} ({plugin.os_platform})")
                         
         except ImportError as e:
             logger.warning(f"Could not import module {module_name}: {e}")
@@ -157,4 +157,4 @@ class PluginManager:
         
         self.plugins.clear()
         self._loaded = False
-        logger.info("✓ All plugins unloaded")
+        logger.info("[OK] All plugins unloaded")

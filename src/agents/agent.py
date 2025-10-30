@@ -75,7 +75,7 @@ class UniversalAgent:
     async def start(self):
         """Démarre l'agent."""
         logger.info("=" * 70)
-        logger.info(f"🤖 333HOME Universal Agent v1.0.0")
+        logger.info(f"[Agent] 333HOME Universal Agent v1.0.0")
         logger.info(f"Agent ID: {self.config.agent_id}")
         logger.info(f"Hostname: {self.config.hostname}")
         logger.info(f"OS Platform: {self.config.os_platform}")
@@ -85,10 +85,10 @@ class UniversalAgent:
         # Charger les plugins
         logger.info("Loading plugins...")
         plugins_count = await self.plugin_manager.load_plugins()
-        logger.info(f"✓ {plugins_count} plugins loaded")
+        logger.info(f"[OK] {plugins_count} plugins loaded")
         
         if plugins_count == 0:
-            logger.warning("⚠️  No plugins loaded - agent will be idle")
+            logger.warning("[WARNING] No plugins loaded - agent will be idle")
         
         # Liste des plugins
         for plugin in self.plugin_manager.list_plugins():
@@ -97,7 +97,7 @@ class UniversalAgent:
         # Setup remote logging
         logger.info("Setting up remote logging...")
         self._remote_log_handler = setup_remote_logging(self, level=logging.DEBUG)
-        logger.info("✓ Remote logging enabled - logs will stream to Hub")
+        logger.info("[OK] Remote logging enabled - logs will stream to Hub")
         
         self.running = True
         
@@ -134,7 +134,7 @@ class UniversalAgent:
                 self.connected = True
                 self._reconnect_attempts = 0
                 
-                logger.info("✓ Connected to Hub")
+                logger.info("[OK] Connected to Hub")
                 
                 # Envoyer handshake
                 await self._send_handshake()
@@ -166,7 +166,7 @@ class UniversalAgent:
         }
         
         await self._send_message(handshake)
-        logger.info("✓ Handshake sent")
+        logger.info("[OK] Handshake sent")
     
     async def _heartbeat_loop(self):
         """Boucle d'envoi heartbeat."""
@@ -181,7 +181,7 @@ class UniversalAgent:
                         "plugins_loaded": [p["name"] for p in self.plugin_manager.list_plugins()]
                     }
                     await self._send_message(heartbeat)
-                    logger.debug("💓 Heartbeat sent")
+                    logger.debug("[HB] Heartbeat sent")
         except asyncio.CancelledError:
             logger.debug("Heartbeat task cancelled")
         except Exception as e:
@@ -215,7 +215,7 @@ class UniversalAgent:
         elif msg_type == "ping":
             await self._send_message({"type": "pong"})
         elif msg_type == "handshake_ack":
-            logger.info("✓ Handshake acknowledged by Hub")
+            logger.info("[OK] Handshake acknowledged by Hub")
             # Pas d'action requise, juste confirmation
         elif msg_type == "shutdown":
             logger.info("Shutdown requested by Hub")
@@ -234,7 +234,7 @@ class UniversalAgent:
         plugin_name = data.get("plugin")
         params = data.get("params", {})
         
-        logger.info(f"📋 Task received: {task_id} (plugin: {plugin_name})")
+        logger.info(f"[Task] Task received: {task_id} (plugin: {plugin_name})")
         
         # Acquitter la tâche
         await self._send_message({
@@ -271,9 +271,9 @@ class UniversalAgent:
         
         # Exécuter le plugin
         try:
-            logger.info(f"🚀 Executing plugin: {plugin_name}")
+            logger.info(f"[Exec] Executing plugin: {plugin_name}")
             result = await plugin.execute(params)
-            logger.info(f"✓ Plugin execution completed: {result.status}")
+            logger.info(f"[OK] Plugin execution completed: {result.status}")
             await self._send_task_result(task_id, result)
         except Exception as e:
             logger.error(f"Plugin execution failed: {e}", exc_info=True)
@@ -353,7 +353,7 @@ class UniversalAgent:
         # Décharger plugins
         await self.plugin_manager.unload_plugins()
         
-        logger.info("✓ Agent stopped")
+        logger.info("[OK] Agent stopped")
 
 
 async def main():
