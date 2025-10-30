@@ -287,7 +287,7 @@ class UniversalAgent:
         message = {
             "type": "task_result",
             "task_id": task_id,
-            **result.dict()
+            **result.model_dump()
         }
         await self._send_message(message)
     

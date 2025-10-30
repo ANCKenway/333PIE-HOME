@@ -1,6 +1,6 @@
 """
-🔄 Plugin Self-Update - Auto-mise à jour Agent
-===============================================
+[Update] Plugin Self-Update - Auto-mise à jour Agent
+=====================================================
 
 Plugin cross-platform pour auto-update de l'agent depuis le Hub.
 
@@ -127,7 +127,7 @@ class SelfUpdatePlugin(BasePlugin):
             params = SelfUpdateParams(**params)
         
         try:
-            self.logger.info(f"🔄 Starting self-update to version {params.version}")
+            self.logger.info(f"[Update] Starting self-update to version {params.version}")
             
             # Step 1: Vérifier version
             if not params.force and params.version == self.CURRENT_VERSION:
@@ -159,7 +159,7 @@ class SelfUpdatePlugin(BasePlugin):
             await self._replace_files()
             
             # Step 7: Restart agent
-            self.logger.info("🔄 Restarting agent with new version...")
+            self.logger.info("[Update] Restarting agent with new version...")
             await self._restart_agent()
             
             return PluginResult(
@@ -173,7 +173,7 @@ class SelfUpdatePlugin(BasePlugin):
             )
         
         except Exception as e:
-            self.logger.error(f"❌ Update failed: {e}", exc_info=True)
+            self.logger.error(f"[ERROR] Update failed: {e}", exc_info=True)
             
             # Tentative rollback
             try:
@@ -221,7 +221,7 @@ class SelfUpdatePlugin(BasePlugin):
                     async for chunk in response.content.iter_chunked(8192):
                         f.write(chunk)
         
-        self.logger.info(f"✓ Downloaded {package_path.name} ({package_path.stat().st_size} bytes)")
+        self.logger.info(f"[OK] Downloaded {package_path.name} ({package_path.stat().st_size} bytes)")
         return package_path
     
     async def _verify_checksum(self, file_path: Path, expected_checksum: str) -> bool:
@@ -238,7 +238,7 @@ class SelfUpdatePlugin(BasePlugin):
             self.logger.error(f"Checksum mismatch: {actual_checksum} != {expected_checksum}")
             return False
         
-        self.logger.info("✓ Checksum verified")
+        self.logger.info("[OK] Checksum verified")
         return True
     
     async def _backup_current_version(self) -> Path:
@@ -251,7 +251,7 @@ class SelfUpdatePlugin(BasePlugin):
             ".backup", ".update_temp", "__pycache__", "*.pyc", ".git"
         ))
         
-        self.logger.info(f"✓ Backup created: {backup_path}")
+        self.logger.info(f"[OK] Backup created: {backup_path}")
         return backup_path
     
     async def _extract_package(self, package_path: Path):
@@ -268,7 +268,7 @@ class SelfUpdatePlugin(BasePlugin):
         else:
             raise PluginExecutionError(f"Unsupported package format: {package_path.suffix}")
         
-        self.logger.info(f"✓ Extracted to {extract_dir}")
+        self.logger.info(f"[OK] Extracted to {extract_dir}")
     
     async def _replace_files(self):
         """Remplace les fichiers de l'agent par la nouvelle version."""
@@ -294,7 +294,7 @@ class SelfUpdatePlugin(BasePlugin):
                 target_path.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(item, target_path)
         
-        self.logger.info("✓ Files replaced")
+        self.logger.info("[OK] Files replaced")
     
     async def _restart_agent(self):
         """Restart l'agent avec la nouvelle version."""
@@ -315,7 +315,7 @@ class SelfUpdatePlugin(BasePlugin):
             # Linux/macOS: fork + exec
             subprocess.Popen([sys.executable] + args, cwd=str(self._agent_dir))
         
-        self.logger.info("✓ Restart initiated")
+        self.logger.info("[OK] Restart initiated")
         
         # Attendre 2s puis exit
         await asyncio.sleep(2)
@@ -340,13 +340,13 @@ class SelfUpdatePlugin(BasePlugin):
                 target_path.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(item, target_path)
         
-        self.logger.info(f"✓ Rolled back from {latest_backup}")
+        self.logger.info(f"[OK] Rolled back from {latest_backup}")
     
     async def _cleanup(self):
         """Nettoie les fichiers temporaires."""
         try:
             if self._temp_dir.exists():
                 shutil.rmtree(self._temp_dir)
-            self.logger.info("✓ Cleanup completed")
+            self.logger.info("[OK] Cleanup completed")
         except Exception as e:
             self.logger.warning(f"Cleanup failed: {e}")
