@@ -244,8 +244,8 @@
                                     <span x-show="!d.is_vpn_connected && d.in_devices && (d.metadata?.expect_vpn || d.metadata?.is_vpn || d.tags?.includes('vpn'))" 
                                           class="px-2 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-500 opacity-75" 
                                           title="VPN déconnecté">🔓 VPN</span>
-                                    <!-- Agent Badge: Violet si connecté, Gris si attendu mais déconnecté -->
-                                    <span x-show="d.is_agent_connected" class="px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800" :title="'Agent: '+(d.agent_id||'N/A')+' v'+(d.agent_version||'?')">🤖 Agent</span>
+                                    <!-- Agent Badge: Violet uni si connecté, Gris si attendu mais déconnecté -->
+                                    <span x-show="d.is_agent_connected" class="px-2 py-1 rounded-full text-xs font-semibold bg-purple-500 text-white" :title="'Agent: '+(d.agent_id||'N/A')+' v'+(d.agent_version||'?')">🤖 Agent</span>
                                     <span x-show="!d.is_agent_connected && d.in_devices && (d.metadata?.expect_agent || d.tags?.includes('agent') || d.tags?.includes('windows') || d.tags?.includes('pc'))" 
                                           class="px-2 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-500 opacity-75" 
                                           title="Agent déconnecté">🤖 Agent</span>
@@ -357,7 +357,7 @@
                                         </div>
                                         <span :class="d.currently_online?'bg-green-100 text-green-800':'bg-red-100 text-red-800'" class="px-2 py-1 rounded-full text-xs font-semibold" x-text="d.currently_online?'✅':'❌'"></span>
                                         <span x-show="d.is_vpn_connected" class="px-2 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800" :title="'VPN: '+d.vpn_ip">🔒 VPN</span>
-                                        <span x-show="d.is_agent_connected" class="px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800" :title="'Agent: '+(d.agent_id||'N/A')+' v'+(d.agent_version||'?')">🤖 Agent</span>
+                                        <span x-show="d.is_agent_connected" class="px-2 py-1 rounded-full text-xs font-semibold bg-purple-500 text-white" :title="'Agent: '+(d.agent_id||'N/A')+' v'+(d.agent_version||'?')">🤖 Agent</span>
                                         <span x-show="d.in_devices" class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">✓ Géré</span>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-1 text-sm">
