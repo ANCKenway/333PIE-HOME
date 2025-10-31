@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "last_updated": "2025-10-31T12:41:07.020234",
+  "total_devices": 1,
+  "devices": {
+    "88:A2:9E:3B:20:31": {
+      "mac": "88:A2:9E:3B:20:31",
+      "current_ip": "192.168.1.150",
+      "current_hostname": "333PIE",
+      "vendor": "Raspberry Pi",
+      "os_detected": "Linux",
+      "device_type": "Server",
+      "is_online": true,
+      "is_vpn_connected": true,
+      "vpn_ip": "100.115.207.11",
+      "is_agent_connected": false,
+      "agent_id": null,
+      "agent_version": null,
+      "ip_history": [],
+      "hostname_history": [],
+      "first_seen": "2025-10-31T11:34:18.852627+00:00",
+      "last_seen": "2025-10-31T11:41:07.020202+00:00",
+      "last_seen_online": "2025-10-31T11:41:07.020202+00:00",
+      "total_detections": 1,
+      "notes": "Self-device (auto-detected)",
+      "is_managed": true
+    }
+  }
+}

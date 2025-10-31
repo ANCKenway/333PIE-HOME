@@ -1,0 +1,2918 @@
+{
+  "version": "3.0",
+  "created_at": "2025-10-21T10:21:40.780602",
+  "last_updated": "2025-10-30T19:43:20.276686",
+  "metadata": {
+    "total_scans": 70,
+    "total_devices_seen": 27,
+    "first_scan": "2025-10-21T10:21:31.863245",
+    "last_scan": "2025-10-30T19:43:20.257459"
+  },
+  "devices": {
+    "ca:08:c5:bf:00:13": {
+      "id": "dev_network_ca08c5bf0013",
+      "mac": "ca:08:c5:bf:00:13",
+      "current_ip": "192.168.1.23",
+      "current_hostname": null,
+      "vendor": "Unknown",
+      "device_type": "❓ Unknown",
+      "os_detected": "Linux/Unix/MacOS",
+      "first_seen": "2025-10-21T10:21:31.863245",
+      "last_seen": "2025-10-21T16:35:56.833922",
+      "total_appearances": 19,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "c8:ff:77:59:de:e1": {
+      "id": "dev_network_c8ff7759dee1",
+      "mac": "c8:ff:77:59:de:e1",
+      "current_ip": "192.168.1.77",
+      "current_hostname": null,
+      "vendor": "Dyson Limited",
+      "device_type": "❓ Dyson Limited",
+      "os_detected": "Linux/Unix/MacOS",
+      "first_seen": "2025-10-21T10:21:31.863245",
+      "last_seen": "2025-10-21T16:35:56.833922",
+      "total_appearances": 23,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "9e:67:44:b4:b8:7d": {
+      "id": "dev_network_9e6744b4b87d",
+      "mac": "9e:67:44:b4:b8:7d",
+      "current_ip": "192.168.1.99",
+      "current_hostname": null,
+      "vendor": "Unknown",
+      "device_type": "❓ Unknown",
+      "os_detected": "Linux/Unix/MacOS",
+      "first_seen": "2025-10-21T10:21:31.863245",
+      "last_seen": "2025-10-21T16:35:56.833922",
+      "total_appearances": 23,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "a4:e5:7c:31:54:36": {
+      "id": "dev_network_a4e57c315436",
+      "mac": "a4:e5:7c:31:54:36",
+      "current_ip": "192.168.1.171",
+      "current_hostname": null,
+      "vendor": "Espressif",
+      "device_type": "🔧 ESP32/ESP8266",
+      "os_detected": "Network Device",
+      "first_seen": "2025-10-21T10:21:31.863245",
+      "last_seen": "2025-10-21T16:35:56.833922",
+      "total_appearances": 23,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "34:5a:60:7f:12:c1": {
+      "id": "dev_network_345a607f12c1",
+      "mac": "34:5a:60:7f:12:c1",
+      "current_ip": "192.168.1.174",
+      "current_hostname": null,
+      "vendor": "Micro-Star INTL CO., LTD.",
+      "device_type": "❓ Micro-Star INTL CO., LTD.",
+      "os_detected": "Windows",
+      "first_seen": "2025-10-21T10:21:31.863245",
+      "last_seen": "2025-10-21T16:35:56.833922",
+      "total_appearances": 23,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "8c:97:ea:31:c0:a2": {
+      "id": "dev_network_8c97ea31c0a2",
+      "mac": "8c:97:ea:31:c0:a2",
+      "current_ip": "192.168.1.254",
+      "current_hostname": "Freebox-Server.local",
+      "vendor": "Freebox",
+      "device_type": "🌐 Freebox",
+      "os_detected": "Linux/Unix/MacOS",
+      "first_seen": "2025-10-21T10:21:31.863245",
+      "last_seen": "2025-10-21T16:35:56.833922",
+      "total_appearances": 23,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "c8:7f:54:53:1d:40": {
+      "id": "dev_network_c87f54531d40",
+      "mac": "c8:7f:54:53:1d:40",
+      "current_ip": "192.168.1.175",
+      "current_hostname": null,
+      "vendor": "ASUSTek COMPUTER INC.",
+      "device_type": "💻 ASUSTek COMPUTER INC.",
+      "os_detected": "computer",
+      "first_seen": "2025-10-21T10:21:31.863245",
+      "last_seen": "2025-10-21T10:21:31.863245",
+      "total_appearances": 1,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "8c:97:ea:14:9d:1b": {
+      "id": "dev_network_8c97ea149d1b",
+      "mac": "8c:97:ea:14:9d:1b",
+      "current_ip": "192.168.1.100",
+      "current_hostname": null,
+      "vendor": "Freebox",
+      "device_type": "🌐 Freebox",
+      "os_detected": "router",
+      "first_seen": "2025-10-21T10:21:31.863245",
+      "last_seen": "2025-10-21T16:35:56.833922",
+      "total_appearances": 13,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "f4:fe:fb:77:5c:26": {
+      "id": "dev_network_f4fefb775c26",
+      "mac": "f4:fe:fb:77:5c:26",
+      "current_ip": "192.168.1.82",
+      "current_hostname": null,
+      "vendor": "Samsung",
+      "device_type": "📺 Smart TV Samsung",
+      "os_detected": "tv",
+      "first_seen": "2025-10-21T10:21:31.863245",
+      "last_seen": "2025-10-21T16:35:56.833922",
+      "total_appearances": 13,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "10:7c:61:78:72:8b": {
+      "id": "dev_network_107c6178728b",
+      "mac": "10:7c:61:78:72:8b",
+      "current_ip": "192.168.1.24",
+      "current_hostname": null,
+      "vendor": "ASUSTek COMPUTER INC.",
+      "device_type": "💻 ASUSTek COMPUTER INC.",
+      "os_detected": "Windows",
+      "first_seen": "2025-10-21T10:41:02.144804",
+      "last_seen": "2025-10-21T16:35:56.833922",
+      "total_appearances": 21,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "a4:e9:75:73:1f:cb": {
+      "id": "dev_network_a4e975731fcb",
+      "mac": "a4:e9:75:73:1f:cb",
+      "current_ip": "192.168.1.117",
+      "current_hostname": "iPad-de-Miren.local",
+      "vendor": "Apple, Inc.",
+      "device_type": "❓ Apple, Inc.",
+      "os_detected": "Linux/Unix/MacOS",
+      "first_seen": "2025-10-21T12:36:19.706145",
+      "last_seen": "2025-10-21T16:35:56.833922",
+      "total_appearances": 19,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "A4:E9:75:73:1F:CB": {
+      "id": "dev_a4e975731fcb",
+      "mac": "A4:E9:75:73:1F:CB",
+      "current_ip": "192.168.1.117",
+      "current_hostname": null,
+      "vendor": null,
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-21T17:01:24.367206",
+      "last_seen": "2025-10-21T17:18:37.052877",
+      "total_appearances": 3,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "C8:FF:77:59:DE:E1": {
+      "id": "dev_c8ff7759dee1",
+      "mac": "C8:FF:77:59:DE:E1",
+      "current_ip": "192.168.1.77",
+      "current_hostname": null,
+      "vendor": "Dyson Limited",
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-21T17:01:24.367318",
+      "last_seen": "2025-10-30T19:43:20.255524",
+      "total_appearances": 29,
+      "currently_online": true,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "8C:97:EA:31:C0:A2": {
+      "id": "dev_8c97ea31c0a2",
+      "mac": "8C:97:EA:31:C0:A2",
+      "current_ip": "192.168.1.254",
+      "current_hostname": "Freebox-Server.local",
+      "vendor": "Freebox SAS",
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-21T17:01:24.367447",
+      "last_seen": "2025-10-30T19:43:20.255804",
+      "total_appearances": 32,
+      "currently_online": true,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "A4:E5:7C:31:54:36": {
+      "id": "dev_a4e57c315436",
+      "mac": "A4:E5:7C:31:54:36",
+      "current_ip": "192.168.1.171",
+      "current_hostname": null,
+      "vendor": "Espressif",
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-21T17:01:24.367527",
+      "last_seen": "2025-10-30T19:43:20.256121",
+      "total_appearances": 28,
+      "currently_online": true,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "8C:97:EA:14:9D:1B": {
+      "id": "dev_8c97ea149d1b",
+      "mac": "8C:97:EA:14:9D:1B",
+      "current_ip": "192.168.1.100",
+      "current_hostname": null,
+      "vendor": "Freebox",
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-21T17:01:24.367589",
+      "last_seen": "2025-10-30T19:19:28.667498",
+      "total_appearances": 28,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "34:5A:60:7F:12:C1": {
+      "id": "dev_345a607f12c1",
+      "mac": "34:5A:60:7F:12:C1",
+      "current_ip": "192.168.1.174",
+      "current_hostname": "TITO",
+      "vendor": null,
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-21T17:01:24.367684",
+      "last_seen": "2025-10-30T19:43:20.256284",
+      "total_appearances": 32,
+      "currently_online": true,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "9E:67:44:B4:B8:7D": {
+      "id": "dev_9e6744b4b87d",
+      "mac": "9E:67:44:B4:B8:7D",
+      "current_ip": "192.168.1.99",
+      "current_hostname": null,
+      "vendor": "Android Device",
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-21T17:01:24.367745",
+      "last_seen": "2025-10-30T19:43:20.256425",
+      "total_appearances": 31,
+      "currently_online": true,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "10:7C:61:78:72:8B": {
+      "id": "dev_107c6178728b",
+      "mac": "10:7C:61:78:72:8B",
+      "current_ip": "192.168.1.24",
+      "current_hostname": "CLACLA",
+      "vendor": null,
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-21T17:01:24.367806",
+      "last_seen": "2025-10-30T19:43:20.256574",
+      "total_appearances": 28,
+      "currently_online": true,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "CA:08:C5:BF:00:13": {
+      "id": "dev_ca08c5bf0013",
+      "mac": "CA:08:C5:BF:00:13",
+      "current_ip": "192.168.1.23",
+      "current_hostname": null,
+      "vendor": "Apple Inc.",
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-21T17:01:24.367866",
+      "last_seen": "2025-10-30T19:43:20.256680",
+      "total_appearances": 32,
+      "currently_online": true,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "F4:FE:FB:77:5C:26": {
+      "id": "dev_f4fefb775c26",
+      "mac": "F4:FE:FB:77:5C:26",
+      "current_ip": "192.168.1.82",
+      "current_hostname": null,
+      "vendor": "Samsung",
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-21T17:01:24.367920",
+      "last_seen": "2025-10-30T19:43:20.256782",
+      "total_appearances": 29,
+      "currently_online": true,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "VPN:100:80:31:55": {
+      "id": "dev_vpn100803155",
+      "mac": "VPN:100:80:31:55",
+      "current_ip": "100.80.31.55",
+      "current_hostname": "333srv",
+      "vendor": "Tailscale VPN",
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-21T17:21:46.308316",
+      "last_seen": "2025-10-21T17:31:20.403209",
+      "total_appearances": 3,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "VPN:100:121:1:128": {
+      "id": "dev_vpn1001211128",
+      "mac": "VPN:100:121:1:128",
+      "current_ip": "100.121.1.128",
+      "current_hostname": "localhost",
+      "vendor": "Tailscale VPN",
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-21T17:21:46.308441",
+      "last_seen": "2025-10-21T17:31:20.403292",
+      "total_appearances": 3,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "VPN:100:114:4:46": {
+      "id": "dev_vpn100114446",
+      "mac": "VPN:100:114:4:46",
+      "current_ip": "100.114.4.46",
+      "current_hostname": "CLACLA",
+      "vendor": "Tailscale VPN",
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-21T17:21:46.308518",
+      "last_seen": "2025-10-21T17:31:20.403353",
+      "total_appearances": 3,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "VPN:100:93:236:71": {
+      "id": "dev_vpn1009323671",
+      "mac": "VPN:100:93:236:71",
+      "current_ip": "100.93.236.71",
+      "current_hostname": "TiTo",
+      "vendor": "Tailscale VPN",
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-21T17:21:46.308590",
+      "last_seen": "2025-10-21T17:31:20.403411",
+      "total_appearances": 3,
+      "currently_online": false,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "C8:7F:54:53:1D:40": {
+      "id": "dev_c87f54531d40",
+      "mac": "C8:7F:54:53:1D:40",
+      "current_ip": "192.168.1.175",
+      "current_hostname": "333srv.local",
+      "vendor": "Asustek Computer",
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-30T11:33:11.571900",
+      "last_seen": "2025-10-30T19:43:20.255978",
+      "total_appearances": 3,
+      "currently_online": true,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    },
+    "00:00:00:00:00:00": {
+      "id": "dev_000000000000",
+      "mac": "00:00:00:00:00:00",
+      "current_ip": "192.168.1.175",
+      "current_hostname": "333SRV",
+      "vendor": null,
+      "device_type": null,
+      "os_detected": null,
+      "first_seen": "2025-10-30T19:19:28.668242",
+      "last_seen": "2025-10-30T19:43:20.256872",
+      "total_appearances": 2,
+      "currently_online": true,
+      "in_devices": false,
+      "tags": [],
+      "ip_history": []
+    }
+  },
+  "scan_history": [
+    {
+      "scan_id": "scan_1761034900",
+      "timestamp": "2025-10-21T10:21:31.863245",
+      "duration_ms": 8916,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 9,
+      "device_macs": [
+        "ca:08:c5:bf:00:13",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2",
+        "c8:7f:54:53:1d:40",
+        "8c:97:ea:14:9d:1b",
+        "f4:fe:fb:77:5c:26"
+      ]
+    },
+    {
+      "scan_id": "scan_1761034912",
+      "timestamp": "2025-10-21T10:21:44.777205",
+      "duration_ms": 8193,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 8,
+      "new_devices": 0,
+      "device_macs": [
+        "ca:08:c5:bf:00:13",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2",
+        "8c:97:ea:14:9d:1b",
+        "f4:fe:fb:77:5c:26"
+      ]
+    },
+    {
+      "scan_id": "scan_1761036073",
+      "timestamp": "2025-10-21T10:41:02.144804",
+      "duration_ms": 11725,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 1,
+      "device_macs": [
+        "ca:08:c5:bf:00:13",
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2",
+        "8c:97:ea:14:9d:1b",
+        "f4:fe:fb:77:5c:26"
+      ]
+    },
+    {
+      "scan_id": "scan_1761036627",
+      "timestamp": "2025-10-21T10:50:19.809045",
+      "duration_ms": 7658,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 7,
+      "new_devices": 0,
+      "device_macs": [
+        "ca:08:c5:bf:00:13",
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2"
+      ]
+    },
+    {
+      "scan_id": "test_scan_123",
+      "timestamp": "2025-10-21T12:32:42.892335",
+      "duration_ms": 5200,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 3,
+      "new_devices": 0,
+      "device_macs": []
+    },
+    {
+      "scan_id": "test_scan_123",
+      "timestamp": "2025-10-21T12:35:04.575532",
+      "duration_ms": 5200,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 3,
+      "new_devices": 0,
+      "device_macs": []
+    },
+    {
+      "scan_id": "scan_1761042988",
+      "timestamp": "2025-10-21T12:36:19.706145",
+      "duration_ms": 8868,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 8,
+      "new_devices": 8,
+      "device_macs": [
+        "ca:08:c5:bf:00:13",
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e9:75:73:1f:cb",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2"
+      ]
+    },
+    {
+      "scan_id": "scan_1761042997",
+      "timestamp": "2025-10-21T12:36:28.672366",
+      "duration_ms": 8792,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 8,
+      "new_devices": 0,
+      "device_macs": [
+        "ca:08:c5:bf:00:13",
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e9:75:73:1f:cb",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2"
+      ]
+    },
+    {
+      "scan_id": "scan_1761043006",
+      "timestamp": "2025-10-21T12:36:37.529181",
+      "duration_ms": 8663,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 8,
+      "new_devices": 0,
+      "device_macs": [
+        "ca:08:c5:bf:00:13",
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e9:75:73:1f:cb",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2"
+      ]
+    },
+    {
+      "scan_id": "scan_1761043029",
+      "timestamp": "2025-10-21T12:37:01.527064",
+      "duration_ms": 7840,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 7,
+      "new_devices": 7,
+      "device_macs": [
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e9:75:73:1f:cb",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2"
+      ]
+    },
+    {
+      "scan_id": "test_scan_123",
+      "timestamp": "2025-10-21T12:40:33.761961",
+      "duration_ms": 5200,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 3,
+      "new_devices": 0,
+      "device_macs": []
+    },
+    {
+      "scan_id": "scan_1761043241",
+      "timestamp": "2025-10-21T12:40:33.773789",
+      "duration_ms": 7701,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 7,
+      "new_devices": 0,
+      "device_macs": [
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e9:75:73:1f:cb",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2"
+      ]
+    },
+    {
+      "scan_id": "scan_1761043896",
+      "timestamp": "2025-10-21T12:51:27.776749",
+      "duration_ms": 8896,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 8,
+      "new_devices": 0,
+      "device_macs": [
+        "ca:08:c5:bf:00:13",
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e9:75:73:1f:cb",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2"
+      ]
+    },
+    {
+      "scan_id": "scan_1761043943",
+      "timestamp": "2025-10-21T12:52:15.510653",
+      "duration_ms": 7600,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 7,
+      "new_devices": 0,
+      "device_macs": [
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e9:75:73:1f:cb",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2"
+      ]
+    },
+    {
+      "scan_id": "scan_1761043978",
+      "timestamp": "2025-10-21T12:52:49.420663",
+      "duration_ms": 8841,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 8,
+      "new_devices": 0,
+      "device_macs": [
+        "ca:08:c5:bf:00:13",
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e9:75:73:1f:cb",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2"
+      ]
+    },
+    {
+      "scan_id": "test_scan_123",
+      "timestamp": "2025-10-21T12:53:24.331222",
+      "duration_ms": 5200,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 3,
+      "new_devices": 0,
+      "device_macs": []
+    },
+    {
+      "scan_id": "test_scan_123",
+      "timestamp": "2025-10-21T12:53:33.477341",
+      "duration_ms": 5200,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 3,
+      "new_devices": 0,
+      "device_macs": []
+    },
+    {
+      "scan_id": "test_scan_123",
+      "timestamp": "2025-10-21T12:53:42.189004",
+      "duration_ms": 5200,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 3,
+      "new_devices": 0,
+      "device_macs": []
+    },
+    {
+      "scan_id": "test_scan_123",
+      "timestamp": "2025-10-21T12:53:58.287215",
+      "duration_ms": 5200,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 3,
+      "new_devices": 0,
+      "device_macs": []
+    },
+    {
+      "scan_id": "scan_1761045092",
+      "timestamp": "2025-10-21T13:11:17.901926",
+      "duration_ms": 14962,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "ca:08:c5:bf:00:13",
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e9:75:73:1f:cb",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2",
+        "a4:e5:7c:31:54:36",
+        "8c:97:ea:14:9d:1b",
+        "f4:fe:fb:77:5c:26"
+      ]
+    },
+    {
+      "scan_id": "test_scan_123",
+      "timestamp": "2025-10-21T13:19:16.653846",
+      "duration_ms": 5200,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 3,
+      "new_devices": 0,
+      "device_macs": []
+    },
+    {
+      "scan_id": "test_scan_123",
+      "timestamp": "2025-10-21T13:23:26.726477",
+      "duration_ms": 5200,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 3,
+      "new_devices": 0,
+      "device_macs": []
+    },
+    {
+      "scan_id": "scan_1761046633",
+      "timestamp": "2025-10-21T13:37:03.642049",
+      "duration_ms": 9644,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2",
+        "a4:e9:75:73:1f:cb",
+        "8c:97:ea:14:9d:1b",
+        "ca:08:c5:bf:00:13",
+        "f4:fe:fb:77:5c:26"
+      ]
+    },
+    {
+      "scan_id": "test_scan_123",
+      "timestamp": "2025-10-21T13:37:38.557267",
+      "duration_ms": 5200,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 3,
+      "new_devices": 0,
+      "device_macs": []
+    },
+    {
+      "scan_id": "scan_1761046722",
+      "timestamp": "2025-10-21T13:38:32.692277",
+      "duration_ms": 10092,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "ca:08:c5:bf:00:13",
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2",
+        "a4:e9:75:73:1f:cb",
+        "8c:97:ea:14:9d:1b",
+        "f4:fe:fb:77:5c:26"
+      ]
+    },
+    {
+      "scan_id": "scan_1761047096",
+      "timestamp": "2025-10-21T13:44:45.290142",
+      "duration_ms": 10981,
+      "scan_type": "full",
+      "subnet": "auto",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "a4:e9:75:73:1f:cb",
+        "c8:ff:77:59:de:e1",
+        "8c:97:ea:31:c0:a2",
+        "a4:e5:7c:31:54:36",
+        "8c:97:ea:14:9d:1b",
+        "34:5a:60:7f:12:c1",
+        "9e:67:44:b4:b8:7d",
+        "10:7c:61:78:72:8b",
+        "ca:08:c5:bf:00:13",
+        "f4:fe:fb:77:5c:26"
+      ]
+    },
+    {
+      "scan_id": "test_scan_123",
+      "timestamp": "2025-10-21T13:47:03.613228",
+      "duration_ms": 5200,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 3,
+      "new_devices": 0,
+      "device_macs": []
+    },
+    {
+      "scan_id": "test_scan_123",
+      "timestamp": "2025-10-21T13:48:46.003810",
+      "duration_ms": 5200,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 3,
+      "new_devices": 0,
+      "device_macs": []
+    },
+    {
+      "scan_id": "test_scan_123",
+      "timestamp": "2025-10-21T13:50:45.604471",
+      "duration_ms": 5200,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 3,
+      "new_devices": 0,
+      "device_macs": []
+    },
+    {
+      "scan_id": "test_scan_123",
+      "timestamp": "2025-10-21T13:56:25.385725",
+      "duration_ms": 5200,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 3,
+      "new_devices": 0,
+      "device_macs": []
+    },
+    {
+      "scan_id": "scan_1761047875",
+      "timestamp": "2025-10-21T13:57:45.000653",
+      "duration_ms": 10768,
+      "scan_type": "full",
+      "subnet": "auto",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "a4:e9:75:73:1f:cb",
+        "c8:ff:77:59:de:e1",
+        "8c:97:ea:31:c0:a2",
+        "a4:e5:7c:31:54:36",
+        "8c:97:ea:14:9d:1b",
+        "34:5a:60:7f:12:c1",
+        "9e:67:44:b4:b8:7d",
+        "10:7c:61:78:72:8b",
+        "ca:08:c5:bf:00:13",
+        "f4:fe:fb:77:5c:26"
+      ]
+    },
+    {
+      "scan_id": "scan_1761050115",
+      "timestamp": "2025-10-21T14:35:04.203156",
+      "duration_ms": 10965,
+      "scan_type": "full",
+      "subnet": "auto",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "a4:e9:75:73:1f:cb",
+        "c8:ff:77:59:de:e1",
+        "8c:97:ea:31:c0:a2",
+        "a4:e5:7c:31:54:36",
+        "8c:97:ea:14:9d:1b",
+        "34:5a:60:7f:12:c1",
+        "9e:67:44:b4:b8:7d",
+        "10:7c:61:78:72:8b",
+        "ca:08:c5:bf:00:13",
+        "f4:fe:fb:77:5c:26"
+      ]
+    },
+    {
+      "scan_id": "scan_1761050134",
+      "timestamp": "2025-10-21T14:35:23.929454",
+      "duration_ms": 10943,
+      "scan_type": "full",
+      "subnet": "auto",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "a4:e9:75:73:1f:cb",
+        "c8:ff:77:59:de:e1",
+        "8c:97:ea:31:c0:a2",
+        "a4:e5:7c:31:54:36",
+        "8c:97:ea:14:9d:1b",
+        "34:5a:60:7f:12:c1",
+        "9e:67:44:b4:b8:7d",
+        "10:7c:61:78:72:8b",
+        "ca:08:c5:bf:00:13",
+        "f4:fe:fb:77:5c:26"
+      ]
+    },
+    {
+      "scan_id": "scan_1761056781",
+      "timestamp": "2025-10-21T16:26:15.162663",
+      "duration_ms": 6715,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 7,
+      "new_devices": 0,
+      "device_macs": [
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e9:75:73:1f:cb",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2"
+      ]
+    },
+    {
+      "scan_id": "scan_1761056801",
+      "timestamp": "2025-10-21T16:26:28.302421",
+      "duration_ms": 12968,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e9:75:73:1f:cb",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2",
+        "8c:97:ea:14:9d:1b",
+        "ca:08:c5:bf:00:13",
+        "f4:fe:fb:77:5c:26"
+      ]
+    },
+    {
+      "scan_id": "scan_1761056978",
+      "timestamp": "2025-10-21T16:29:25.203903",
+      "duration_ms": 13155,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "ca:08:c5:bf:00:13",
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e9:75:73:1f:cb",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2",
+        "8c:97:ea:14:9d:1b",
+        "f4:fe:fb:77:5c:26"
+      ]
+    },
+    {
+      "scan_id": "scan_1761057369",
+      "timestamp": "2025-10-21T16:35:56.833922",
+      "duration_ms": 13038,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "ca:08:c5:bf:00:13",
+        "10:7c:61:78:72:8b",
+        "c8:ff:77:59:de:e1",
+        "9e:67:44:b4:b8:7d",
+        "a4:e9:75:73:1f:cb",
+        "a4:e5:7c:31:54:36",
+        "34:5a:60:7f:12:c1",
+        "8c:97:ea:31:c0:a2",
+        "8c:97:ea:14:9d:1b",
+        "f4:fe:fb:77:5c:26"
+      ]
+    },
+    {
+      "scan_id": "scan_2c6e1704",
+      "timestamp": "2025-10-21T17:01:24.368380",
+      "duration_ms": 0,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 10,
+      "new_devices": 10,
+      "device_macs": [
+        "A4:E9:75:73:1F:CB",
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_4413a991",
+      "timestamp": "2025-10-21T17:06:42.097455",
+      "duration_ms": 0,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "A4:E9:75:73:1F:CB",
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_acd8b975",
+      "timestamp": "2025-10-21T17:11:37.841286",
+      "duration_ms": 0,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "A4:E9:75:73:1F:CB",
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_e85884fd",
+      "timestamp": "2025-10-21T17:18:37.054387",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "A4:E9:75:73:1F:CB",
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_cf37bfd9",
+      "timestamp": "2025-10-21T17:21:46.309725",
+      "duration_ms": 0,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 12,
+      "new_devices": 4,
+      "device_macs": [
+        "VPN:100:80:31:55",
+        "VPN:100:121:1:128",
+        "VPN:100:114:4:46",
+        "VPN:100:93:236:71",
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_2ee08f7e",
+      "timestamp": "2025-10-21T17:24:32.989022",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 12,
+      "new_devices": 0,
+      "device_macs": [
+        "VPN:100:80:31:55",
+        "VPN:100:121:1:128",
+        "VPN:100:114:4:46",
+        "VPN:100:93:236:71",
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_7c92cbad",
+      "timestamp": "2025-10-21T17:27:47.448819",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 8,
+      "new_devices": 0,
+      "device_macs": [
+        "VPN:100:80:31:55",
+        "VPN:100:121:1:128",
+        "VPN:100:114:4:46",
+        "VPN:100:93:236:71",
+        "8C:97:EA:31:C0:A2",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "CA:08:C5:BF:00:13"
+      ]
+    },
+    {
+      "scan_id": "scan_5c2241a6",
+      "timestamp": "2025-10-21T17:31:20.404324",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 11,
+      "new_devices": 0,
+      "device_macs": [
+        "VPN:100:80:31:55",
+        "VPN:100:121:1:128",
+        "VPN:100:114:4:46",
+        "VPN:100:93:236:71",
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_1dd77cce",
+      "timestamp": "2025-10-21T17:49:58.412014",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 4,
+      "new_devices": 0,
+      "device_macs": [
+        "8C:97:EA:31:C0:A2",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "CA:08:C5:BF:00:13"
+      ]
+    },
+    {
+      "scan_id": "scan_2b206c3c",
+      "timestamp": "2025-10-21T18:01:01.524107",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 6,
+      "new_devices": 0,
+      "device_macs": [
+        "8C:97:EA:31:C0:A2",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13"
+      ]
+    },
+    {
+      "scan_id": "scan_3a467a71",
+      "timestamp": "2025-10-21T18:04:26.610563",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_a3832208",
+      "timestamp": "2025-10-21T18:12:20.693068",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_07dcc7e0",
+      "timestamp": "2025-10-21T18:23:02.155709",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_0707cd74",
+      "timestamp": "2025-10-21T18:39:42.620836",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_bdb493c0",
+      "timestamp": "2025-10-21T18:43:30.109626",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_01284a7b",
+      "timestamp": "2025-10-21T18:45:24.529552",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_f1dd3e7b",
+      "timestamp": "2025-10-21T18:52:03.039188",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_8da45c8f",
+      "timestamp": "2025-10-21T19:14:16.595231",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_fd07645a",
+      "timestamp": "2025-10-21T19:14:40.908350",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_3fbf4fe0",
+      "timestamp": "2025-10-21T19:20:31.441994",
+      "duration_ms": 0,
+      "scan_type": "quick",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_19d90347",
+      "timestamp": "2025-10-21T19:21:11.599196",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_db0f3462",
+      "timestamp": "2025-10-21T20:36:48.459285",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 9,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_6b5791ad",
+      "timestamp": "2025-10-22T00:07:05.376345",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_f84c6581",
+      "timestamp": "2025-10-22T00:14:28.929139",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_4864dda3",
+      "timestamp": "2025-10-22T00:21:02.931395",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_65eeaf27",
+      "timestamp": "2025-10-22T00:32:23.416467",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_f254283b",
+      "timestamp": "2025-10-22T00:34:25.245483",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_01d7959f",
+      "timestamp": "2025-10-22T00:40:43.494727",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_d642434c",
+      "timestamp": "2025-10-22T00:44:59.239347",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 9,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_4225d96e",
+      "timestamp": "2025-10-30T11:33:11.573373",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 10,
+      "new_devices": 10,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "C8:7F:54:53:1D:40",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26"
+      ]
+    },
+    {
+      "scan_id": "scan_88d72404",
+      "timestamp": "2025-10-30T19:19:28.668882",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 11,
+      "new_devices": 1,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "C8:7F:54:53:1D:40",
+        "A4:E5:7C:31:54:36",
+        "8C:97:EA:14:9D:1B",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26",
+        "00:00:00:00:00:00"
+      ]
+    },
+    {
+      "scan_id": "scan_4a3724d2",
+      "timestamp": "2025-10-30T19:25:50.603295",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "C8:7F:54:53:1D:40",
+        "A4:E5:7C:31:54:36",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26",
+        "00:00:00:00:00:00"
+      ]
+    },
+    {
+      "scan_id": "scan_73ddc55c",
+      "timestamp": "2025-10-30T19:43:20.257459",
+      "duration_ms": 0,
+      "scan_type": "full",
+      "subnet": "192.168.1.0/24",
+      "devices_found": 10,
+      "new_devices": 0,
+      "device_macs": [
+        "C8:FF:77:59:DE:E1",
+        "8C:97:EA:31:C0:A2",
+        "C8:7F:54:53:1D:40",
+        "A4:E5:7C:31:54:36",
+        "34:5A:60:7F:12:C1",
+        "9E:67:44:B4:B8:7D",
+        "10:7C:61:78:72:8B",
+        "CA:08:C5:BF:00:13",
+        "F4:FE:FB:77:5C:26",
+        "00:00:00:00:00:00"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "event_id": "event_1761034900",
+      "timestamp": "2025-10-21T10:21:40.780674",
+      "event_type": "device_appeared",
+      "device_mac": "ca:08:c5:bf:00:13",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.23",
+        "vendor": "Unknown",
+        "device_type": "❓ Unknown"
+      }
+    },
+    {
+      "event_id": "event_1761034900",
+      "timestamp": "2025-10-21T10:21:40.781295",
+      "event_type": "device_appeared",
+      "device_mac": "c8:ff:77:59:de:e1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.77",
+        "vendor": "Dyson Limited",
+        "device_type": "❓ Dyson Limited"
+      }
+    },
+    {
+      "event_id": "event_1761034900",
+      "timestamp": "2025-10-21T10:21:40.781900",
+      "event_type": "device_appeared",
+      "device_mac": "9e:67:44:b4:b8:7d",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.99",
+        "vendor": "Unknown",
+        "device_type": "❓ Unknown"
+      }
+    },
+    {
+      "event_id": "event_1761034900",
+      "timestamp": "2025-10-21T10:21:40.784787",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e5:7c:31:54:36",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.171",
+        "vendor": "Espressif",
+        "device_type": "🔧 ESP32/ESP8266"
+      }
+    },
+    {
+      "event_id": "event_1761034900",
+      "timestamp": "2025-10-21T10:21:40.785670",
+      "event_type": "device_appeared",
+      "device_mac": "34:5a:60:7f:12:c1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.174",
+        "vendor": "Micro-Star INTL CO., LTD.",
+        "device_type": "❓ Micro-Star INTL CO., LTD."
+      }
+    },
+    {
+      "event_id": "event_1761034900",
+      "timestamp": "2025-10-21T10:21:40.786617",
+      "event_type": "device_appeared",
+      "device_mac": "8c:97:ea:31:c0:a2",
+      "device_name": "Freebox-Server.local",
+      "details": {
+        "ip": "192.168.1.254",
+        "vendor": "Freebox",
+        "device_type": "🌐 Freebox"
+      }
+    },
+    {
+      "event_id": "event_1761034900",
+      "timestamp": "2025-10-21T10:21:40.787812",
+      "event_type": "device_appeared",
+      "device_mac": "c8:7f:54:53:1d:40",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.175",
+        "vendor": "ASUSTek COMPUTER INC.",
+        "device_type": "💻 ASUSTek COMPUTER INC."
+      }
+    },
+    {
+      "event_id": "event_1761034900",
+      "timestamp": "2025-10-21T10:21:40.788697",
+      "event_type": "device_appeared",
+      "device_mac": "8c:97:ea:14:9d:1b",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.100",
+        "vendor": "Freebox",
+        "device_type": "🌐 Freebox"
+      }
+    },
+    {
+      "event_id": "event_1761034900",
+      "timestamp": "2025-10-21T10:21:40.789561",
+      "event_type": "device_appeared",
+      "device_mac": "f4:fe:fb:77:5c:26",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.82",
+        "vendor": "Samsung",
+        "device_type": "📺 Smart TV Samsung"
+      }
+    },
+    {
+      "event_id": "event_1761036073",
+      "timestamp": "2025-10-21T10:41:13.870725",
+      "event_type": "device_appeared",
+      "device_mac": "10:7c:61:78:72:8b",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.24",
+        "vendor": "ASUSTek COMPUTER INC.",
+        "device_type": "💻 ASUSTek COMPUTER INC."
+      }
+    },
+    {
+      "event_id": "event_1761042988",
+      "timestamp": "2025-10-21T12:36:28.575024",
+      "event_type": "device_appeared",
+      "device_mac": "ca:08:c5:bf:00:13",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.23",
+        "vendor": "Unknown",
+        "device_type": "❓ Unknown"
+      }
+    },
+    {
+      "event_id": "event_1761042988",
+      "timestamp": "2025-10-21T12:36:28.576890",
+      "event_type": "device_appeared",
+      "device_mac": "10:7c:61:78:72:8b",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.24",
+        "vendor": "ASUSTek COMPUTER INC.",
+        "device_type": "💻 ASUSTek COMPUTER INC."
+      }
+    },
+    {
+      "event_id": "event_1761042988",
+      "timestamp": "2025-10-21T12:36:28.578602",
+      "event_type": "device_appeared",
+      "device_mac": "c8:ff:77:59:de:e1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.77",
+        "vendor": "Dyson Limited",
+        "device_type": "❓ Dyson Limited"
+      }
+    },
+    {
+      "event_id": "event_1761042988",
+      "timestamp": "2025-10-21T12:36:28.580216",
+      "event_type": "device_appeared",
+      "device_mac": "9e:67:44:b4:b8:7d",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.99",
+        "vendor": "Unknown",
+        "device_type": "❓ Unknown"
+      }
+    },
+    {
+      "event_id": "event_1761042988",
+      "timestamp": "2025-10-21T12:36:28.581755",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e9:75:73:1f:cb",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.117",
+        "vendor": "Apple, Inc.",
+        "device_type": "❓ Apple, Inc."
+      }
+    },
+    {
+      "event_id": "event_1761042988",
+      "timestamp": "2025-10-21T12:36:28.583387",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e5:7c:31:54:36",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.171",
+        "vendor": "Espressif",
+        "device_type": "🔧 ESP32/ESP8266"
+      }
+    },
+    {
+      "event_id": "event_1761042988",
+      "timestamp": "2025-10-21T12:36:28.584986",
+      "event_type": "device_appeared",
+      "device_mac": "34:5a:60:7f:12:c1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.174",
+        "vendor": "Micro-Star INTL CO., LTD.",
+        "device_type": "❓ Micro-Star INTL CO., LTD."
+      }
+    },
+    {
+      "event_id": "event_1761042988",
+      "timestamp": "2025-10-21T12:36:28.586555",
+      "event_type": "device_appeared",
+      "device_mac": "8c:97:ea:31:c0:a2",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.254",
+        "vendor": "Freebox",
+        "device_type": "🌐 Freebox"
+      }
+    },
+    {
+      "event_id": "event_1761043029",
+      "timestamp": "2025-10-21T12:37:09.368313",
+      "event_type": "device_appeared",
+      "device_mac": "10:7c:61:78:72:8b",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.24",
+        "vendor": "ASUSTek COMPUTER INC.",
+        "device_type": "💻 ASUSTek COMPUTER INC."
+      }
+    },
+    {
+      "event_id": "event_1761043029",
+      "timestamp": "2025-10-21T12:37:09.369560",
+      "event_type": "device_appeared",
+      "device_mac": "c8:ff:77:59:de:e1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.77",
+        "vendor": "Dyson Limited",
+        "device_type": "❓ Dyson Limited"
+      }
+    },
+    {
+      "event_id": "event_1761043029",
+      "timestamp": "2025-10-21T12:37:09.371606",
+      "event_type": "device_appeared",
+      "device_mac": "9e:67:44:b4:b8:7d",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.99",
+        "vendor": "Unknown",
+        "device_type": "❓ Unknown"
+      }
+    },
+    {
+      "event_id": "event_1761043029",
+      "timestamp": "2025-10-21T12:37:09.375562",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e9:75:73:1f:cb",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.117",
+        "vendor": "Apple, Inc.",
+        "device_type": "❓ Apple, Inc."
+      }
+    },
+    {
+      "event_id": "event_1761043029",
+      "timestamp": "2025-10-21T12:37:09.376902",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e5:7c:31:54:36",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.171",
+        "vendor": "Espressif",
+        "device_type": "🔧 ESP32/ESP8266"
+      }
+    },
+    {
+      "event_id": "event_1761043029",
+      "timestamp": "2025-10-21T12:37:09.378155",
+      "event_type": "device_appeared",
+      "device_mac": "34:5a:60:7f:12:c1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.174",
+        "vendor": "Micro-Star INTL CO., LTD.",
+        "device_type": "❓ Micro-Star INTL CO., LTD."
+      }
+    },
+    {
+      "event_id": "event_1761043029",
+      "timestamp": "2025-10-21T12:37:09.379204",
+      "event_type": "device_appeared",
+      "device_mac": "8c:97:ea:31:c0:a2",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.254",
+        "vendor": "Freebox",
+        "device_type": "🌐 Freebox"
+      }
+    },
+    {
+      "event_id": "event_1761043241",
+      "timestamp": "2025-10-21T12:40:41.476630",
+      "event_type": "device_appeared",
+      "device_mac": "10:7c:61:78:72:8b",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.24",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761043241",
+      "timestamp": "2025-10-21T12:40:41.478360",
+      "event_type": "device_appeared",
+      "device_mac": "c8:ff:77:59:de:e1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.77",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761043241",
+      "timestamp": "2025-10-21T12:40:41.482289",
+      "event_type": "device_appeared",
+      "device_mac": "9e:67:44:b4:b8:7d",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.99",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761043241",
+      "timestamp": "2025-10-21T12:40:41.483846",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e9:75:73:1f:cb",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.117",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761043241",
+      "timestamp": "2025-10-21T12:40:41.485360",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e5:7c:31:54:36",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.171",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761043241",
+      "timestamp": "2025-10-21T12:40:41.486956",
+      "event_type": "device_appeared",
+      "device_mac": "34:5a:60:7f:12:c1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.174",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761043241",
+      "timestamp": "2025-10-21T12:40:41.488428",
+      "event_type": "device_appeared",
+      "device_mac": "8c:97:ea:31:c0:a2",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.254",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761043896",
+      "timestamp": "2025-10-21T12:51:36.675208",
+      "event_type": "device_appeared",
+      "device_mac": "ca:08:c5:bf:00:13",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.23",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761043978",
+      "timestamp": "2025-10-21T12:52:58.263643",
+      "event_type": "device_appeared",
+      "device_mac": "ca:08:c5:bf:00:13",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.23",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761045092",
+      "timestamp": "2025-10-21T13:11:32.865801",
+      "event_type": "device_appeared",
+      "device_mac": "ca:08:c5:bf:00:13",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.23",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761045092",
+      "timestamp": "2025-10-21T13:11:32.868908",
+      "event_type": "device_appeared",
+      "device_mac": "10:7c:61:78:72:8b",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.24",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761045092",
+      "timestamp": "2025-10-21T13:11:32.872269",
+      "event_type": "device_appeared",
+      "device_mac": "c8:ff:77:59:de:e1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.77",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761045092",
+      "timestamp": "2025-10-21T13:11:32.875991",
+      "event_type": "device_appeared",
+      "device_mac": "9e:67:44:b4:b8:7d",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.99",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761045092",
+      "timestamp": "2025-10-21T13:11:32.878292",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e9:75:73:1f:cb",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.117",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761045092",
+      "timestamp": "2025-10-21T13:11:32.880657",
+      "event_type": "device_appeared",
+      "device_mac": "34:5a:60:7f:12:c1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.174",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761045092",
+      "timestamp": "2025-10-21T13:11:32.882961",
+      "event_type": "device_appeared",
+      "device_mac": "8c:97:ea:31:c0:a2",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.254",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761045092",
+      "timestamp": "2025-10-21T13:11:32.885239",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e5:7c:31:54:36",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.171",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761045092",
+      "timestamp": "2025-10-21T13:11:32.887555",
+      "event_type": "device_appeared",
+      "device_mac": "8c:97:ea:14:9d:1b",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.100",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761045092",
+      "timestamp": "2025-10-21T13:11:32.889837",
+      "event_type": "device_appeared",
+      "device_mac": "f4:fe:fb:77:5c:26",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.82",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046633",
+      "timestamp": "2025-10-21T13:37:13.288272",
+      "event_type": "device_appeared",
+      "device_mac": "10:7c:61:78:72:8b",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.24",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046633",
+      "timestamp": "2025-10-21T13:37:13.291664",
+      "event_type": "device_appeared",
+      "device_mac": "c8:ff:77:59:de:e1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.77",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046633",
+      "timestamp": "2025-10-21T13:37:13.295136",
+      "event_type": "device_appeared",
+      "device_mac": "9e:67:44:b4:b8:7d",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.99",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046633",
+      "timestamp": "2025-10-21T13:37:13.299278",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e5:7c:31:54:36",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.171",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046633",
+      "timestamp": "2025-10-21T13:37:13.302672",
+      "event_type": "device_appeared",
+      "device_mac": "34:5a:60:7f:12:c1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.174",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046633",
+      "timestamp": "2025-10-21T13:37:13.306017",
+      "event_type": "hostname_changed",
+      "device_mac": "8c:97:ea:31:c0:a2",
+      "device_name": "Freebox-Server.local",
+      "details": {
+        "old_hostname": null,
+        "new_hostname": "Freebox-Server.local"
+      }
+    },
+    {
+      "event_id": "event_1761046633",
+      "timestamp": "2025-10-21T13:37:13.308366",
+      "event_type": "device_appeared",
+      "device_mac": "8c:97:ea:31:c0:a2",
+      "device_name": "Freebox-Server.local",
+      "details": {
+        "ip": "192.168.1.254",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046633",
+      "timestamp": "2025-10-21T13:37:13.311187",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e9:75:73:1f:cb",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.117",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046633",
+      "timestamp": "2025-10-21T13:37:13.314004",
+      "event_type": "device_appeared",
+      "device_mac": "8c:97:ea:14:9d:1b",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.100",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046633",
+      "timestamp": "2025-10-21T13:37:13.316882",
+      "event_type": "device_appeared",
+      "device_mac": "ca:08:c5:bf:00:13",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.23",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046633",
+      "timestamp": "2025-10-21T13:37:13.320236",
+      "event_type": "device_appeared",
+      "device_mac": "f4:fe:fb:77:5c:26",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.82",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046722",
+      "timestamp": "2025-10-21T13:38:42.786592",
+      "event_type": "device_appeared",
+      "device_mac": "ca:08:c5:bf:00:13",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.23",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046722",
+      "timestamp": "2025-10-21T13:38:42.790055",
+      "event_type": "device_appeared",
+      "device_mac": "10:7c:61:78:72:8b",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.24",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046722",
+      "timestamp": "2025-10-21T13:38:42.793707",
+      "event_type": "device_appeared",
+      "device_mac": "c8:ff:77:59:de:e1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.77",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046722",
+      "timestamp": "2025-10-21T13:38:42.796956",
+      "event_type": "device_appeared",
+      "device_mac": "9e:67:44:b4:b8:7d",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.99",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046722",
+      "timestamp": "2025-10-21T13:38:42.800195",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e5:7c:31:54:36",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.171",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046722",
+      "timestamp": "2025-10-21T13:38:42.803136",
+      "event_type": "device_appeared",
+      "device_mac": "34:5a:60:7f:12:c1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.174",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046722",
+      "timestamp": "2025-10-21T13:38:42.805991",
+      "event_type": "device_appeared",
+      "device_mac": "8c:97:ea:31:c0:a2",
+      "device_name": "Freebox-Server.local",
+      "details": {
+        "ip": "192.168.1.254",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046722",
+      "timestamp": "2025-10-21T13:38:42.808889",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e9:75:73:1f:cb",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.117",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046722",
+      "timestamp": "2025-10-21T13:38:42.811813",
+      "event_type": "device_appeared",
+      "device_mac": "8c:97:ea:14:9d:1b",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.100",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761046722",
+      "timestamp": "2025-10-21T13:38:42.815249",
+      "event_type": "device_appeared",
+      "device_mac": "f4:fe:fb:77:5c:26",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.82",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761047875",
+      "timestamp": "2025-10-21T13:57:55.771114",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e9:75:73:1f:cb",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.117",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761047875",
+      "timestamp": "2025-10-21T13:57:55.775274",
+      "event_type": "device_appeared",
+      "device_mac": "c8:ff:77:59:de:e1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.77",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761047875",
+      "timestamp": "2025-10-21T13:57:55.779841",
+      "event_type": "device_appeared",
+      "device_mac": "8c:97:ea:31:c0:a2",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.254",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761047875",
+      "timestamp": "2025-10-21T13:57:55.784513",
+      "event_type": "device_appeared",
+      "device_mac": "a4:e5:7c:31:54:36",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.171",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761047875",
+      "timestamp": "2025-10-21T13:57:55.789818",
+      "event_type": "device_appeared",
+      "device_mac": "8c:97:ea:14:9d:1b",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.100",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761047875",
+      "timestamp": "2025-10-21T13:57:55.794439",
+      "event_type": "device_appeared",
+      "device_mac": "34:5a:60:7f:12:c1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.174",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761047875",
+      "timestamp": "2025-10-21T13:57:55.799017",
+      "event_type": "device_appeared",
+      "device_mac": "9e:67:44:b4:b8:7d",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.99",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761047875",
+      "timestamp": "2025-10-21T13:57:55.803514",
+      "event_type": "device_appeared",
+      "device_mac": "10:7c:61:78:72:8b",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.24",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761047875",
+      "timestamp": "2025-10-21T13:57:55.807758",
+      "event_type": "device_appeared",
+      "device_mac": "ca:08:c5:bf:00:13",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.23",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761047875",
+      "timestamp": "2025-10-21T13:57:55.811612",
+      "event_type": "device_appeared",
+      "device_mac": "f4:fe:fb:77:5c:26",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.82",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761056801",
+      "timestamp": "2025-10-21T16:26:41.274204",
+      "event_type": "hostname_changed",
+      "device_mac": "a4:e9:75:73:1f:cb",
+      "device_name": "iPad-de-Miren.local",
+      "details": {
+        "old_hostname": null,
+        "new_hostname": "iPad-de-Miren.local"
+      }
+    },
+    {
+      "event_id": "event_1761056801",
+      "timestamp": "2025-10-21T16:26:41.278699",
+      "event_type": "hostname_changed",
+      "device_mac": "8c:97:ea:31:c0:a2",
+      "device_name": "Freebox-Server.local",
+      "details": {
+        "old_hostname": null,
+        "new_hostname": "Freebox-Server.local"
+      }
+    },
+    {
+      "event_id": "event_1761056801",
+      "timestamp": "2025-10-21T16:26:41.282206",
+      "event_type": "device_appeared",
+      "device_mac": "8c:97:ea:14:9d:1b",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.100",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761056801",
+      "timestamp": "2025-10-21T16:26:41.286448",
+      "event_type": "device_appeared",
+      "device_mac": "ca:08:c5:bf:00:13",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.23",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761056801",
+      "timestamp": "2025-10-21T16:26:41.289944",
+      "event_type": "device_appeared",
+      "device_mac": "f4:fe:fb:77:5c:26",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.82",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761058884",
+      "timestamp": "2025-10-21T17:01:24.370092",
+      "event_type": "device_appeared",
+      "device_mac": "A4:E9:75:73:1F:CB",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.117",
+        "vendor": null,
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761058884",
+      "timestamp": "2025-10-21T17:01:24.372982",
+      "event_type": "device_appeared",
+      "device_mac": "C8:FF:77:59:DE:E1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.77",
+        "vendor": null,
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761058884",
+      "timestamp": "2025-10-21T17:01:24.375697",
+      "event_type": "device_appeared",
+      "device_mac": "8C:97:EA:31:C0:A2",
+      "device_name": "Freebox-Server.local",
+      "details": {
+        "ip": "192.168.1.254",
+        "vendor": null,
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761058884",
+      "timestamp": "2025-10-21T17:01:24.379677",
+      "event_type": "device_appeared",
+      "device_mac": "A4:E5:7C:31:54:36",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.171",
+        "vendor": null,
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761058884",
+      "timestamp": "2025-10-21T17:01:24.382329",
+      "event_type": "device_appeared",
+      "device_mac": "8C:97:EA:14:9D:1B",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.100",
+        "vendor": null,
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761058884",
+      "timestamp": "2025-10-21T17:01:24.385000",
+      "event_type": "device_appeared",
+      "device_mac": "34:5A:60:7F:12:C1",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.174",
+        "vendor": null,
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761058884",
+      "timestamp": "2025-10-21T17:01:24.387662",
+      "event_type": "device_appeared",
+      "device_mac": "9E:67:44:B4:B8:7D",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.99",
+        "vendor": null,
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761058884",
+      "timestamp": "2025-10-21T17:01:24.390328",
+      "event_type": "device_appeared",
+      "device_mac": "10:7C:61:78:72:8B",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.24",
+        "vendor": null,
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761058884",
+      "timestamp": "2025-10-21T17:01:24.393046",
+      "event_type": "device_appeared",
+      "device_mac": "CA:08:C5:BF:00:13",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.23",
+        "vendor": null,
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761058884",
+      "timestamp": "2025-10-21T17:01:24.397347",
+      "event_type": "device_appeared",
+      "device_mac": "F4:FE:FB:77:5C:26",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.82",
+        "vendor": null,
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761059202",
+      "timestamp": "2025-10-21T17:06:42.106062",
+      "event_type": "hostname_changed",
+      "device_mac": "8C:97:EA:14:9D:1B",
+      "device_name": "Android.local",
+      "details": {
+        "old_hostname": null,
+        "new_hostname": "Android.local"
+      }
+    },
+    {
+      "event_id": "event_1761059202",
+      "timestamp": "2025-10-21T17:06:42.110406",
+      "event_type": "device_appeared",
+      "device_mac": "8C:97:EA:14:9D:1B",
+      "device_name": "Android.local",
+      "details": {
+        "ip": "192.168.1.100",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761060106",
+      "timestamp": "2025-10-21T17:21:46.313699",
+      "event_type": "device_appeared",
+      "device_mac": "VPN:100:80:31:55",
+      "device_name": "333srv",
+      "details": {
+        "ip": "100.80.31.55",
+        "vendor": "Tailscale VPN",
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761060106",
+      "timestamp": "2025-10-21T17:21:46.317220",
+      "event_type": "device_appeared",
+      "device_mac": "VPN:100:121:1:128",
+      "device_name": "localhost",
+      "details": {
+        "ip": "100.121.1.128",
+        "vendor": "Tailscale VPN",
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761060106",
+      "timestamp": "2025-10-21T17:21:46.321073",
+      "event_type": "device_appeared",
+      "device_mac": "VPN:100:114:4:46",
+      "device_name": "CLACLA",
+      "details": {
+        "ip": "100.114.4.46",
+        "vendor": "Tailscale VPN",
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761060106",
+      "timestamp": "2025-10-21T17:21:46.324455",
+      "event_type": "device_appeared",
+      "device_mac": "VPN:100:93:236:71",
+      "device_name": "TiTo",
+      "details": {
+        "ip": "100.93.236.71",
+        "vendor": "Tailscale VPN",
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761062461",
+      "timestamp": "2025-10-21T18:01:01.531971",
+      "event_type": "hostname_changed",
+      "device_mac": "34:5A:60:7F:12:C1",
+      "device_name": "TITO",
+      "details": {
+        "old_hostname": null,
+        "new_hostname": "TITO"
+      }
+    },
+    {
+      "event_id": "event_1761062461",
+      "timestamp": "2025-10-21T18:01:01.539397",
+      "event_type": "hostname_changed",
+      "device_mac": "10:7C:61:78:72:8B",
+      "device_name": "CLACLA",
+      "details": {
+        "old_hostname": null,
+        "new_hostname": "CLACLA"
+      }
+    },
+    {
+      "event_id": "event_1761062461",
+      "timestamp": "2025-10-21T18:01:01.544235",
+      "event_type": "device_appeared",
+      "device_mac": "10:7C:61:78:72:8B",
+      "device_name": "CLACLA",
+      "details": {
+        "ip": "192.168.1.24",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761062666",
+      "timestamp": "2025-10-21T18:04:26.619698",
+      "event_type": "device_appeared",
+      "device_mac": "F4:FE:FB:77:5C:26",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.82",
+        "offline_duration": "unknown"
+      }
+    },
+    {
+      "event_id": "event_1761067231",
+      "timestamp": "2025-10-21T19:20:31.445274",
+      "event_type": "hostname_changed",
+      "device_mac": "8C:97:EA:31:C0:A2",
+      "device_name": "Freebox-Server.local",
+      "details": {
+        "old_hostname": null,
+        "new_hostname": "Freebox-Server.local"
+      }
+    },
+    {
+      "event_id": "event_1761084425",
+      "timestamp": "2025-10-22T00:07:05.385718",
+      "event_type": "hostname_changed",
+      "device_mac": "10:7C:61:78:72:8B",
+      "device_name": "CLACLA",
+      "details": {
+        "old_hostname": null,
+        "new_hostname": "CLACLA"
+      }
+    },
+    {
+      "event_id": "event_1761820391",
+      "timestamp": "2025-10-30T11:33:11.578551",
+      "event_type": "hostname_changed",
+      "device_mac": "8C:97:EA:31:C0:A2",
+      "device_name": "Freebox-Server.local",
+      "details": {
+        "old_hostname": null,
+        "new_hostname": "Freebox-Server.local"
+      }
+    },
+    {
+      "event_id": "event_1761820391",
+      "timestamp": "2025-10-30T11:33:11.584320",
+      "event_type": "device_appeared",
+      "device_mac": "C8:7F:54:53:1D:40",
+      "device_name": null,
+      "details": {
+        "ip": "192.168.1.175",
+        "vendor": "Asustek Computer",
+        "device_type": null
+      }
+    },
+    {
+      "event_id": "event_1761848368",
+      "timestamp": "2025-10-30T19:19:28.675628",
+      "event_type": "hostname_changed",
+      "device_mac": "C8:7F:54:53:1D:40",
+      "device_name": "333srv.local",
+      "details": {
+        "old_hostname": null,
+        "new_hostname": "333srv.local"
+      }
+    },
+    {
+      "event_id": "event_1761848368",
+      "timestamp": "2025-10-30T19:19:28.688250",
+      "event_type": "device_appeared",
+      "device_mac": "00:00:00:00:00:00",
+      "device_name": "333SRV",
+      "details": {
+        "ip": "192.168.1.175",
+        "vendor": null,
+        "device_type": null
+      }
+    }
+  ]
+}

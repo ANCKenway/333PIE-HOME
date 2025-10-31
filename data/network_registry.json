@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "last_updated": "2025-10-30T19:50:30.522868",
-  "total_devices": 12,
+  "last_updated": "2025-10-31T12:52:07.080909",
+  "total_devices": 9,
   "devices": {
     "88:A2:9E:3B:20:31": {
       "mac": "88:A2:9E:3B:20:31",
@@ -18,9 +18,9 @@
       "agent_version": null,
       "ip_history": [],
       "hostname_history": [],
-      "first_seen": "2025-10-28T15:54:26.674754+00:00",
-      "last_seen": "2025-10-30T18:50:30.522738+00:00",
-      "last_seen_online": "2025-10-30T18:50:30.522738+00:00",
+      "first_seen": "2025-10-31T11:34:18.852627+00:00",
+      "last_seen": "2025-10-31T11:52:07.080778+00:00",
+      "last_seen_online": "2025-10-31T11:52:07.080778+00:00",
       "total_detections": 1,
       "notes": "Self-device (auto-detected)",
       "is_managed": true
@@ -41,23 +41,23 @@
       "ip_history": [
         {
           "ip": "192.168.1.77",
-          "first_seen": "2025-10-30T11:33:11.573410",
-          "last_seen": "2025-10-30T11:33:11.573410",
+          "first_seen": "2025-10-31T12:42:39.015540",
+          "last_seen": "2025-10-31T12:42:39.015540",
           "occurrences": 1
         }
       ],
       "hostname_history": [],
-      "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:50:30.522774+00:00",
-      "last_seen_online": "2025-10-30T18:50:30.522774+00:00",
-      "total_detections": 4,
+      "first_seen": "2025-10-31T12:42:39.015540",
+      "last_seen": "2025-10-31T11:52:07.080822+00:00",
+      "last_seen_online": "2025-10-31T11:52:07.080822+00:00",
+      "total_detections": 1,
       "notes": null,
       "is_managed": false
     },
     "8C:97:EA:31:C0:A2": {
       "mac": "8C:97:EA:31:C0:A2",
       "current_ip": "192.168.1.254",
-      "current_hostname": "Freebox-Server.local",
+      "current_hostname": null,
       "vendor": "Freebox SAS",
       "os_detected": null,
       "device_type": null,
@@ -70,59 +70,18 @@
       "ip_history": [
         {
           "ip": "192.168.1.254",
-          "first_seen": "2025-10-30T11:33:11.573410",
-          "last_seen": "2025-10-30T11:33:11.573410",
+          "first_seen": "2025-10-31T12:42:39.015540",
+          "last_seen": "2025-10-31T12:42:39.015540",
           "occurrences": 1
         }
       ],
-      "hostname_history": [
-        {
-          "hostname": "Freebox-Server.local",
-          "first_seen": "2025-10-30T11:33:11.573410",
-          "last_seen": "2025-10-30T11:33:11.573410"
-        }
-      ],
-      "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:50:30.522784+00:00",
-      "last_seen_online": "2025-10-30T18:50:30.522784+00:00",
-      "total_detections": 4,
+      "hostname_history": [],
+      "first_seen": "2025-10-31T12:42:39.015540",
+      "last_seen": "2025-10-31T11:52:07.080836+00:00",
+      "last_seen_online": "2025-10-31T11:52:07.080836+00:00",
+      "total_detections": 1,
       "notes": null,
       "is_managed": false
-    },
-    "C8:7F:54:53:1D:40": {
-      "mac": "C8:7F:54:53:1D:40",
-      "current_ip": "192.168.1.175",
-      "current_hostname": "333srv.local",
-      "vendor": "Asustek Computer",
-      "os_detected": null,
-      "device_type": null,
-      "is_online": true,
-      "is_vpn_connected": false,
-      "vpn_ip": "100.80.31.55",
-      "is_agent_connected": false,
-      "agent_id": null,
-      "agent_version": null,
-      "ip_history": [
-        {
-          "ip": "192.168.1.175",
-          "first_seen": "2025-10-30T11:33:11.573410",
-          "last_seen": "2025-10-30T11:33:11.573410",
-          "occurrences": 1
-        }
-      ],
-      "hostname_history": [
-        {
-          "hostname": "333srv.local",
-          "first_seen": "2025-10-30T19:19:28.668924",
-          "last_seen": "2025-10-30T19:19:28.668924"
-        }
-      ],
-      "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:50:30.522795+00:00",
-      "last_seen_online": "2025-10-30T18:50:30.522795+00:00",
-      "total_detections": 4,
-      "notes": null,
-      "is_managed": true
     },
     "A4:E5:7C:31:54:36": {
       "mac": "A4:E5:7C:31:54:36",
@@ -140,45 +99,16 @@
       "ip_history": [
         {
           "ip": "192.168.1.171",
-          "first_seen": "2025-10-30T11:33:11.573410",
-          "last_seen": "2025-10-30T11:33:11.573410",
+          "first_seen": "2025-10-31T12:42:39.015540",
+          "last_seen": "2025-10-31T12:42:39.015540",
           "occurrences": 1
         }
       ],
       "hostname_history": [],
-      "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:50:30.522805+00:00",
-      "last_seen_online": "2025-10-30T18:50:30.522805+00:00",
-      "total_detections": 4,
-      "notes": null,
-      "is_managed": false
-    },
-    "8C:97:EA:14:9D:1B": {
-      "mac": "8C:97:EA:14:9D:1B",
-      "current_ip": "192.168.1.100",
-      "current_hostname": null,
-      "vendor": "Freebox SAS",
-      "os_detected": null,
-      "device_type": null,
-      "is_online": false,
-      "is_vpn_connected": false,
-      "vpn_ip": null,
-      "is_agent_connected": false,
-      "agent_id": null,
-      "agent_version": null,
-      "ip_history": [
-        {
-          "ip": "192.168.1.100",
-          "first_seen": "2025-10-30T11:33:11.573410",
-          "last_seen": "2025-10-30T11:33:11.573410",
-          "occurrences": 1
-        }
-      ],
-      "hostname_history": [],
-      "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T19:19:28.668924",
-      "last_seen_online": "2025-10-30T19:19:28.668924",
-      "total_detections": 2,
+      "first_seen": "2025-10-31T12:42:39.015540",
+      "last_seen": "2025-10-31T11:52:07.080848+00:00",
+      "last_seen_online": "2025-10-31T11:52:07.080848+00:00",
+      "total_detections": 1,
       "notes": null,
       "is_managed": false
     },
@@ -198,22 +128,22 @@
       "ip_history": [
         {
           "ip": "192.168.1.174",
-          "first_seen": "2025-10-30T11:33:11.573410",
-          "last_seen": "2025-10-30T11:33:11.573410",
+          "first_seen": "2025-10-31T12:42:39.015540",
+          "last_seen": "2025-10-31T12:42:39.015540",
           "occurrences": 1
         }
       ],
       "hostname_history": [
         {
           "hostname": "TITO",
-          "first_seen": "2025-10-30T11:33:11.573410",
-          "last_seen": "2025-10-30T11:33:11.573410"
+          "first_seen": "2025-10-31T12:42:39.015540",
+          "last_seen": "2025-10-31T12:42:39.015540"
         }
       ],
-      "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:50:30.522819+00:00",
-      "last_seen_online": "2025-10-30T18:50:30.522819+00:00",
-      "total_detections": 4,
+      "first_seen": "2025-10-31T12:42:39.015540",
+      "last_seen": "2025-10-31T11:52:07.080860+00:00",
+      "last_seen_online": "2025-10-31T11:52:07.080860+00:00",
+      "total_detections": 1,
       "notes": null,
       "is_managed": false
     },
@@ -224,7 +154,7 @@
       "vendor": "Android Device",
       "os_detected": null,
       "device_type": null,
-      "is_online": true,
+      "is_online": false,
       "is_vpn_connected": false,
       "vpn_ip": null,
       "is_agent_connected": false,
@@ -233,51 +163,16 @@
       "ip_history": [
         {
           "ip": "192.168.1.99",
-          "first_seen": "2025-10-30T11:33:11.573410",
-          "last_seen": "2025-10-30T11:33:11.573410",
+          "first_seen": "2025-10-31T12:42:39.015540",
+          "last_seen": "2025-10-31T12:42:39.015540",
           "occurrences": 1
         }
       ],
       "hostname_history": [],
-      "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:50:30.522830+00:00",
-      "last_seen_online": "2025-10-30T18:50:30.522830+00:00",
-      "total_detections": 4,
-      "notes": null,
-      "is_managed": false
-    },
-    "10:7C:61:78:72:8B": {
-      "mac": "10:7C:61:78:72:8B",
-      "current_ip": "192.168.1.24",
-      "current_hostname": "CLACLA",
-      "vendor": "ASUSTek COMPUTER INC.",
-      "os_detected": null,
-      "device_type": null,
-      "is_online": true,
-      "is_vpn_connected": true,
-      "vpn_ip": "100.114.4.46",
-      "is_agent_connected": false,
-      "agent_id": null,
-      "agent_version": null,
-      "ip_history": [
-        {
-          "ip": "192.168.1.24",
-          "first_seen": "2025-10-30T11:33:11.573410",
-          "last_seen": "2025-10-30T11:33:11.573410",
-          "occurrences": 1
-        }
-      ],
-      "hostname_history": [
-        {
-          "hostname": "CLACLA",
-          "first_seen": "2025-10-30T11:33:11.573410",
-          "last_seen": "2025-10-30T11:33:11.573410"
-        }
-      ],
-      "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:50:30.522839+00:00",
-      "last_seen_online": "2025-10-30T18:50:30.522839+00:00",
-      "total_detections": 4,
+      "first_seen": "2025-10-31T12:42:39.015540",
+      "last_seen": "2025-10-31T12:42:39.015540",
+      "last_seen_online": "2025-10-31T12:42:39.015540",
+      "total_detections": 1,
       "notes": null,
       "is_managed": false
     },
@@ -297,16 +192,16 @@
       "ip_history": [
         {
           "ip": "192.168.1.23",
-          "first_seen": "2025-10-30T11:33:11.573410",
-          "last_seen": "2025-10-30T11:33:11.573410",
+          "first_seen": "2025-10-31T12:42:39.015540",
+          "last_seen": "2025-10-31T12:42:39.015540",
           "occurrences": 1
         }
       ],
       "hostname_history": [],
-      "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:50:30.522848+00:00",
-      "last_seen_online": "2025-10-30T18:50:30.522848+00:00",
-      "total_detections": 4,
+      "first_seen": "2025-10-31T12:42:39.015540",
+      "last_seen": "2025-10-31T11:52:07.080879+00:00",
+      "last_seen_online": "2025-10-31T11:52:07.080879+00:00",
+      "total_detections": 1,
       "notes": null,
       "is_managed": false
     },
@@ -314,7 +209,7 @@
       "mac": "F4:FE:FB:77:5C:26",
       "current_ip": "192.168.1.82",
       "current_hostname": null,
-      "vendor": "Samsung Electronics",
+      "vendor": "Samsung",
       "os_detected": null,
       "device_type": null,
       "is_online": true,
@@ -326,51 +221,45 @@
       "ip_history": [
         {
           "ip": "192.168.1.82",
-          "first_seen": "2025-10-30T11:33:11.573410",
-          "last_seen": "2025-10-30T11:33:11.573410",
+          "first_seen": "2025-10-31T12:42:39.015540",
+          "last_seen": "2025-10-31T12:42:39.015540",
           "occurrences": 1
         }
       ],
       "hostname_history": [],
-      "first_seen": "2025-10-30T11:33:11.573410",
-      "last_seen": "2025-10-30T18:50:30.522857+00:00",
-      "last_seen_online": "2025-10-30T18:50:30.522857+00:00",
-      "total_detections": 4,
+      "first_seen": "2025-10-31T12:42:39.015540",
+      "last_seen": "2025-10-31T11:52:07.080891+00:00",
+      "last_seen_online": "2025-10-31T11:52:07.080891+00:00",
+      "total_detections": 1,
       "notes": null,
       "is_managed": false
     },
-    "00:00:00:00:00:00": {
-      "mac": "00:00:00:00:00:00",
-      "current_ip": "192.168.1.175",
-      "current_hostname": "333SRV",
-      "vendor": "XEROX CORPORATION",
+    "C8:FF:77:D5:82:8C": {
+      "mac": "C8:FF:77:D5:82:8C",
+      "current_ip": "192.168.1.57",
+      "current_hostname": null,
+      "vendor": "Dyson Limited",
       "os_detected": null,
       "device_type": null,
-      "is_online": false,
-      "is_vpn_connected": true,
-      "vpn_ip": "100.80.31.55",
+      "is_online": true,
+      "is_vpn_connected": false,
+      "vpn_ip": null,
       "is_agent_connected": false,
       "agent_id": null,
       "agent_version": null,
       "ip_history": [
         {
-          "ip": "192.168.1.175",
-          "first_seen": "2025-10-30T19:19:28.668924",
-          "last_seen": "2025-10-30T19:19:28.668924",
+          "ip": "192.168.1.57",
+          "first_seen": "2025-10-31T12:42:39.015540",
+          "last_seen": "2025-10-31T12:42:39.015540",
           "occurrences": 1
         }
       ],
-      "hostname_history": [
-        {
-          "hostname": "333SRV",
-          "first_seen": "2025-10-30T19:19:28.668924",
-          "last_seen": "2025-10-30T19:19:28.668924"
-        }
-      ],
-      "first_seen": "2025-10-30T19:19:28.668924",
-      "last_seen": "2025-10-30T19:43:20.257503",
-      "last_seen_online": "2025-10-30T19:43:20.257503",
-      "total_detections": 3,
+      "hostname_history": [],
+      "first_seen": "2025-10-31T12:42:39.015540",
+      "last_seen": "2025-10-31T11:52:07.080902+00:00",
+      "last_seen_online": "2025-10-31T11:52:07.080902+00:00",
+      "total_detections": 1,
       "notes": null,
       "is_managed": false
     }

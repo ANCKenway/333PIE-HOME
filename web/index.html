@@ -856,14 +856,17 @@
             await this.loadUnifiedDevices(); // ✅ Source unique
             await this.refreshAgents(); // ✅ Charger agents
             
-            // ✅ Monitoring temps réel unifié: Refresh registry PUIS reload devices
-            // Cycle complet toutes les 5s pour garantir cohérence
+            // ✅ Refresh registry rapide (5s) en arrière-plan pour VPN/Agent status
             setInterval(async ()=>{
-                await this.refreshRegistryStatus(); // 1. Refresh ARP + VPN (< 100ms)
-                await this.loadUnifiedDevices();    // 2. Reload devices enrichis (< 200ms)
-                await this.refreshAgents();         // 3. Refresh agents
-                if(this.showLogsModal) await this.refreshAgentLogs(); // 4. Auto-refresh logs si modal ouvert
-            }, 5000); // Cycle complet: 5s
+                await this.refreshRegistryStatus(); // Refresh ARP + VPN + Agent (< 100ms)
+            }, 5000);
+            
+            // ✅ Reload devices + agents moins fréquent (30s) pour éviter refresh trop rapide UI
+            setInterval(async ()=>{
+                await this.loadUnifiedDevices();    // Reload devices enrichis
+                await this.refreshAgents();         // Refresh agents
+                if(this.showLogsModal) await this.refreshAgentLogs(); // Auto-refresh logs si modal ouvert
+            }, 30000); // Cycle UI: 30s (confortable pour consultation)
         },
         
         async refreshAll(){
