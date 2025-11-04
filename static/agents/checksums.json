@@ -1,89 +1,52 @@
 {
+  "metadata": {
+    "generated_at": "2025-11-04T20:14:37.624356Z",
+    "agent_name": "333HOME Agent",
+    "repository": "https://github.com/ANCKenway/333PIE-HOME",
+    "latest_version": "1.0.37",
+    "retention_policy": "Keep milestones only (restart-fix, update-fix, auto-restart, latest)"
+  },
   "versions": {
-    "1.0.18": {
-      "checksum": "5954330f1d43eebf5ad0490229e4caa862d651dde060736f1603ea4f9d744489",
-      "date": "2025-11-04T18:40:11Z",
-      "size": "36K"
-    },
-    "1.0.19": {
-      "checksum": "13e87088345766db19b52bdbfcdc69391df56a04e8636a5024d598d529ffd19d",
-      "date": "2025-11-04T18:41:51Z",
-      "size": "36K"
-    },
-    "1.0.20": {
-      "checksum": "31f07f13287be77e7b9429b2aff09bdde4af35a3405bc1797878991e86f1cc0f",
-      "date": "2025-11-04T18:57:53Z",
-      "size": "36K"
-    },
-    "1.0.21": {
-      "checksum": "01d4740487a77f4fcf5fbdf985f2ed4981fe33bb613276f98dc5c1eb7dada493",
-      "date": "2025-11-04T19:02:06Z",
-      "size": "40K"
-    },
-    "1.0.22": {
-      "checksum": "cde475b25934808815654547c5eb7f0068ffbcc40e82353e41aef31b5ec9e95f",
-      "date": "2025-11-04T19:06:03Z",
-      "size": "40K"
-    },
-    "1.0.23": {
-      "checksum": "479f95fa8a69a0408078f4bfac0a8219a4c74f710a625abb10961793e69976ea",
-      "date": "2025-11-04T19:09:07Z",
-      "size": "40K"
-    },
-    "1.0.24": {
-      "checksum": "8d0907c282ae3237bd78bb69452ce34f835848bd6310a776dd81d4d21e88b587",
-      "date": "2025-11-04T19:17:16Z",
-      "size": "40K"
-    },
-    "1.0.25": {
-      "checksum": "4e661a92fec1eaf46456997f31574874838062005a77f0a6778367ea9a503d9f",
-      "date": "2025-11-04T19:24:25Z",
-      "size": "40K"
-    },
-    "1.0.26": {
-      "checksum": "41cfcedc581146d771c876395016a0bd6db3b8d1e7819031186fcb195583161b",
-      "date": "2025-11-04T19:27:58Z",
-      "size": "40K"
-    },
-    "1.0.27": {
-      "checksum": "565f4598dec501ffa068ab259049f002c2f7fee92818845f5c946b3536cfd8bb",
-      "date": "2025-11-04T19:29:30Z",
-      "size": "40K"
-    },
     "1.0.28": {
       "checksum": "c85594067efd5a1e560f3f85be94a1f72c527d72fc5d1778b643cd7174c62a0c",
       "date": "2025-11-04T19:39:17Z",
-      "size": "40K"
-    },
-    "1.0.30": {
-      "checksum": "d52b7434426b47bccad4ac73b57295c1c7a26bb0d85608ef8a26d3d26fdfa297",
-      "date": "2025-11-04T19:43:15Z",
-      "size": "40K"
-    },
-    "1.0.31": {
-      "checksum": "6d87256294236ae2afe1455430b9878b10f192b581fc29d427ce1963f05b4102",
-      "date": "2025-11-04T19:48:06Z",
-      "size": "40K"
+      "size": "40K",
+      "size_bytes": 37214,
+      "description": "Restart fix - asyncio.create_task + watchdog tray optimis\u00e9",
+      "stable": true,
+      "milestone": "restart-fix",
+      "breaking_changes": false
     },
     "1.0.32": {
       "checksum": "b602385f714879bd8ba4ccaad4a7984dfb03e253c4201a140e0879df62a282e9",
       "date": "2025-11-04T19:50:04Z",
-      "size": "40K"
-    },
-    "1.0.34": {
-      "checksum": "97adb0f1c67ed80bd70d24984ed96e77ba45154715ce34c065c9805c6f30a8c6",
-      "date": "2025-11-04T19:52:23Z",
-      "size": "40K"
+      "size": "40K",
+      "size_bytes": 37280,
+      "description": "Self-update fix - mkdir .update_temp automatique",
+      "stable": true,
+      "milestone": "update-fix",
+      "breaking_changes": false
     },
     "1.0.35": {
       "checksum": "df014c21fc7b0993b188051913c0d7ce26f446a1275735913aaa25d08f5b9aa7",
       "date": "2025-11-04T19:54:40Z",
-      "size": "40K"
+      "size": "40K",
+      "size_bytes": 37188,
+      "description": "Auto-restart activ\u00e9 - update complet sans intervention",
+      "stable": true,
+      "milestone": "auto-restart",
+      "breaking_changes": false
     },
     "1.0.37": {
       "checksum": "765becb2f678f628a2ebfa503b23d79988cb856150b8e4ad6d0bebf17a7d6b69",
       "date": "2025-11-04T20:00:18Z",
-      "size": "40K"
+      "size": "40K",
+      "size_bytes": 37189,
+      "description": "Latest stable - Tous fixes int\u00e9gr\u00e9s + documentation compl\u00e8te",
+      "stable": true,
+      "milestone": "latest",
+      "breaking_changes": false,
+      "recommended": true
     }
   }
 }

@@ -21,39 +21,65 @@ wheels/
 *.egg
 MANIFEST
 
-# Virtual environments
+# Virtual Environment
 venv/
-env/
 ENV/
-.venv/
+env/
+.venv
 
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# OS
+*~
 .DS_Store
-Thumbs.db
+
+# Testing
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Runtime Data (ne pas committer)
+data/*.json
+!data/.gitkeep
+data/backups/*
+!data/backups/.gitkeep
 
 # Logs
 *.log
 logs/
+*.log.*
 
-# Temporary files
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Temporary
 *.tmp
 *.temp
-.cache/
+*.bak
+*.swp
+.~*
+test_results.json
 
-# Test scripts temporaires (ne pas commiter)
-test_api*.py
-simple_test*.py
-run_tests.sh
-api_test_result.json
-*_test_*.json
+# Static agents (committer seulement milestones)
+# Les packages sont gros, on garde seulement les milestones
+# static/agents/agent_v*.zip sont tracked manuellement
 
-# Config secrets (keep templates)
-config/*.secret
-config/auth.json
-!config/auth.example.json
+# OS
+Thumbs.db
+.DS_Store
+
+# Documentation build
+docs/_build/
+site/
+
