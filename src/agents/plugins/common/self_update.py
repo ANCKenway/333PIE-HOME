@@ -133,6 +133,11 @@ class SelfUpdatePlugin(BasePlugin):
         if isinstance(params, dict):
             params = SelfUpdateParams(**params)
         
+        # S'assurer que les répertoires de travail existent
+        # (en cas de setup() non appelé ou échoué)
+        self._backup_dir.mkdir(exist_ok=True)
+        self._temp_dir.mkdir(exist_ok=True)
+        
         try:
             self.logger.info(f"[Update] Starting self-update to version {params.version}")
             
@@ -165,20 +170,22 @@ class SelfUpdatePlugin(BasePlugin):
             self.logger.info("Replacing files...")
             await self._replace_files()
             
-            # Step 7: SUCCESS - Pas de redémarrage automatique pour v1
-            # L'utilisateur doit relancer manuellement l'agent
+            # Step 7: Cleanup et restart automatique
             self.logger.info("[Update] Update completed successfully!")
-            self.logger.info("[Update] Please restart the agent manually to use the new version")
+            await self._cleanup()
+            
+            # Restart agent automatiquement (background task)
+            asyncio.create_task(self._restart_agent())
             
             return PluginResult(
                 status="success",
-                message=f"Update to version {params.version} completed. Please restart agent manually.",
+                message=f"Update to version {params.version} completed. Agent restarting...",
                 data={
                     "old_version": self.CURRENT_VERSION,
                     "new_version": params.version,
                     "backup_path": str(backup_path),
-                    "restart_required": True,
-                    "restart_command": f"python agent.py --agent-id {self.config.agent_id} --hub-url {self.config.hub_url}" if hasattr(self, 'config') else "python agent.py"
+                    "restart_required": False,  # Auto-restart activé
+                    "auto_restart": True
                 }
             )
         
@@ -402,25 +409,22 @@ class SelfUpdatePlugin(BasePlugin):
                 # Vérifier si agent_tray.pyw existe (installation avec tray icon)
                 agent_tray = self._agent_dir / "agent_tray.pyw"
                 if agent_tray.exists():
-                    # Lancer agent_tray qui va relancer agent.py
-                    self.logger.info("✅ Tray icon détecté, restart via agent_tray.pyw...")
-                    subprocess.Popen(
-                        [python_exe, str(agent_tray)],
-                        cwd=str(self._agent_dir),
-                        creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
-                    )
+                    # Tray icon: JUSTE exit, le watchdog du tray relancera automatiquement
+                    self.logger.info("✅ Tray icon détecté, exit pour que le watchdog relance l'agent...")
+                    self.logger.info("[OK] Agent restart scheduled (via tray watchdog)")
+                    await asyncio.sleep(2)
+                    os._exit(0)
                 else:
-                    # Lancer agent.py directement
-                    self.logger.info("✅ Restart agent.py direct...")
+                    # Mode standalone: Lancer agent.py directement puis exit
+                    self.logger.info("✅ Restart agent.py direct (mode standalone)...")
                     subprocess.Popen(
                         [python_exe, "agent.py"] + sys.argv[1:],
                         cwd=str(self._agent_dir),
                         creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
                     )
-                
-                self.logger.info("[OK] Agent restart scheduled (pythonw)")
-                await asyncio.sleep(2)
-                os._exit(0)
+                    self.logger.info("[OK] Agent restart scheduled, exiting current process...")
+                    await asyncio.sleep(2)
+                    os._exit(0)
                 
             except Exception as e:
                 self.logger.error(f"Subprocess restart failed: {e}")

@@ -106,16 +106,37 @@ class SystemRestartPlugin(BasePlugin):
         """
         Redémarre l'agent.
         
-        Méthodes selon déploiement:
+        Méthodes selon déploiement (identique à self_update):
         - Windows: Service (sc restart) ou subprocess pythonw
         - Linux: Systemd (systemctl restart) ou subprocess
         """
         os_name = platform.system()
         
+        # Créer la tâche de restart en background SANS ATTENDRE
+        # Cela permet de renvoyer le résultat au Hub AVANT de s'arrêter
+        asyncio.create_task(self._do_restart(delay))
+        
+        # Retourner immédiatement le succès
+        return PluginResult(
+            status="success",
+            message=f"Agent restart scheduled in {delay}s"
+        )
+    
+    async def _do_restart(self, delay: int):
+        """Effectue réellement le restart après le délai."""
+        # Attendre le délai avant de restart
+        if delay > 0:
+            self.logger.info(f"⏱️  Waiting {delay}s before restart...")
+            await asyncio.sleep(delay)
+        
+        self.logger.info("🔄 Starting agent restart...")
+        
+        os_name = platform.system()
+        
         if os_name == "Windows":
             # Windows: Priorité service > subprocess
             try:
-                # Vérifier si service Windows existe
+                # Méthode 1: Service Windows (si installé)
                 result = subprocess.run(
                     ['sc', 'query', '333HOME Agent'],
                     capture_output=True,
@@ -125,50 +146,44 @@ class SystemRestartPlugin(BasePlugin):
                 
                 if result.returncode == 0:
                     # Service existe, utiliser sc restart
+                    self.logger.info("✅ Service Windows détecté, restart via sc...")
                     subprocess.Popen(
-                        f'timeout {delay} && sc stop "333HOME Agent" && sc start "333HOME Agent"',
+                        'timeout 2 && sc stop "333HOME Agent" && sc start "333HOME Agent"',
                         shell=True,
                         creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
                     )
-                    
-                    return PluginResult(
-                        status="success",
-                        message=f"Agent restart scheduled in {delay}s (service)",
-                        data={"method": "windows_service", "delay": delay}
-                    )
-            
-            except Exception as e:
-                self.logger.debug(f"Service restart failed: {e}")
-            
-            # Fallback: Restart via subprocess (tray icon ou standalone)
-            try:
-                # Déterminer script à relancer
-                agent_dir = os.path.dirname(os.path.abspath(__file__))
-                agent_tray = os.path.join(agent_dir, "..", "..", "agent_tray.pyw")
+                    self.logger.info("[OK] Service restart scheduled")
+                    await asyncio.sleep(1)
+                    os._exit(0)
                 
+            except Exception as e:
+                self.logger.debug(f"Service check failed: {e}, trying subprocess...")
+            
+            # Méthode 2: Subprocess pythonw (tray icon ou standalone)
+            try:
+                python_exe = sys.executable.replace("python.exe", "pythonw.exe")
+                agent_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                
+                # Vérifier si agent_tray.pyw existe (installation avec tray icon)
+                agent_tray = os.path.join(agent_dir, "agent_tray.pyw")
                 if os.path.exists(agent_tray):
-                    # Tray icon disponible
-                    python_exe = sys.executable.replace("python.exe", "pythonw.exe")
-                    subprocess.Popen(
-                        f'timeout {delay} && "{python_exe}" "{agent_tray}"',
-                        shell=True,
-                        creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
-                    )
-                    method = "tray_icon"
+                    # Tray icon: JUSTE exit, le watchdog relancera automatiquement l'agent
+                    self.logger.info("✅ Tray icon détecté, exit pour que le watchdog relance l'agent...")
+                    self.logger.info("[OK] Agent restart scheduled (via tray watchdog)")
+                    await asyncio.sleep(1)
+                    os._exit(0)
                 else:
-                    # Agent standalone
-                    python_exe = sys.executable
-                    agent_py = os.path.join(agent_dir, "..", "..", "agent.py")
+                    # Lancer agent.py directement (pas de tray, pas de watchdog)
+                    self.logger.info("✅ Restart agent.py direct...")
+                    agent_py = os.path.join(agent_dir, "agent.py")
                     subprocess.Popen(
                         [python_exe, agent_py] + sys.argv[1:],
-                        cwd=os.path.dirname(agent_py),
+                        cwd=agent_dir,
                         creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
                     )
-                    method = "subprocess"
-                
-                # Exit après délai
-                await asyncio.sleep(delay)
-                os._exit(0)
+                    self.logger.info("[OK] Agent restart scheduled, exiting current process...")
+                    await asyncio.sleep(1)
+                    os._exit(0)
                 
             except Exception as e:
                 self.logger.error(f"Subprocess restart failed: {e}")
@@ -181,7 +196,7 @@ class SystemRestartPlugin(BasePlugin):
         else:
             # Linux/macOS: Priorité systemd > subprocess
             try:
-                # Vérifier si systemd service existe
+                # Méthode 1: Systemd service (si installé)
                 result = subprocess.run(
                     ['systemctl', 'is-active', '333agent'],
                     capture_output=True,
@@ -190,34 +205,32 @@ class SystemRestartPlugin(BasePlugin):
                 )
                 
                 if result.returncode == 0:
-                    # Service systemd actif
+                    # Service systemd actif, utiliser systemctl restart
+                    self.logger.info("✅ Systemd service détecté, restart via systemctl...")
                     subprocess.Popen(
-                        ['sh', '-c', f'sleep {delay} && systemctl restart 333agent'],
+                        ['sh', '-c', 'sleep 2 && systemctl restart 333agent'],
                         start_new_session=True
                     )
-                    
-                    return PluginResult(
-                        status="success",
-                        message=f"Agent restart scheduled in {delay}s (systemd)",
-                        data={"method": "systemd", "delay": delay}
-                    )
-            
-            except Exception as e:
-                self.logger.debug(f"Systemd restart failed: {e}")
-            
-            # Fallback: Subprocess direct
-            try:
-                agent_dir = os.path.dirname(os.path.abspath(__file__))
-                agent_py = os.path.join(agent_dir, "..", "..", "agent.py")
+                    self.logger.info("[OK] Systemd restart scheduled")
+                    await asyncio.sleep(1)
+                    os._exit(0)
                 
+            except Exception as e:
+                self.logger.debug(f"Systemd check failed: {e}, trying subprocess...")
+            
+            # Méthode 2: Subprocess direct (standalone)
+            try:
+                agent_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                agent_py = os.path.join(agent_dir, "agent.py")
+                
+                self.logger.info("✅ Restart agent.py subprocess...")
                 subprocess.Popen(
-                    ['sh', '-c', f'sleep {delay} && {sys.executable} {agent_py} {" ".join(sys.argv[1:])}'],
-                    cwd=os.path.dirname(agent_py),
+                    [sys.executable, agent_py] + sys.argv[1:],
+                    cwd=agent_dir,
                     start_new_session=True
                 )
-                
-                # Exit après délai
-                await asyncio.sleep(delay)
+                self.logger.info("[OK] Agent restart scheduled, exiting current process...")
+                await asyncio.sleep(1)
                 os._exit(0)
                 
             except Exception as e:
@@ -228,9 +241,11 @@ class SystemRestartPlugin(BasePlugin):
                     error=str(e)
                 )
         
+        # Ce code ne devrait jamais être atteint (os._exit() tue le processus)
         return PluginResult(
-            status="error",
-            message="No restart method available"
+            status="success",
+            message=f"Agent restart initiated (should have exited)",
+            data={"method": "unknown", "delay": delay}
         )
     
     async def _restart_system(self, delay: int) -> PluginResult:

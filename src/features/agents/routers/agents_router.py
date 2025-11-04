@@ -24,6 +24,7 @@ import logging
 import json
 import asyncio
 import uuid
+from pathlib import Path
 
 
 logger = logging.getLogger(__name__)
@@ -511,33 +512,166 @@ async def get_agent_logs(
     }
 
 
+@router.post("/{agent_id}/restart")
+async def restart_agent(
+    agent_id: str,
+    target: str = Query(default="agent", description="Cible restart: 'agent' ou 'system'"),
+    delay: int = Query(default=5, ge=0, le=300, description="Délai avant restart (secondes)")
+):
+    """
+    Redémarre un agent ou sa machine hôte.
+    
+    Args:
+        agent_id: ID de l'agent
+        target: "agent" (redémarre l'agent) ou "system" (redémarre la machine)
+        delay: Délai avant restart (0-300s)
+    
+    Returns:
+        Tâche de restart créée
+    """
+    try:
+        # Vérifier agent connecté
+        conn = agent_manager.get_connection(agent_id)
+        if not conn:
+            raise HTTPException(status_code=404, detail=f"Agent {agent_id} not connected")
+        
+        # Vérifier plugin disponible
+        if "system_restart" not in conn.plugins:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Plugin 'system_restart' not available on agent {agent_id}"
+            )
+        
+        # Envoyer tâche
+        task_id = await agent_manager.send_task(
+            agent_id=agent_id,
+            plugin="system_restart",
+            params={
+                "target": target,
+                "delay": delay
+            },
+            timeout=60  # 1min timeout
+        )
+        
+        task = agent_manager.get_task(task_id)
+        
+        action = "Agent restart" if target == "agent" else "System restart"
+        
+        return TaskResponse(
+            task_id=task_id,
+            agent_id=agent_id,
+            plugin="system_restart",
+            status="pending",
+            created_at=task["created_at"],
+            message=f"{action} scheduled in {delay}s"
+        )
+    
+    except HTTPException:
+        raise
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        logger.error(f"Failed to restart agent: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to restart agent: {str(e)}")
+
+
 @router.post("/{agent_id}/update")
 async def trigger_agent_update(
     agent_id: str,
-    version: str = Query(..., description="Version cible (ex: 1.1.0)"),
-    download_url: str = Query(..., description="URL package agent"),
-    checksum: str = Query(..., description="SHA256 checksum"),
+    version: Optional[str] = Query(default=None, description="Version cible (optionnel, défaut: latest)"),
     force: bool = Query(default=False, description="Forcer update même version")
 ):
     """
     Déclenche l'auto-update d'un agent.
     
+    Si version non spécifiée, détecte automatiquement la dernière version depuis checksums.json.
+    
     Args:
         agent_id: ID de l'agent
-        version: Version cible
-        download_url: URL package
-        checksum: SHA256 checksum
-        force: Forcer update
+        version: Version cible (optionnel, par défaut: latest depuis checksums.json)
+        force: Forcer update même si version identique
     
     Returns:
         Tâche d'update créée
     """
     try:
+        # Vérifier agent connecté
+        conn = agent_manager.get_connection(agent_id)
+        if not conn:
+            raise HTTPException(status_code=404, detail=f"Agent {agent_id} not connected")
+        
+        # Vérifier plugin disponible
+        if "self_update" not in conn.plugins:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Plugin 'self_update' not available on agent {agent_id}"
+            )
+        
+        # Lire checksums.json pour auto-détection version/checksum
+        checksums_path = Path("/home/pie333/333HOME/static/agents/checksums.json")
+        
+        if not checksums_path.exists():
+            raise HTTPException(
+                status_code=500, 
+                detail="checksums.json not found, cannot auto-detect version"
+            )
+        
+        with open(checksums_path, "r") as f:
+            checksums_data = json.load(f)
+        
+        versions = checksums_data.get("versions", {})
+        
+        if not versions:
+            raise HTTPException(status_code=500, detail="No versions found in checksums.json")
+        
+        # Déterminer version cible
+        if version:
+            # Version spécifiée par user
+            if version not in versions:
+                available = ", ".join(versions.keys())
+                raise HTTPException(
+                    status_code=400, 
+                    detail=f"Version {version} not found. Available: {available}"
+                )
+            target_version = version
+        else:
+            # Auto-détection: dernière version (tri sémantique)
+            sorted_versions = sorted(
+                versions.keys(), 
+                key=lambda v: [int(x) for x in v.split(".")],
+                reverse=True
+            )
+            target_version = sorted_versions[0]
+        
+        # Récupérer infos version cible
+        version_info = versions[target_version]
+        checksum = version_info.get("checksum")
+        
+        if not checksum:
+            raise HTTPException(
+                status_code=500, 
+                detail=f"Checksum missing for version {target_version}"
+            )
+        
+        # Générer URL download
+        download_url = f"http://localhost:8000/static/agents/agent_v{target_version}.zip"
+        
+        # Version actuelle agent
+        current_version = conn.metadata.get("version", "unknown")
+        
+        # Vérifier si update nécessaire
+        if current_version == target_version and not force:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Agent already on version {target_version}. Use force=true to reinstall."
+            )
+        
+        # Envoyer tâche
         task_id = await agent_manager.send_task(
             agent_id=agent_id,
             plugin="self_update",
             params={
-                "version": version,
+                "version": target_version,
                 "download_url": download_url,
                 "checksum": checksum,
                 "force": force
@@ -547,15 +681,19 @@ async def trigger_agent_update(
         
         task = agent_manager.get_task(task_id)
         
-        return TaskResponse(
-            task_id=task_id,
-            agent_id=agent_id,
-            plugin="self_update",
-            status="pending",
-            created_at=task["created_at"],
-            message=f"Update to version {version} initiated"
-        )
+        return {
+            "task_id": task_id,
+            "agent_id": agent_id,
+            "plugin": "self_update",
+            "status": "pending",
+            "current_version": current_version,
+            "target_version": target_version,
+            "created_at": task["created_at"],
+            "message": f"Update from {current_version} to {target_version} initiated"
+        }
     
+    except HTTPException:
+        raise
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
