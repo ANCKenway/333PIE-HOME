@@ -6,4 +6,4 @@ Fichier unique pour gestion version.
 Importé par agent.py et plugins.
 """
 
-__version__ = "1.0.17"
+__version__ = "1.0.19"

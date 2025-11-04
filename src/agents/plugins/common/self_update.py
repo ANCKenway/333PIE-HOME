@@ -281,7 +281,11 @@ class SelfUpdatePlugin(BasePlugin):
         self.logger.info(f"[OK] Extracted to {extract_dir}")
     
     async def _replace_files(self):
-        """Remplace les fichiers de l'agent par la nouvelle version."""
+        """
+        Remplace les fichiers de l'agent par la nouvelle version.
+        
+        ⭐ AMÉLIORATION: Retry logic pour gérer file locks
+        """
         extract_dir = self._temp_dir / "extracted"
         
         # Trouver le dossier racine extrait (peut avoir un sous-dossier)
@@ -291,45 +295,183 @@ class SelfUpdatePlugin(BasePlugin):
         else:
             source_dir = extract_dir
         
-        # Remplacer fichiers (sauf agent.py qui tourne)
+        # Lister tous les fichiers à remplacer
+        files_to_replace = []
         for item in source_dir.rglob("*"):
             if item.is_file():
                 rel_path = item.relative_to(source_dir)
                 target_path = self._agent_dir / rel_path
-                
-                # Skip agent.py (sera remplacé au restart)
-                if target_path.name == "agent.py":
-                    continue
-                
-                target_path.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(item, target_path)
+                files_to_replace.append((item, target_path))
         
-        self.logger.info("[OK] Files replaced")
+        self.logger.info(f"[+] Replacing {len(files_to_replace)} files...")
+        
+        # Remplacer fichiers avec retry logic
+        failed_files = []
+        for source_file, target_file in files_to_replace:
+            # Skip agent.py (fichier actuel en cours d'exécution)
+            if target_file.name == "agent.py":
+                self.logger.debug(f"Skipping agent.py (will be replaced on restart)")
+                continue
+            
+            # Créer dossier parent si nécessaire
+            target_file.parent.mkdir(parents=True, exist_ok=True)
+            
+            # Tenter remplacement avec retry
+            success = False
+            for attempt in range(3):
+                try:
+                    # Méthode 1: Copier directement
+                    shutil.copy2(source_file, target_file)
+                    success = True
+                    break
+                except PermissionError:
+                    # File lock: Tenter rename au lieu de delete
+                    self.logger.debug(f"File locked: {target_file.name}, trying rename...")
+                    try:
+                        # Renommer ancien fichier avec .old
+                        old_file = target_file.with_suffix(target_file.suffix + ".old")
+                        if old_file.exists():
+                            old_file.unlink()
+                        target_file.rename(old_file)
+                        
+                        # Copier nouveau fichier
+                        shutil.copy2(source_file, target_file)
+                        success = True
+                        break
+                    except Exception as e:
+                        self.logger.warning(f"Rename failed (attempt {attempt+1}/3): {e}")
+                        await asyncio.sleep(1)
+                except Exception as e:
+                    self.logger.warning(f"Copy failed (attempt {attempt+1}/3): {e}")
+                    await asyncio.sleep(1)
+            
+            if not success:
+                failed_files.append(target_file.name)
+                self.logger.error(f"Failed to replace: {target_file.name}")
+        
+        if failed_files:
+            self.logger.warning(f"⚠️  {len(failed_files)} files failed to replace: {', '.join(failed_files)}")
+            self.logger.warning("These files will be updated on next restart")
+        else:
+            self.logger.info("[OK] All files replaced successfully")
+        
+        return len(failed_files) == 0
     
     async def _restart_agent(self):
-        """Restart l'agent avec la nouvelle version."""
-        self.logger.info("Preparing restart...")
+        """
+        Restart l'agent avec la nouvelle version.
         
-        # Obtenir le script de l'agent
-        agent_script = self._agent_dir / "agent.py"
+        ⭐ AMÉLIORATION: Auto-restart robuste selon méthode déploiement
+        - Windows: Service (sc restart) ou pythonw subprocess
+        - Linux: Systemd (systemctl restart) ou subprocess
+        """
+        self.logger.info("🔄 Preparing auto-restart...")
         
-        # Arguments actuels
-        args = sys.argv[:]
+        os_name = platform.system()
         
-        # Commande restart
-        if platform.system() == "Windows":
-            # Windows: utiliser pythonw pour détacher
-            python_exe = sys.executable.replace("python.exe", "pythonw.exe")
-            subprocess.Popen([python_exe] + args, cwd=str(self._agent_dir))
+        if os_name == "Windows":
+            # Windows: Priorité service > tâche planifiée > subprocess
+            try:
+                # Méthode 1: Service Windows (si installé)
+                result = subprocess.run(
+                    ['sc', 'query', '333HOME Agent'],
+                    capture_output=True,
+                    text=True,
+                    timeout=5
+                )
+                
+                if result.returncode == 0:
+                    # Service existe, utiliser sc restart
+                    self.logger.info("✅ Service Windows détecté, restart via sc...")
+                    subprocess.Popen(
+                        'timeout 3 && sc stop "333HOME Agent" && sc start "333HOME Agent"',
+                        shell=True,
+                        creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
+                    )
+                    self.logger.info("[OK] Service restart scheduled")
+                    await asyncio.sleep(2)
+                    os._exit(0)
+                
+            except Exception as e:
+                self.logger.debug(f"Service check failed: {e}, trying subprocess...")
+            
+            # Méthode 2: Subprocess pythonw (tray icon ou standalone)
+            try:
+                python_exe = sys.executable.replace("python.exe", "pythonw.exe")
+                
+                # Vérifier si agent_tray.pyw existe (installation avec tray icon)
+                agent_tray = self._agent_dir / "agent_tray.pyw"
+                if agent_tray.exists():
+                    # Lancer agent_tray qui va relancer agent.py
+                    self.logger.info("✅ Tray icon détecté, restart via agent_tray.pyw...")
+                    subprocess.Popen(
+                        [python_exe, str(agent_tray)],
+                        cwd=str(self._agent_dir),
+                        creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
+                    )
+                else:
+                    # Lancer agent.py directement
+                    self.logger.info("✅ Restart agent.py direct...")
+                    subprocess.Popen(
+                        [python_exe, "agent.py"] + sys.argv[1:],
+                        cwd=str(self._agent_dir),
+                        creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
+                    )
+                
+                self.logger.info("[OK] Agent restart scheduled (pythonw)")
+                await asyncio.sleep(2)
+                os._exit(0)
+                
+            except Exception as e:
+                self.logger.error(f"Subprocess restart failed: {e}")
+                self.logger.warning("⚠️  Manual restart required via tray icon")
+        
         else:
-            # Linux/macOS: fork + exec
-            subprocess.Popen([sys.executable] + args, cwd=str(self._agent_dir))
+            # Linux/macOS: Priorité systemd > subprocess
+            try:
+                # Méthode 1: Systemd service (si installé)
+                result = subprocess.run(
+                    ['systemctl', 'is-active', '333agent'],
+                    capture_output=True,
+                    text=True,
+                    timeout=5
+                )
+                
+                if result.returncode == 0:
+                    # Service systemd actif, utiliser systemctl restart
+                    self.logger.info("✅ Systemd service détecté, restart via systemctl...")
+                    subprocess.Popen(
+                        ['sh', '-c', 'sleep 3 && systemctl restart 333agent'],
+                        start_new_session=True
+                    )
+                    self.logger.info("[OK] Systemd restart scheduled")
+                    await asyncio.sleep(2)
+                    os._exit(0)
+                
+            except Exception as e:
+                self.logger.debug(f"Systemd check failed: {e}, trying subprocess...")
+            
+            # Méthode 2: Subprocess direct (standalone)
+            try:
+                self.logger.info("✅ Restart agent.py subprocess...")
+                subprocess.Popen(
+                    [sys.executable, "agent.py"] + sys.argv[1:],
+                    cwd=str(self._agent_dir),
+                    start_new_session=True
+                )
+                self.logger.info("[OK] Agent restart scheduled (subprocess)")
+                await asyncio.sleep(2)
+                os._exit(0)
+                
+            except Exception as e:
+                self.logger.error(f"Subprocess restart failed: {e}")
+                self.logger.warning("⚠️  Manual restart required")
         
-        self.logger.info("[OK] Restart initiated")
-        
-        # Attendre 2s puis exit
+        # Si toutes les méthodes échouent
+        self.logger.error("❌ Auto-restart failed, manual restart required")
+        self.logger.info("Exiting current agent process...")
         await asyncio.sleep(2)
-        sys.exit(0)
+        os._exit(1)
     
     async def _rollback(self):
         """Rollback vers la version précédente."""
