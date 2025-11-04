@@ -38,6 +38,12 @@ http://localhost:8000
 ### 📁 Static API (3 endpoints)
 - **Pages Web** : Interface principale, debug, test
 
+### 🤖 Agents API (8 endpoints)
+- **Gestion** : Liste, détails, logs agents connectés
+- **Contrôle** : Restart, update automatique
+- **Tasks** : Exécution plugins, résultats temps réel
+- **Monitoring** : WebSocket, statuts, versions
+
 ---
 
 ## 📱 Devices API
@@ -449,6 +455,480 @@ Content-Type: application/json
 Access-Control-Allow-Origin: *
 ```
 
+---
+
+## 🤖 Agents API
+
+### Vue d'Ensemble
+API pour la gestion des agents 333HOME connectés via WebSocket. Permet le contrôle à distance, les mises à jour automatiques et l'exécution de tâches.
+
+**Base Path** : `/api/agents`
+
+### GET /api/agents
+**Description** : Liste tous les agents connectés avec leurs métadonnées
+
+**Réponse** :
+```json
+[
+  {
+    "agent_id": "TITO",
+    "version": "1.0.37",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "hostname": "TITO-PC",
+    "python_version": "3.11.5",
+    "plugins": ["self_update", "system_info", "system_restart", "logmein_rescue"],
+    "connected_at": "2025-11-04T20:00:45.123456+00:00",
+    "last_heartbeat": "2025-11-04T20:05:30.789012+00:00"
+  }
+]
+```
+
+**Codes d'état** :
+- `200 OK` : Liste retournée avec succès
+- `500 Internal Server Error` : Erreur serveur
+
+**Exemple curl** :
+```bash
+curl http://localhost:8000/api/agents
+```
+
+---
+
+### GET /api/agents/{agent_id}
+**Description** : Détails complets d'un agent spécifique
+
+**Paramètres** :
+- `agent_id` (string, path) : Identifiant unique de l'agent
+
+**Réponse** :
+```json
+{
+  "agent_id": "TITO",
+  "version": "1.0.37",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "hostname": "TITO-PC",
+  "python_version": "3.11.5",
+  "plugins": ["self_update", "system_info", "system_restart", "logmein_rescue"],
+  "connected_at": "2025-11-04T20:00:45.123456+00:00",
+  "last_heartbeat": "2025-11-04T20:05:30.789012+00:00",
+  "metadata": {
+    "install_path": "C:\\Program Files\\333HOME Agent",
+    "config_path": "C:\\Program Files\\333HOME Agent\\config.json",
+    "startup_type": "tray"
+  }
+}
+```
+
+**Codes d'état** :
+- `200 OK` : Agent trouvé
+- `404 Not Found` : Agent non connecté
+- `500 Internal Server Error` : Erreur serveur
+
+**Exemple curl** :
+```bash
+curl http://localhost:8000/api/agents/TITO
+```
+
+---
+
+### POST /api/agents/{agent_id}/restart
+**Description** : Redémarre l'agent ou le système à distance (nouveau ✨)
+
+**Paramètres** :
+- `agent_id` (string, path) : Identifiant de l'agent
+- `target` (string, query, optionnel) : Cible du restart
+  - `"agent"` (défaut) : Redémarre seulement l'agent
+  - `"system"` : Redémarre le système complet
+- `delay` (integer, query, optionnel) : Délai avant restart en secondes
+  - Plage : 0-300 secondes
+  - Défaut : 5 secondes
+
+**Réponse** :
+```json
+{
+  "task_id": "57d5574c-d3bf-4921-9a30-5a65ec86df3d",
+  "agent_id": "TITO",
+  "plugin": "system_restart",
+  "status": "pending",
+  "created_at": "2025-11-04T19:40:48.235585+00:00",
+  "message": "Agent restart scheduled in 5s"
+}
+```
+
+**Codes d'état** :
+- `200 OK` : Tâche créée avec succès
+- `404 Not Found` : Agent non connecté
+- `400 Bad Request` : Plugin system_restart non disponible ou paramètres invalides
+- `500 Internal Server Error` : Erreur serveur
+
+**Workflow** :
+1. Hub envoie tâche `system_restart` à l'agent via WebSocket
+2. Agent attend le délai configuré
+3. Agent détecte présence watchdog tray
+4. Agent fait `os._exit(0)` (watchdog relance automatiquement)
+5. Agent reconnexion WebSocket (3-5 secondes)
+
+**Exemples curl** :
+```bash
+# Restart agent (délai 5s par défaut)
+curl -X POST http://localhost:8000/api/agents/TITO/restart
+
+# Restart agent avec délai 10s
+curl -X POST http://localhost:8000/api/agents/TITO/restart?delay=10
+
+# Restart système complet avec délai 30s
+curl -X POST http://localhost:8000/api/agents/TITO/restart?target=system&delay=30
+```
+
+---
+
+### POST /api/agents/{agent_id}/update
+**Description** : Met à jour l'agent vers une version spécifique ou la dernière (nouveau ✨)
+
+**Paramètres** :
+- `agent_id` (string, path) : Identifiant de l'agent
+- `version` (string, query, optionnel) : Version cible (ex: "1.0.37")
+  - Si omis : Auto-détection de la dernière version depuis `checksums.json`
+- `force` (boolean, query, optionnel) : Force l'update même si déjà à jour
+  - Défaut : `false`
+
+**Réponse** :
+```json
+{
+  "task_id": "c83066e0-ad96-4a15-bf83-f56283d21f26",
+  "agent_id": "TITO",
+  "plugin": "self_update",
+  "status": "pending",
+  "current_version": "1.0.35",
+  "target_version": "1.0.37",
+  "created_at": "2025-11-04T20:56:29.464000+00:00",
+  "message": "Update from 1.0.35 to 1.0.37 initiated"
+}
+```
+
+**Codes d'état** :
+- `200 OK` : Tâche créée avec succès
+- `404 Not Found` : Agent non connecté
+- `400 Bad Request` : 
+  - Agent déjà à jour (utiliser `force=true` pour forcer)
+  - Plugin self_update non disponible
+  - Version cible invalide ou introuvable
+- `500 Internal Server Error` : Erreur serveur
+
+**Workflow Auto-Update Complet** :
+1. Hub lit `static/agents/checksums.json` (si version non spécifiée)
+2. Hub compare `current_version` vs `target_version`
+3. Hub génère URL : `http://localhost:8000/static/agents/agent_vX.X.X.zip`
+4. Hub envoie tâche `self_update` à l'agent avec URL + checksum
+5. Agent télécharge le package (vérification SHA256)
+6. Agent crée backup : `.backup/agent_vX.X.X_YYYYMMDD_HHMMSS`
+7. Agent extrait et remplace fichiers
+8. Agent **redémarre automatiquement** (asyncio.create_task + watchdog)
+9. Agent reconnexion avec nouvelle version (3-5 secondes)
+
+**Exemples curl** :
+```bash
+# Update vers dernière version (auto-détection)
+curl -X POST http://localhost:8000/api/agents/TITO/update
+
+# Update vers version spécifique
+curl -X POST 'http://localhost:8000/api/agents/TITO/update?version=1.0.37'
+
+# Force update même si déjà à jour
+curl -X POST 'http://localhost:8000/api/agents/TITO/update?force=true'
+```
+
+---
+
+### POST /api/agents/{agent_id}/tasks/{plugin_name}
+**Description** : Exécute une tâche plugin sur un agent
+
+**Paramètres** :
+- `agent_id` (string, path) : Identifiant de l'agent
+- `plugin_name` (string, path) : Nom du plugin à exécuter
+- `timeout` (integer, query, optionnel) : Timeout en secondes (défaut: 60)
+
+**Body** :
+```json
+{
+  "param1": "value1",
+  "param2": "value2"
+}
+```
+
+**Réponse** :
+```json
+{
+  "task_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "agent_id": "TITO",
+  "plugin": "system_info",
+  "status": "pending",
+  "created_at": "2025-11-04T20:00:00.000000+00:00"
+}
+```
+
+**Codes d'état** :
+- `200 OK` : Tâche créée
+- `404 Not Found` : Agent non connecté
+- `500 Internal Server Error` : Erreur serveur
+
+**Exemple curl** :
+```bash
+curl -X POST http://localhost:8000/api/agents/TITO/tasks/system_info \
+  -H "Content-Type: application/json" \
+  -d '{}'
+```
+
+---
+
+### GET /api/agents/tasks/{task_id}
+**Description** : Récupère le résultat d'une tâche
+
+**Paramètres** :
+- `task_id` (string, path) : Identifiant unique de la tâche
+
+**Réponse (pending)** :
+```json
+{
+  "task_id": "57d5574c-d3bf-4921-9a30-5a65ec86df3d",
+  "agent_id": "TITO",
+  "plugin": "system_restart",
+  "params": {
+    "target": "agent",
+    "delay": 5
+  },
+  "timeout": 60,
+  "status": "pending",
+  "created_at": "2025-11-04T19:40:48.235585+00:00",
+  "result": null,
+  "updated_at": "2025-11-04T19:40:48.285247+00:00"
+}
+```
+
+**Réponse (success)** :
+```json
+{
+  "task_id": "c83066e0-ad96-4a15-bf83-f56283d21f26",
+  "agent_id": "TITO",
+  "plugin": "self_update",
+  "params": {
+    "version": "1.0.37",
+    "download_url": "http://localhost:8000/static/agents/agent_v1.0.37.zip",
+    "checksum": "765becb2f678f628a2ebfa503b23d79988cb856150b8e4ad6d0bebf17a7d6b69",
+    "force": false
+  },
+  "timeout": 300,
+  "status": "success",
+  "created_at": "2025-11-04T20:56:29.464000+00:00",
+  "result": {
+    "status": "success",
+    "message": "Update to version 1.0.37 completed. Agent restarting...",
+    "data": {
+      "old_version": "1.0.35",
+      "new_version": "1.0.37",
+      "backup_path": "C:\\Program Files\\333HOME Agent\\.backup\\agent_v1.0.35_20251104_205629",
+      "restart_required": false,
+      "auto_restart": true
+    }
+  },
+  "updated_at": "2025-11-04T20:56:42.983000+00:00"
+}
+```
+
+**Réponse (error)** :
+```json
+{
+  "task_id": "abc123...",
+  "status": "error",
+  "result": {
+    "status": "error",
+    "message": "Plugin execution failed",
+    "error": "FileNotFoundError: [Errno 2] No such file or directory"
+  }
+}
+```
+
+**Statuts possibles** :
+- `pending` : Tâche en attente d'exécution
+- `acknowledged` : Tâche reçue par l'agent
+- `success` : Tâche terminée avec succès
+- `error` : Tâche échouée
+- `timeout` : Tâche expirée
+
+**Codes d'état** :
+- `200 OK` : Tâche trouvée
+- `404 Not Found` : Tâche introuvable
+- `500 Internal Server Error` : Erreur serveur
+
+**Exemple curl** :
+```bash
+curl http://localhost:8000/api/agents/tasks/57d5574c-d3bf-4921-9a30-5a65ec86df3d
+```
+
+---
+
+### GET /api/agents/{agent_id}/logs
+**Description** : Récupère les logs en temps réel d'un agent
+
+**Paramètres** :
+- `agent_id` (string, path) : Identifiant de l'agent
+- `level` (string, query, optionnel) : Niveau de log minimum
+  - Valeurs : `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`
+  - Défaut : `INFO`
+- `limit` (integer, query, optionnel) : Nombre max de lignes
+  - Défaut : 100
+
+**Réponse** :
+```json
+{
+  "agent_id": "TITO",
+  "logs": [
+    {
+      "timestamp": "2025-11-04T20:56:29.465000+00:00",
+      "level": "INFO",
+      "logger": "plugin.self_update",
+      "message": "[Update] Starting self-update to version 1.0.37"
+    },
+    {
+      "timestamp": "2025-11-04T20:56:42.981000+00:00",
+      "level": "INFO",
+      "logger": "plugin.self_update",
+      "message": "[Update] Update completed successfully!"
+    }
+  ],
+  "total": 2
+}
+```
+
+**Codes d'état** :
+- `200 OK` : Logs récupérés
+- `404 Not Found` : Agent non connecté
+- `500 Internal Server Error` : Erreur serveur
+
+**Exemple curl** :
+```bash
+# Logs INFO et supérieur (100 dernières lignes)
+curl http://localhost:8000/api/agents/TITO/logs
+
+# Logs ERROR seulement (50 dernières lignes)
+curl 'http://localhost:8000/api/agents/TITO/logs?level=ERROR&limit=50'
+```
+
+---
+
+### WebSocket /api/ws/agents
+**Description** : Connexion WebSocket pour les agents
+
+**Paramètres Query** :
+- `agent_id` (string, required) : Identifiant unique de l'agent
+- `token` (string, optional) : JWT token d'authentification
+
+**URL Exemple** :
+```
+ws://localhost:8000/api/ws/agents?agent_id=TITO
+```
+
+**Messages Entrants (Hub → Agent)** :
+```json
+{
+  "type": "task",
+  "task_id": "abc123...",
+  "plugin": "system_info",
+  "params": {},
+  "timeout": 60
+}
+```
+
+**Messages Sortants (Agent → Hub)** :
+```json
+// Handshake
+{
+  "type": "handshake",
+  "agent_id": "TITO",
+  "version": "1.0.37",
+  "platform": "Windows-10",
+  "plugins": ["self_update", "system_restart"]
+}
+
+// Task acknowledgement
+{
+  "type": "task_ack",
+  "task_id": "abc123..."
+}
+
+// Task result
+{
+  "type": "task_result",
+  "task_id": "abc123...",
+  "status": "success",
+  "message": "Task completed",
+  "data": {}
+}
+
+// Logs streaming
+{
+  "type": "log",
+  "level": "INFO",
+  "logger": "plugin.self_update",
+  "message": "[Update] Downloading package...",
+  "timestamp": "2025-11-04T20:56:30.000000+00:00"
+}
+
+// Heartbeat
+{
+  "type": "heartbeat",
+  "timestamp": "2025-11-04T20:57:00.000000+00:00"
+}
+```
+
+---
+
+### Plugins Disponibles
+
+#### self_update
+**Description** : Mise à jour automatique de l'agent
+**Paramètres** :
+- `version` (string) : Version cible
+- `download_url` (string) : URL du package
+- `checksum` (string) : SHA256 du package
+- `force` (boolean) : Force l'update
+
+**Workflow** :
+1. Download package (vérification checksum SHA256)
+2. Backup version actuelle
+3. Extract nouvelle version
+4. Replace fichiers
+5. Auto-restart agent (watchdog tray)
+
+#### system_restart
+**Description** : Redémarre l'agent ou le système
+**Paramètres** :
+- `target` (string) : `"agent"` ou `"system"`
+- `delay` (integer) : Délai avant restart (0-300s)
+
+**Workflow** :
+1. Attente délai configuré
+2. Détection watchdog tray (Windows) ou systemd (Linux)
+3. Exit propre (`os._exit(0)`)
+4. Watchdog relance automatiquement
+
+#### system_info
+**Description** : Informations système de l'agent
+**Paramètres** : Aucun
+
+**Retourne** :
+- OS, version, architecture
+- CPU, RAM, disque
+- Réseau, interfaces
+- Processus, uptime
+
+#### logmein_rescue
+**Description** : Contrôle LogMeIn Rescue
+**Paramètres** :
+- `action` (string) : `"start"` ou `"stop"`
+
+---
+
 ## 📊 Pagination et Limites
 
 ### Limites par Défaut
@@ -466,5 +946,6 @@ GET /api/system/logs?limit=50
 ---
 
 **📅 Documentation API créée :** 19 octobre 2025  
-**🔄 Version :** 2.0.0 (Architecture modulaire)  
+**🔄 Dernière mise à jour :** 4 novembre 2025 (Agents API v1.0.37)  
+**🔄 Version :** 2.1.0 (Architecture modulaire + Agents auto-gérés)  
 **📖 Statut :** Documentation complète et à jour
