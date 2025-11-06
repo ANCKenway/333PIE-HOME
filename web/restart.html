@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>333HOME - Redémarrage d'urgence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-purple-900 to-pink-900 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8">
+        <div class="text-center mb-8">
+            <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl">
+                🔄
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">333HOME</h1>
+            <p class="text-gray-600">Redémarrage d'urgence</p>
+        </div>
+
+        <div id="status" class="mb-6 p-4 rounded-lg bg-gray-100">
+            <p class="text-sm text-gray-700">Chargement du statut...</p>
+        </div>
+
+        <div class="space-y-3">
+            <button onclick="restartServer()" 
+                class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-105 shadow-lg">
+                🔄 Redémarrer le serveur
+            </button>
+
+            <a href="/" 
+                class="block w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-xl text-center transition-all">
+                ← Retour à l'interface
+            </a>
+        </div>
+
+        <div class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+            <p class="text-xs text-yellow-800">
+                ⚠️ Cette page utilise systemd pour redémarrer le serveur. 
+                Installez d'abord le service avec <code class="bg-yellow-200 px-1 rounded">./install_systemd.sh</code>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        async function checkStatus() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                document.getElementById('status').innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                        <div>
+                            <p class="font-semibold text-green-700">Serveur en ligne</p>
+                            <p class="text-xs text-gray-600">Version ${data.version}</p>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('status').innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <div>
+                            <p class="font-semibold text-red-700">Serveur hors ligne</p>
+                            <p class="text-xs text-gray-600">Impossible de se connecter</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        async function restartServer() {
+            const confirmed = confirm('⚠️ Êtes-vous sûr de vouloir redémarrer le serveur ?\n\nL\'interface sera indisponible pendant 5-10 secondes.');
+            if (!confirmed) return;
+
+            document.getElementById('status').innerHTML = `
+                <div class="text-center py-4">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-2"></div>
+                    <p class="font-semibold text-purple-700">Redémarrage en cours...</p>
+                    <p class="text-xs text-gray-600">Reconnexion automatique dans 10s</p>
+                </div>
+            `;
+
+            try {
+                // Appeler l'endpoint de redémarrage (à créer dans app.py)
+                await fetch('/api/system/restart', { method: 'POST' });
+            } catch (error) {
+                // Normal, le serveur se coupe
+            }
+
+            // Attendre 10 secondes puis recharger la page
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 10000);
+        }
+
+        // Vérifier le statut au chargement
+        checkStatus();
+        
+        // Refresh toutes les 5 secondes
+        setInterval(checkStatus, 5000);
+    </script>
+</body>
+</html>

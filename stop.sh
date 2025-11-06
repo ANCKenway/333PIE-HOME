@@ -1,49 +1,57 @@
 #!/bin/bash
+# ===== 333HOME v4.0.0 - ARRÊT SERVEUR UNIFIÉ =====
 
-# 🏠 333HOME - Script d'arrêt
-# Arrêt propre du serveur de gestion de parc informatique
+PID_FILE="data/unified_server.pid"
 
-echo "🛑 ===== ARRÊT 333HOME ====="
-echo "🔍 Recherche des processus serveur..."
+echo "🛑 Arrêt du serveur 333HOME..."
 
-# Rechercher les processus Python du serveur
-PIDS=$(ps aux | grep "python.*server.py" | grep -v grep | awk '{print $2}')
+# Méthode 1: Utiliser le PID file
+if [ -f "$PID_FILE" ]; then
+    PID=$(cat "$PID_FILE" 2>/dev/null)
+    if [ ! -z "$PID" ] && kill -0 "$PID" 2>/dev/null; then
+        echo "🔍 Serveur trouvé (PID: $PID)"
+        kill -TERM "$PID" 2>/dev/null
+        
+        # Attendre jusqu'à 5 secondes
+        for i in {1..10}; do
+            if ! kill -0 "$PID" 2>/dev/null; then
+                echo "✅ Serveur arrêté proprement"
+                rm -f "$PID_FILE"
+                exit 0
+            fi
+            sleep 0.5
+        done
+        
+        # Forcer si nécessaire
+        echo "⚠️  Arrêt forcé..."
+        kill -9 "$PID" 2>/dev/null
+        rm -f "$PID_FILE"
+        echo "✅ Serveur arrêté (forcé)"
+        exit 0
+    else
+        rm -f "$PID_FILE"
+    fi
+fi
 
-if [ -z "$PIDS" ]; then
-    echo "ℹ️  Aucun serveur 333HOME en cours d'exécution"
-else
-    echo "🎯 Processus trouvés: $PIDS"
+# Méthode 2: Chercher le processus uvicorn
+PID=$(ps aux | grep "uvicorn.*app:app" | grep -v grep | awk '{print $2}')
+if [ ! -z "$PID" ]; then
+    echo "🔍 Serveur trouvé (PID: $PID)"
+    kill -TERM $PID 2>/dev/null
+    sleep 2
     
-    for PID in $PIDS; do
-        echo "🛑 Arrêt du processus $PID..."
-        kill -TERM $PID 2>/dev/null
-        
-        # Attendre 3 secondes pour un arrêt propre
-        sleep 3
-        
-        # Vérifier si le processus est toujours en cours
-        if kill -0 $PID 2>/dev/null; then
-            echo "⚠️  Forçage de l'arrêt du processus $PID..."
-            kill -KILL $PID 2>/dev/null
-        fi
-        
-        echo "✅ Processus $PID arrêté"
-    done
+    # Vérifier si arrêté
+    if ! kill -0 $PID 2>/dev/null; then
+        echo "✅ Serveur arrêté proprement"
+    else
+        echo "⚠️  Arrêt forcé..."
+        kill -9 $PID 2>/dev/null
+        echo "✅ Serveur arrêté (forcé)"
+    fi
+    rm -f "$PID_FILE"
+    exit 0
 fi
 
-# Vérifier les ports occupés
-PORT_CHECK=$(lsof -i :8000 2>/dev/null)
-if [ ! -z "$PORT_CHECK" ]; then
-    echo "⚠️  Port 8000 toujours occupé:"
-    echo "$PORT_CHECK"
-    echo "🔧 Libération forcée du port..."
-    lsof -ti :8000 | xargs kill -9 2>/dev/null
-fi
-
-echo "🧹 Nettoyage des fichiers temporaires..."
-# Nettoyer les fichiers de cache Python s'ils existent
-find /home/pie333/333HOME -name "*.pyc" -delete 2>/dev/null
-find /home/pie333/333HOME -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null
-
-echo "✅ 333HOME arrêté proprement"
-echo "================================"
+echo "ℹ️  Aucun serveur en cours d'exécution"
+rm -f "$PID_FILE"
+exit 0

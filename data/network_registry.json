@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "last_updated": "2025-10-31T12:52:07.080909",
+  "last_updated": "2025-11-06T10:20:40.659342",
   "total_devices": 9,
   "devices": {
     "88:A2:9E:3B:20:31": {
@@ -19,8 +19,8 @@
       "ip_history": [],
       "hostname_history": [],
       "first_seen": "2025-10-31T11:34:18.852627+00:00",
-      "last_seen": "2025-10-31T11:52:07.080778+00:00",
-      "last_seen_online": "2025-10-31T11:52:07.080778+00:00",
+      "last_seen": "2025-11-06T09:20:40.659211+00:00",
+      "last_seen_online": "2025-11-06T09:20:40.659211+00:00",
       "total_detections": 1,
       "notes": "Self-device (auto-detected)",
       "is_managed": true
@@ -48,8 +48,8 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-31T12:42:39.015540",
-      "last_seen": "2025-10-31T11:52:07.080822+00:00",
-      "last_seen_online": "2025-10-31T11:52:07.080822+00:00",
+      "last_seen": "2025-11-06T09:20:40.659256+00:00",
+      "last_seen_online": "2025-11-06T09:20:40.659256+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false
@@ -77,8 +77,8 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-31T12:42:39.015540",
-      "last_seen": "2025-10-31T11:52:07.080836+00:00",
-      "last_seen_online": "2025-10-31T11:52:07.080836+00:00",
+      "last_seen": "2025-11-06T09:20:40.659273+00:00",
+      "last_seen_online": "2025-11-06T09:20:40.659273+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false
@@ -106,8 +106,8 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-31T12:42:39.015540",
-      "last_seen": "2025-10-31T11:52:07.080848+00:00",
-      "last_seen_online": "2025-10-31T11:52:07.080848+00:00",
+      "last_seen": "2025-11-06T09:20:40.659285+00:00",
+      "last_seen_online": "2025-11-06T09:20:40.659285+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false
@@ -122,9 +122,9 @@
       "is_online": true,
       "is_vpn_connected": true,
       "vpn_ip": "100.93.236.71",
-      "is_agent_connected": true,
-      "agent_id": "TITO",
-      "agent_version": "1.0.17",
+      "is_agent_connected": false,
+      "agent_id": null,
+      "agent_version": null,
       "ip_history": [
         {
           "ip": "192.168.1.174",
@@ -141,8 +141,8 @@
         }
       ],
       "first_seen": "2025-10-31T12:42:39.015540",
-      "last_seen": "2025-10-31T11:52:07.080860+00:00",
-      "last_seen_online": "2025-10-31T11:52:07.080860+00:00",
+      "last_seen": "2025-11-06T09:20:40.659296+00:00",
+      "last_seen_online": "2025-11-06T09:20:40.659296+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false
@@ -199,8 +199,8 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-31T12:42:39.015540",
-      "last_seen": "2025-10-31T11:52:07.080879+00:00",
-      "last_seen_online": "2025-10-31T11:52:07.080879+00:00",
+      "last_seen": "2025-11-06T09:20:40.659313+00:00",
+      "last_seen_online": "2025-11-06T09:20:40.659313+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false
@@ -228,8 +228,8 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-31T12:42:39.015540",
-      "last_seen": "2025-10-31T11:52:07.080891+00:00",
-      "last_seen_online": "2025-10-31T11:52:07.080891+00:00",
+      "last_seen": "2025-11-06T09:20:40.659325+00:00",
+      "last_seen_online": "2025-11-06T09:20:40.659325+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false
@@ -257,8 +257,8 @@
       ],
       "hostname_history": [],
       "first_seen": "2025-10-31T12:42:39.015540",
-      "last_seen": "2025-10-31T11:52:07.080902+00:00",
-      "last_seen_online": "2025-10-31T11:52:07.080902+00:00",
+      "last_seen": "2025-11-06T09:20:40.659335+00:00",
+      "last_seen_online": "2025-11-06T09:20:40.659335+00:00",
       "total_detections": 1,
       "notes": null,
       "is_managed": false

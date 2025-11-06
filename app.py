@@ -143,9 +143,43 @@ def create_app() -> FastAPI:
             return FileResponse(hub_file)
         return {"error": "Hub page not found"}
     
+    @app.get("/restart")
+    async def restart_page():
+        """Page de redémarrage d'urgence"""
+        web_dir = Path(__file__).parent / "web"
+        restart_file = web_dir / "restart.html"
+        if restart_file.exists():
+            return FileResponse(restart_file)
+        return {"error": "Restart page not found"}
+    
     @app.get("/health")
     async def health_check():
         return {"status": "healthy", "version": "3.0.0"}
+    
+    @app.post("/api/system/restart")
+    async def system_restart():
+        """Redémarrer le serveur (via systemd si disponible)"""
+        import subprocess
+        import os
+        
+        logger.warning("🔄 Redémarrage du serveur demandé via API")
+        
+        # Essayer via systemd d'abord
+        try:
+            subprocess.Popen(['systemctl', '--user', 'restart', '333home'])
+            return {"success": True, "method": "systemd", "message": "Redémarrage via systemd"}
+        except:
+            pass
+        
+        # Sinon, redémarrer le processus actuel
+        try:
+            pid = os.getpid()
+            # Envoyer SIGHUP pour recharger (uvicorn --reload le gère)
+            os.kill(pid, 1)
+            return {"success": True, "method": "reload", "message": "Rechargement du serveur"}
+        except Exception as e:
+            logger.error(f"❌ Erreur redémarrage: {e}")
+            return {"success": False, "error": str(e)}
     
     @app.get("/api/info")
     async def app_info():

@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     
     # Serveur
     host: str = Field(default="0.0.0.0", description="Adresse d'écoute du serveur")
-    port: int = Field(default=8000, description="Port d'écoute du serveur")
+    port: int = Field(default=8000, description="Port d'écoute du serveur API")
     reload: bool = Field(default=False, description="Auto-reload en développement")
     
     # Chemins
