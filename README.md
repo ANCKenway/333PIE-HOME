@@ -1,97 +1,70 @@
-# 🏠 333HOME v6.0 - HUB Unifié
+# 🏠 333HOME v3.0
 
 **Système de domotique et gestion de parc informatique pour Raspberry Pi**
 
-> ⭐ **Nouveau** : Interface HUB unifiée avec navigation moderne SPA !  
-> Accès : **http://localhost:8000/hub**
+> 🚀 Application moderne avec FastAPI + Interface web responsive  
+> 🔄 Redémarrage à distance sans SSH  
+> 🤖 Agents de monitoring avec WebSocket
 
-## 🎯 Vision du projet
+## 🎯 Fonctionnalités principales
 
-333HOME est une application de domotique moderne construite avec une **architecture HUB unifiée**. L'interface frontend est une Single Page Application (SPA) qui orchestre plusieurs modules fonctionnels indépendants, le tout propulsé par un backend FastAPI modulaire et performant.
-
-### 🆕 Architecture HUB v6.0
-
-**Frontend moderne** :
-- 🎨 Interface unifiée (hub.html) avec navigation sidebar
-- 📱 Responsive (desktop + mobile avec menu hamburger)
-- 🚀 Routing hash-based avec lazy loading
-- 🧩 Modules indépendants chargés dynamiquement
-- ⚡ Performance optimale
-
-**Backend feature-based** :
-- 🔧 Architecture modulaire propre
-- 📦 Features autonomes et testables
-- 🎯 Type safety avec Pydantic
-- 📝 Logging structuré
-- ✨ API REST complète
+- 📱 **Gestion d'appareils** : CRUD complet, Wake-on-LAN, monitoring ping
+- 🌐 **Scanner réseau** : Découverte automatique, historique, détection vendors (60+)
+- 📊 **Monitoring** : Bandwidth, latency, statistiques réseau
+- 🤖 **Agents** : Système d'agents avec WebSocket pour contrôle à distance
+- 🔒 **VPN Tailscale** : Intégration et monitoring VPN
+- � **Contrôle à distance** : Page `/restart` pour redémarrage sans SSH
+- ⚙️ **Service systemd** : Démarrage automatique au boot, redémarrage auto en cas de crash
 
 ## 📦 Architecture
 
 ```
 333HOME/
-├── app.py                      # Point d'entrée FastAPI moderne
+├── app.py                      # Application FastAPI principale
 ├── requirements.txt            # Dépendances Python
+├── conftest.py                 # Configuration pytest
 │
-├── src/                        # Code source principal
-│   ├── core/                   # Noyau de l'application
-│   │   ├── config.py          # Configuration centralisée (Pydantic Settings)
-│   │   ├── logging_config.py  # Logging structuré avec couleurs
-│   │   └── lifespan.py        # Cycle de vie FastAPI moderne
+├── start.sh                    # Démarrage serveur (legacy)
+├── stop.sh                     # Arrêt serveur
+├── install_systemd.sh          # Installation service systemd
+├── test_restart.sh             # Test système de redémarrage
+│
+├── src/                        # Code source modulaire
+│   ├── core/                   # Configuration, logging, unified API
+│   │   ├── config.py          # Configuration centralisée (Pydantic)
+│   │   ├── logging_config.py  # Logging structuré
+│   │   └── unified/           # API unifiée devices+network
 │   │
 │   ├── shared/                 # Utilitaires partagés
-│   │   ├── constants.py       # Constantes, enums, patterns
-│   │   ├── exceptions.py      # Hiérarchie d'exceptions custom
-│   │   └── utils.py           # Fonctions utilitaires (20+ fonctions)
+│   │   ├── constants.py
+│   │   ├── exceptions.py
+│   │   └── utils.py
 │   │
-│   └── features/               # Features modulaires
-│       ├── devices/           # 📱 Appareils "favoris" avec fonctions avancées
-│       │   ├── manager.py     # CRUD + stockage
-│       │   ├── monitor.py     # Monitoring (ping)
-│       │   ├── wol.py         # Wake-on-LAN
-│       │   ├── router.py      # Routes API
-│       │   ├── schemas.py     # Modèles Pydantic
-│       │   └── storage.py     # Format de données v3.0
-│       │
-│       ├── network/           # 🌐 Hub monitoring réseau complet (TODO)
-│       │                      #     Scanner + Historique IP + Timeline
-│       │                      #     Promotion vers Devices
-│       │
-│       ├── tailscale/         # 🔒 Gestion VPN Tailscale (TODO)
-│       ├── monitoring/        # 📊 Surveillance système (TODO)
-│       └── system/            # 🔧 Administration (TODO)
-│
-├── data/                       # Données persistantes
-│   └── devices.json           # Appareils (format v3.0)
+│   └── features/               # Modules fonctionnels
+│       ├── agents/            # 🤖 Système d'agents avec WebSocket
+│       ├── devices/           # 📱 Gestion appareils favoris
+│       └── network/           # 🌐 Scanner et monitoring réseau
+│           ├── registry.py    # Registry centralisé
+│           ├── scanners/      # Différents scanners
+│           └── routers/       # API endpoints
 │
 ├── web/                        # Interface web
-│   ├── hub.html               # ⭐ HUB unifié (NOUVEAU v6.0)
-│   ├── index.html             # Ancien système (legacy)
-│   └── static/
-│       ├── css/
-│       │   └── modern.css     # Design system dark theme
-│       └── js/
-│           ├── app-hub.js     # Application HUB principale
-│           ├── core/          # Router, Module Loader, API Client
-│           │   ├── router.js         # Hash-based routing
-│           │   ├── module-loader.js  # Dynamic imports
-│           │   ├── api-client.js     # Client API
-│           │   └── component.js      # Base component
-│           └── modules/       # Feature modules
-│               ├── dashboard-module.js  # 📊 Vue d'ensemble
-│               ├── devices-module.js    # 📱 Gestion devices
-│               ├── network-module.js    # 🌐 Monitoring réseau
-│               ├── tailscale-module.js  # 🔒 VPN Tailscale
-│               └── system-module.js     # ⚙️ Système
+│   ├── index.html             # Interface principale
+│   ├── restart.html           # Page de redémarrage d'urgence
+│   └── assets/                # CSS, JS, images
 │
-├── docs/                       # Documentation complète
-│   ├── DEVICES_FEATURE.md     # Documentation feature devices
-│   ├── ARCHITECTURE.md        # Architecture générale
-│   └── ...
+├── static/agents/              # Packages agents téléchargeables
+├── data/                       # Données runtime (gitignored)
+├── tests/                      # Tests unitaires
+├── scripts/                    # Scripts utilitaires
 │
-└── _backup_old_structure/      # Backup de l'ancienne structure
-    ├── api/
-    ├── modules/
-    └── services/
+└── docs/                       # Documentation
+    ├── QUICK_REFERENCE.md     # Référence rapide
+    ├── ARCHITECTURE.md        # Architecture détaillée
+    ├── API_DOCUMENTATION.md   # Documentation API
+    ├── AGENTS_ARCHITECTURE.md # Architecture agents
+    ├── NETWORK_ARCHITECTURE.md # Architecture réseau
+    └── DEVELOPER_GUIDE.md     # Guide développeur
 ```
 
 ## ✅ État d'avancement
